@@ -85,6 +85,11 @@ METRIC total_bytes=626913
 METRIC html_bytes=204878
 ```
 
+The stdout stream is four lines, not three: the three `METRIC` lines plus a legacy
+`issues: <n>` line. That fourth line is required by the autoresearch runner, whose
+`metric_grep` is `^issues:` and therefore cannot match the `METRIC issues=` form.
+Both forms are always present and always agree.
+
 Exit status is `0` whenever measurement succeeds, regardless of how many issues
 are found; a non-zero exit means the harness itself failed (unreadable
 `sitemap.xml`, failed walk). Rule detail lives in
