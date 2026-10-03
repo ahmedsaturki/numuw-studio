@@ -93,9 +93,13 @@ const indexable = htmlFiles.filter(f => f !== "404.html");
 const canonicalOrigin = /^https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/$/;
 for (const file of indexable) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
-  const c = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
-  if (!c || !canonicalOrigin.test(c) && !c.startsWith(PUBLIC_ORIGIN)) {
+  const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+  if (!canonical || (!canonicalOrigin.test(canonical) && !canonical.startsWith(PUBLIC_ORIGIN))) {
     failures.push(`${file}: canonical is outside the configured Pages origin`);
+    continue;
+  }
+  if (!sitemap.includes(`<loc>${canonical}</loc>`)) {
+    failures.push(`${file}: canonical URL is missing from sitemap.xml`);
   }
 }
 
