@@ -67,4 +67,4 @@ The same audit runs in GitHub Actions on pushes and pull requests. It checks doc
 
 ## Premium hardening
 
-The `numuw-premium-hardening` branch carries the current release-quality pass for metadata, accessibility, conversion guidance and static QA.
+The latest `main` includes the current release-quality pass for metadata, accessibility, conversion guidance and static QA.
