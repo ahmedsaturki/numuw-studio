@@ -1,1 +1,88 @@
-(function(){let lang=document.documentElement.lang==='en'?'en':'ar';function applyLang(l){lang=l;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelectorAll('[data-ar][data-en]').forEach(function(el){el.innerHTML=l==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en')});document.querySelectorAll('[data-lang-btn]').forEach(function(b){b.textContent=l==='ar'?'EN':'عربي';b.setAttribute('aria-label',l==='ar'?'Switch to English':'التحويل للعربية')});localStorage.setItem('numuw-lang',l)}const s=localStorage.getItem('numuw-lang');if(s==='ar'||s==='en')applyLang(s);document.addEventListener('click',function(e){const b=e.target.closest('[data-lang-btn]');if(b){applyLang(lang==='ar'?'en':'ar');return}const m=e.target.closest('[data-menu]');if(m){const n=document.querySelector('[data-nav]');if(n)n.classList.toggle('open');return}if(e.target.closest('[data-nav] a')){const n=document.querySelector('[data-nav]');if(n)n.classList.remove('open')}});document.querySelectorAll('[data-year]').forEach(function(e){e.textContent=new Date().getFullYear()})})();
+(function(){
+  var lang=document.documentElement.lang==='en'?'en':'ar';
+  var localized=document.querySelectorAll('[data-ar][data-en]');
+  var langButtons=document.querySelectorAll('[data-lang-btn]');
+
+  function applyLang(next){
+    lang=next==='en'?'en':'ar';
+    document.documentElement.lang=lang;
+    document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+    document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
+      el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+    });
+    langButtons.forEach(function(b){
+      b.textContent=lang==='ar'?'EN':'عربي';
+      b.setAttribute('aria-label',lang==='ar'?'Switch to English':'التحويل للعربية');
+      b.setAttribute('aria-pressed',lang==='en'?'true':'false');
+    });
+    try{localStorage.setItem('numuw-lang',lang)}catch(e){}
+  }
+
+  var main=document.querySelector('main');
+  if(main){
+    if(!main.id)main.id='main';
+    if(!document.querySelector('.skip')){
+      var skip=document.createElement('a');
+      skip.className='skip';
+      skip.href='#main';
+      skip.textContent=lang==='ar'?'تخطّي للمحتوى':'Skip to content';
+      document.body.insertBefore(skip,document.body.firstChild);
+    }
+  }
+
+  var nav=document.querySelector('[data-nav]');
+  var menu=document.querySelector('[data-menu]');
+  if(nav && !nav.id)nav.id='primary-nav';
+  if(menu && nav){
+    menu.setAttribute('aria-controls',nav.id);
+    menu.setAttribute('aria-expanded',nav.classList.contains('open')?'true':'false');
+    menu.setAttribute('aria-label',lang==='ar'?'فتح القائمة':'Open menu');
+  }
+
+  /* Do not advertise a bilingual switch on pages that are not actually localized. */
+  if(localized.length<4){
+    langButtons.forEach(function(b){b.hidden=true});
+  }else{
+    var saved;
+    try{saved=localStorage.getItem('numuw-lang')}catch(e){}
+    if(saved==='ar'||saved==='en')applyLang(saved);
+    else applyLang(lang);
+  }
+
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-lang-btn]');
+    if(b && !b.hidden){applyLang(lang==='ar'?'en':'ar');return}
+    var m=e.target.closest('[data-menu]');
+    if(m && nav){
+      var open=nav.classList.toggle('open');
+      m.setAttribute('aria-expanded',open?'true':'false');
+      m.setAttribute('aria-label',open?(lang==='ar'?'غلق القائمة':'Close menu'):(lang==='ar'?'فتح القائمة':'Open menu'));
+      return;
+    }
+    if(e.target.closest('[data-nav] a') && nav && menu){
+      nav.classList.remove('open');
+      menu.setAttribute('aria-expanded','false');
+      menu.setAttribute('aria-label',lang==='ar'?'فتح القائمة':'Open menu');
+    }
+  });
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape' && nav && menu){
+      nav.classList.remove('open');
+      menu.setAttribute('aria-expanded','false');
+      menu.setAttribute('aria-label',lang==='ar'?'فتح القائمة':'Open menu');
+      menu.focus();
+    }
+  });
+
+  document.querySelectorAll('a[target="_blank"]').forEach(function(a){
+    var rel=(a.getAttribute('rel')||'').split(/\s+/).filter(Boolean);
+    if(rel.indexOf('noopener')<0)rel.push('noopener');
+    if(rel.indexOf('noreferrer')<0)rel.push('noreferrer');
+    a.setAttribute('rel',rel.join(' '));
+  });
+
+  document.querySelectorAll('[data-year]').forEach(function(e){
+    e.textContent=new Date().getFullYear();
+  });
+})();

@@ -54,3 +54,17 @@ Before major investment in **NUMUW / نُمو**, complete formal trademark, doma
 ## Business documents
 
 HTML business documents are print-ready. Release PDFs are generated separately and should be refreshed whenever the approved company facts, offers or contact details change.
+
+
+## Release QA
+
+Run the dependency-free audit locally with:
+
+`node scripts/numuw-static-audit.mjs`
+
+The same audit runs in GitHub Actions on pushes and pull requests. It checks document structure, metadata, JSON-LD validity, internal references, external-link safety, sitemap presence and the shared social image.
+
+
+## Premium hardening
+
+The `numuw-premium-hardening` branch carries the current release-quality pass for metadata, accessibility, conversion guidance and static QA.
