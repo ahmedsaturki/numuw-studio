@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const BASE = "https://ahmedsaturki.github.io/numuw-studio/";
-const SKIP_DIRS = new Set([".git", "node_modules", "bench"]);
+const SKIP_DIRS = new Set([".git", "node_modules", "bench", ".autoresearch"]);
 const SKIP_FILES = new Set(["autoresearch.sh", "site-quality.mjs"]);
 const SITEMAP = "sitemap.xml";
 const NOT_FOUND_PAGE = "404.html";
