@@ -1,55 +1,56 @@
 # NUMUW | نُمو
 
-Premium static landing page for **NUMUW — نُمو**, a founder-led digital growth studio for Egyptian companies and industrial businesses.
+**Growth Systems Studio for Egyptian businesses, industrial companies and B2B teams.**
 
-## Positioning
+NUMUW is organized as a small digital business system, not a single landing page.
 
-NUMUW is positioned around **growth systems**, not disconnected services:
+## Public layers
 
-- Positioning, brand & digital presence
-- Conversion-focused websites and landing pages
-- SEO / local visibility
-- Workflow automation and practical AI
-- CRM, tracking and KPI dashboards
-- Ongoing growth, content and conversion optimization
+- **Website** - the primary brand and conversion page.
+- **Landing Pages** - focused pages for services, offers and industries.
+- **Tools** - self-service diagnostic, estimation and scenario calculators.
+- **Products** - productized offers with scope and next steps.
+- **Documents** - company profile, capability statement, proposal, onboarding, handover and terms.
+- **Pages** - company, method, trust, case studies and contact.
+- **Brand / Media / Resources / Insights** - supporting assets.
 
-The landing page deliberately avoids invented testimonials, client logos, rankings, ROI guarantees, or fake performance numbers. Proof should be earned and added as real cases become available.
+## Principles
 
-## Tech
+1. Problem first.
+2. Clear scope before implementation.
+3. Test before handover.
+4. Ownership and third-party costs are explicit.
+5. No invented testimonials, client logos, ROI, revenue or performance numbers.
 
-- Static HTML/CSS/JS
-- No framework
-- No build step
-- No runtime dependencies
-- Arabic RTL + English toggle
-- Accessible semantic structure and reduced-motion support
-- GitHub Pages compatible
+## Technology
 
-## Run locally
+Static HTML/CSS/JS. No framework, build step or runtime backend is required for the public site. Designed for GitHub Pages.
 
-Open `index.html` directly, or use any static server, for example:
+## Local run
+
+Any static server works:
 
 ```bash
-npx serve .
+python -m http.server 8000
 ```
 
-## Deploy with GitHub Pages
+Then open `http://localhost:8000/`.
 
-GitHub → Settings → Pages → Deploy from branch → `main` / root.
+## Validation checklist
 
-Expected URL:
+- Check every hub and landing page.
+- Test mobile navigation.
+- Test language toggle where enabled.
+- Test WhatsApp / phone links.
+- Validate canonical URLs after the final domain is chosen.
+- Run Lighthouse / Core Web Vitals on the deployed site.
+- Validate structured data with Google's Rich Results Test.
+- Submit the sitemap in Search Console after the public URL is final.
 
-`https://ahmedsaturki.github.io/numuw-studio/`
+## Brand clearance
 
-## Important launch checklist
+Before major investment in **NUMUW / نُمو**, complete formal trademark, domain and social-handle clearance. The site intentionally does not claim that clearance is complete.
 
-1. Confirm the canonical URL and social preview URL after GitHub Pages is live.
-2. Validate `robots.txt` and `sitemap.xml` in Google Search Console.
-3. Claim and complete the real Google Business Profile if the business is eligible.
-4. Replace placeholder/temporary brand assets with the final approved NUMUW identity.
-5. Add only real case studies, testimonials and measurable results — never invented proof.
-6. Validate mobile UX, accessibility, metadata and structured data before public promotion.
+## Business documents
 
-## Brand note
-
-The name **NUMUW / نُمو** has an important strategic risk: `numuw.com` and other established uses of “Numuw” exist in the region. Before investing heavily in the brand, run a formal trademark/domain/handle clearance and decide whether NUMUW is sufficiently ownable. The current landing page keeps the name but does not assume that clearance has been completed.
+HTML business documents are print-ready. Release PDFs are generated separately and should be refreshed whenever the approved company facts, offers or contact details change.
