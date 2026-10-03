@@ -9,6 +9,7 @@ Included:
 - 5 product pages plus products hub
 - Company / Method / Proof / Case Studies / Contact
 - Business Library and public PDF exports
+- Legal / Trust Center (privacy notice and disclaimer)
 - Brand / Media / Insights / Resources
 - Shared CSS / JavaScript
 - Canonical, Open Graph, Twitter and JSON-LD metadata across public HTML pages
