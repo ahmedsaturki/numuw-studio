@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NUMUW | نُمو — استوديو النمو الرقمي | أحمد سعيد تركي</title>
+<meta name="description" content="استوديو نمو رقمي يقوده أحمد سعيد تركي: مواقع، هوية، تسويق عضوي، وأتمتة للشركات والمصانع المصرية — بأسعار واضحة وشفافية كاملة." />
+<style>
+:root{
+  --ink:#0e1b2c; --ink2:#16283f; --teal:#0d9488; --teal2:#14b8a6; --teal-soft:#e6f7f5;
+  --sand:#f7f5f0; --card:#ffffff; --muted:#5b6b7c; --line:#e7ecf2;
+  --gold:#d9a441; --shadow:0 12px 34px rgba(14,27,44,.09); --r:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Tahoma,system-ui,sans-serif;background:var(--sand);color:var(--ink);line-height:1.8}
+.container{max-width:1080px;margin:0 auto;padding:0 22px}
+section{padding:80px 0}
+h1{font-size:2.6rem;line-height:1.25;font-weight:800;letter-spacing:-.5px}
+h2{font-size:2rem;font-weight:800;margin-bottom:14px;letter-spacing:-.3px}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.82rem;color:var(--teal);letter-spacing:1.5px;margin-bottom:16px}
+.kicker::before{content:"";width:28px;height:2px;background:var(--teal);border-radius:2px}
+.sub{color:var(--muted);font-size:1.05rem;max-width:640px}
+.center{text-align:center}
+.center .sub{margin:0 auto}
+.center .kicker::before{display:none}
+
+/* header */
+header{position:sticky;top:0;z-index:60;background:rgba(247,245,240,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:16px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+.brand-mark{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--ink),var(--ink2));color:var(--teal2);font-weight:900;font-size:1.15rem;display:flex;align-items:center;justify-content:center}
+.brand b{font-size:1.1rem;letter-spacing:.5px}
+.brand small{display:block;font-size:.7rem;color:var(--muted);font-weight:600;line-height:1}
+.topnav ul{display:flex;gap:24px;list-style:none}
+.topnav a{color:var(--ink);text-decoration:none;font-weight:600;font-size:.92rem;opacity:.85}
+.topnav a:hover{opacity:1;color:var(--teal)}
+.actions{display:flex;gap:10px;align-items:center}
+.btn{display:inline-block;padding:13px 28px;border-radius:32px;font-weight:700;text-decoration:none;font-size:.95rem;transition:.2s;border:none;cursor:pointer;text-align:center}
+.btn-dark{background:var(--ink);color:#fff}
+.btn-dark:hover{background:var(--teal);transform:translateY(-2px)}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-teal:hover{background:var(--ink);transform:translateY(-2px)}
+.btn-line{border:1.5px solid var(--ink);color:var(--ink);background:transparent}
+.btn-line:hover{background:var(--ink);color:#fff}
+.btn-sm{padding:10px 20px;font-size:.87rem}
+.lang-btn{border:1.5px solid var(--ink);color:var(--ink);background:none;padding:7px 15px;border-radius:22px;font-weight:700;cursor:pointer;font-size:.83rem}
+
+/* hero */
+.hero{padding:90px 0 70px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.13),transparent 65%);top:-200px;inset-inline-end:-160px}
+.hero::after{content:"";position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(217,164,65,.12),transparent 65%);bottom:-160px;inset-inline-start:-120px}
+.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:48px;align-items:center;position:relative;z-index:1}
+.hero h1 span.hl{color:var(--teal)}
+.hero .sub{margin:22px 0 30px;font-size:1.12rem}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.hero-note{margin-top:22px;font-size:.88rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.hero-note b{color:var(--ink)}
+.trustline{display:flex;gap:26px;flex-wrap:wrap;margin-top:44px;padding-top:28px;border-top:1px solid var(--line)}
+.trustline div{font-size:.86rem;color:var(--muted);display:flex;align-items:center;gap:7px}
+.trustline b{color:var(--ink);display:block;font-size:1.1rem}
+/* founder card */
+.founder{background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:34px;border:1px solid var(--line)}
+.founder-top{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+.avatar{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--teal),var(--ink));display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;font-weight:800;flex-shrink:0}
+.founder-top h3{font-size:1.12rem}
+.founder-top small{color:var(--muted)}
+.founder p{font-size:.93rem;color:#3d4c5d}
+.pledges{margin-top:18px;display:grid;gap:10px}
+.pledge{display:flex;gap:10px;font-size:.9rem;color:#2d3d4f;background:var(--teal-soft);border-radius:12px;padding:11px 14px}
+.pledge b{color:var(--ink)}
+
+/* problems */
+.problems{background:var(--ink);color:#fff}
+.problems h2{color:#fff}
+.problems .sub{color:#a9bacd}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:44px}
+.pcard{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);padding:26px}
+.pcard .ico{font-size:1.6rem;margin-bottom:10px}
+.pcard h3{color:#fff;font-size:1.02rem;margin-bottom:6px}
+.pcard p{color:#a9bacd;font-size:.88rem}
+
+/* services */
+.svcgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:24px;margin-top:46px}
+.svc{background:var(--card);border-radius:var(--r);border:1px solid var(--line);padding:32px;box-shadow:var(--shadow);transition:.25s;position:relative}
+.svc:hover{transform:translateY(-6px);border-color:var(--teal)}
+.svc .num{position:absolute;top:22px;inset-inline-end:26px;font-weight:800;color:#e3e9f0;font-size:1.9rem}
+.svc .ico{width:54px;height:54px;border-radius:14px;background:var(--teal-soft);display:flex;align-items:center;justify-content:center;font-size:1.55rem;margin-bottom:18px}
+.svc h3{font-size:1.18rem;margin-bottom:8px}
+.svc>p{color:var(--muted);font-size:.92rem;margin-bottom:16px}
+.svc ul{list-style:none;display:grid;gap:8px}
+.svc li{font-size:.88rem;color:#33445a;padding-inline-start:20px;position:relative}
+.svc li::before{content:"—";position:absolute;inset-inline-start:0;color:var(--teal);font-weight:700}
+
+/* results flow */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:46px;counter-reset:f}
+.fstep{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px 22px;position:relative;box-shadow:var(--shadow)}
+.fstep::before{counter-increment:f;content:"0" counter(f);font-weight:800;color:var(--teal);font-size:1.05rem;display:block;margin-bottom:8px}
+.fstep h3{font-size:1rem;margin-bottom:6px}
+.fstep p{color:var(--muted);font-size:.86rem}
+
+/* pricing */
+.pricing{background:linear-gradient(180deg,var(--sand) 60%,#fff)}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:46px;align-items:stretch}
+.plan{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:34px 30px;display:flex;flex-direction:column;position:relative}
+.plan.hot{border:2px solid var(--teal);box-shadow:0 18px 44px rgba(13,148,136,.16)}
+.plan .pop{position:absolute;top:-14px;inset-inline-start:50%;transform:translateX(50%);background:var(--teal);color:#fff;font-size:.75rem;font-weight:800;padding:5px 18px;border-radius:20px;white-space:nowrap}
+.plan h3{font-size:1.2rem}
+.plan .for{color:var(--muted);font-size:.86rem;margin:6px 0 16px}
+.plan .amount{font-size:2.1rem;font-weight:900;letter-spacing:-1px}
+.plan .amount small{font-size:.9rem;font-weight:600;color:var(--muted)}
+.plan ul{list-style:none;margin:20px 0 26px;flex:1;display:grid;gap:9px}
+.plan li{font-size:.88rem;color:#33445a;padding-inline-start:24px;position:relative}
+.plan li::before{content:"✓";position:absolute;inset-inline-start:0;color:var(--teal);font-weight:800}
+.ala{margin-top:54px}
+.ala-title{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.ala-title h3{font-size:1.25rem}
+.table-wrap{overflow-x:auto;margin-top:20px;border:1px solid var(--line);border-radius:var(--r);background:var(--card)}
+table{width:100%;border-collapse:collapse;min-width:680px}
+th{background:var(--ink);color:#fff;padding:14px 18px;font-size:.88rem;text-align:start;font-weight:700}
+td{padding:13px 18px;border-bottom:1px solid var(--line);font-size:.9rem}
+tr:last-child td{border-bottom:none}
+td.p{font-weight:800;color:var(--ink);white-space:nowrap}
+td:first-child{font-weight:700}
+.pnote{margin-top:22px;font-size:.87rem;color:var(--muted);text-align:center}
+
+/* guarantee */
+.gwrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center}
+.gbox{background:var(--ink);color:#fff;border-radius:26px;padding:40px;position:relative;overflow:hidden}
+.gbox::after{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(20,184,166,.35),transparent 70%);bottom:-100px;inset-inline-end:-80px}
+.gbox h3{color:var(--gold);font-size:1.35rem;margin-bottom:10px}
+.gbox p{color:#c6d2df;font-size:.95rem;margin-bottom:16px}
+.gbox li{list-style:none;margin-bottom:10px;padding-inline-start:26px;position:relative;color:#e8eef4;font-size:.92rem}
+.gbox li::before{content:"✓";position:absolute;inset-inline-start:0;color:var(--teal2);font-weight:800}
+.glist{display:grid;gap:16px}
+.gitem{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;gap:14px;box-shadow:var(--shadow)}
+.gitem .ico{width:44px;height:44px;background:var(--teal-soft);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+.gitem h4{font-size:1rem;margin-bottom:3px}
+.gitem p{color:var(--muted);font-size:.86rem}
+
+/* faq */
+.faq{max-width:840px;margin:40px auto 0;display:grid;gap:14px}
+details{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px 24px}
+summary{font-weight:700;cursor:pointer;font-size:1rem}
+details[open]{border-color:var(--teal)}
+details p{color:var(--muted);font-size:.92rem;margin-top:12px}
+
+/* cta */
+.cta{background:var(--ink);color:#fff;text-align:center;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(20,184,166,.25),transparent 65%);top:-200px;inset-inline-start:50%;transform:translateX(-50%)}
+.cta h2{color:#fff;position:relative}
+.cta .sub{color:#a9bacd;margin:0 auto 30px;position:relative}
+.cta .btn{position:relative}
+.cta .meta{margin-top:24px;color:#a9bacd;font-size:.88rem;position:relative}
+.cta .meta a{color:#fff;text-decoration:none;font-weight:700}
+
+footer{background:#0a1524;color:#8fa2b8;padding:30px 0;text-align:center;font-size:.88rem}
+footer b{color:#fff}
+
+@media(max-width:920px){
+  .hero-grid,.gwrap{grid-template-columns:1fr}
+  .topnav ul{display:none}
+  h1{font-size:1.95rem} h2{font-size:1.55rem}
+  section{padding:60px 0}
+  .trustline{gap:18px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a class="brand" href="#">
+      <span class="brand-mark">N</span>
+      <span><b>NUMUW</b><small data-ar="استوديو النمو الرقمي" data-en="Digital Growth Studio">استوديو النمو الرقمي</small></span>
+    </a>
+    <nav class="topnav">
+      <ul>
+        <li><a href="#problem" data-ar="المشكلة" data-en="The Problem">المشكلة</a></li>
+        <li><a href="#services" data-ar="الحلول" data-en="Solutions">الحلول</a></li>
+        <li><a href="#flow" data-ar="كيف نشتغل" data-en="How We Work">كيف نشتغل</a></li>
+        <li><a href="#pricing" data-ar="الأسعار" data-en="Pricing">الأسعار</a></li>
+        <li><a href="#guarantee" data-ar="ضماناتي" data-en="My Guarantees">ضماناتي</a></li>
+        <li><a href="#faq" data-ar="أسئلة" data-en="FAQ">أسئلة</a></li>
+      </ul>
+    </nav>
+    <div class="actions">
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+      <a class="btn btn-dark btn-sm" href="https://wa.me/201127788810" target="_blank" data-ar="استشارة مجانية" data-en="Free Consultation">استشارة مجانية</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <h1 data-ar="شغلك مش ناقصه إعلانات.<br>ناقصه <span class='hl'>نظام</span> يخليك تلاقي العميل وانت مش بتدفع." data-en="Your business doesn't need more ads.<br>It needs a <span class='hl'>system</span> that brings customers without you paying for each one.">شغلك مش ناقصه إعلانات.<br>ناقصه <span class="hl">نظام</span> يخليك تلاقي العميل وانت مش بتدفع.</h1>
+        <p class="sub" data-ar="أنا أحمد سعيد تركي. أبني للشركات والمصانع المصرية نظام نمو كامل: حضور رقمي محترم، عميل يلاقيك على جوجل والواتساب، وشغل يدوي بقى أوتوماتيك. من غير ميزانيات إعلانات ضخمة ولا فرق مكلفة." data-en="I'm Ahmed Saeed Turki. I build Egyptian companies & factories a complete growth system: a respectable digital presence, customers finding you on Google and WhatsApp, and manual work turned automatic — without huge ad budgets or costly teams.">أنا أحمد سعيد تركي. أبني للشركات والمصانع المصرية نظام نمو كامل: حضور رقمي محترم، عميل يلاقيك على جوجل والواتساب، وشغل يدوي بقى أوتوماتيك. من غير ميزانيات إعلانات ضخمة ولا فرق مكلفة.</p>
+        <div class="hero-cta">
+          <a class="btn btn-teal" href="https://wa.me/201127788810" target="_blank" data-ar="احجز مكالمة تشخيص مجانية — 30 دقيقة" data-en="Book a Free 30-Min Diagnosis Call">احجز مكالمة تشخيص مجانية — 30 دقيقة</a>
+          <a class="btn btn-line" href="#pricing" data-ar="الأسعار معلنة — شوف بنفسك" data-en="Prices are published — see for yourself">الأسعار معلنة — شوف بنفسك</a>
+        </div>
+        <p class="hero-note">✓ <span data-ar="<b>بدون أي التزام</b> — المكالمة مجانية، ولو مش مقتنع مش بنكمل" data-en="<b>Zero obligation</b> — the call is free; if you're not convinced, we don't continue">بدون أي التزام — المكالمة مجانية، ولو مش مقتنع مش بنكمل</span></p>
+      </div>
+      <div class="founder">
+        <div class="founder-top">
+          <div class="avatar">أ</div>
+          <div>
+            <h3 data-ar="أحمد سعيد تركي" data-en="Ahmed Saeed Turki">أحمد سعيد تركي</h3>
+            <small data-ar="مؤسس NUMUW — مدينة السادات" data-en="Founder of NUMUW — Sadat City">مؤسس NUMUW — مدينة السادات</small>
+          </div>
+        </div>
+        <p data-ar="اشتغلت مع شركات ومصانع بتحديات واحدة متكررة: بتنفق على إعلانات وتقف عند نزيف، وموظفين بيتقعدوا ساعتين يوميًا في شغل ورقي، وقرارات بتتاخد بالنفس. NUMUW اتعمل عشان يحل المشاكل دي بترتيب: نظام، أتمتة، بعدين نمو." data-en="I worked with companies and factories facing the same repeated challenges: spending on ads that stop the moment the budget stops, employees wasting two hours a day on manual work, and gut-feel decisions. NUMUW exists to fix these in order: system, automation, then growth.">اشتغلت مع شركات ومصانع بتحديات واحدة متكررة: بتنفق على إعلانات وتقف عند نزيف، وموظفين بيتقعدوا ساعتين يوميًا في شغل ورقي، وقرارات بتتاخد بالنفس. NUMUW اتعمل عشان يحل المشاكل دي بترتيب: نظام، أتمتة، بعدين نمو.</p>
+        <div class="pledges">
+          <div class="pledge">🤝 <span data-ar="<b>أنا اللي بتكلمه</b> — مفيش موظف Account Manager وسيط بيناتنا" data-en="<b>You talk to me directly</b> — no account-manager middleman between us">أنا اللي بتكلمه — مفيش موظف Account Manager وسيط بيناتنا</span></div>
+          <div class="pledge">💰 <span data-ar="<b>أسعاري معلنة هنا</b> — عارف هتدفع كام قبل أول مكالمة" data-en="<b>My prices are published here</b> — you know the cost before the first call">أسعاري معلنة هنا — عارف هتدفع كام قبل أول مكالمة</span></div>
+          <div class="pledge">🚫 <span data-ar="<b>مبععتش ولا جنيه إعلانات مدفوعة</b> — شغالي كله أنظمة وأتمتة وحضور عضوي" data-en="<b>I don't run paid ads</b> — my work is systems, automation and organic presence">مبععتش ولا جنيه إعلانات مدفوعة — شغالي كله أنظمة وأتمتة وحضور عضوي</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="trustline">
+      <div>📍 <div><b data-ar="مصر" data-en="Egypt">مصر</b><span data-ar="كل المحافظات — أونلاين" data-en="All governorates — online">كل المحافظات — أونلاين</span></div></div>
+      <div>🏢 <div><b data-ar="شركات ومصانع" data-en="Companies & factories">شركات ومصانع</b><span data-ar="القطاعات اللي بتفهمها" data-en="Sectors I know deeply">القطاعات اللي بتفهمها</span></div></div>
+      <div>⏱️ <div><b data-ar="رد خلال ساعتين" data-en="Reply in 2 hours">رد خلال ساعتين</b><span data-ar="على الواتساب وقت الدوام" data-en="On WhatsApp during work hours">على الواتساب وقت الدوام</span></div></div>
+      <div>🧾 <div><b data-ar="عقود واضحة" data-en="Clear contracts">عقود واضحة</b><span data-ar="ميزات ومسلمات مكتوبة" data-en="Deliverables in writing">ميزات ومسلمات مكتوبة</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="problem" class="problems">
+  <div class="container">
+    <div class="center">
+      <span class="kicker" style="color:#14b8a6" data-ar="الصورة الحقيقية" data-en="THE HONEST PICTURE">الصورة الحقيقية</span>
+      <h2 data-ar="لو حضرتك صاحب شركة أو مصنع، غالبًا حاسس بواحدة من دول" data-en="If you own a company or factory, you've probably felt one of these">لو حضرتك صاحب شركة أو مصنع، غالبًا حاسس بواحدة من دول</h2>
+      <p class="sub" data-ar="مش وهم — دي نفس المعاناة اللي بتتكرر في أغلب الشركات المصرية الصغيرة والمتوسطة." data-en="It's not an illusion — it's the same pain repeated across most Egyptian SMEs.">مش وهم — دي نفس المعاناة اللي بتتكرر في أغلب الشركات المصرية الصغيرة والمتوسطة.</p>
+    </div>
+    <div class="pgrid">
+      <div class="pcard"><div class="ico">💸</div><h3 data-ar="بتدفع في إعلانات ومش بخلص" data-en="Paying for ads that never end">بتدفع في إعلانات ومش بخلص</h3><p data-ar="أول ما الميزانية توقف، العملاء بيختفوا. مصروف مستمر مابيبنيش أصل." data-en="The moment the budget stops, customers vanish. A permanent expense that builds no asset.">أول ما الميزانية توقف، العملاء بيختفوا. مصروف مستمر مابيبنيش أصل.</p></div>
+      <div class="pcard"><div class="ico">🕐</div><h3 data-ar="شغل يدوي بيضيع ساعات كل يوم" data-en="Manual work eating hours daily">شغل يدوي بيضيع ساعات كل يوم</h3><p data-ar="فواتير وردود ونسخ بيانات وتقارير — حاجات الآلة ممكن تعملها لوحدها." data-en="Invoices, replies, data entry, reports — things a machine could do alone.">فواتير وردود ونسخ بيانات وتقارير — حاجات الآلة ممكن تعملها لوحدها.</p></div>
+      <div class="pcard"><div class="ico">👻</div><h3 data-ar="شركتك مش ظاهرة وقت ما حد بيدور" data-en="Your company is invisible when it matters">شركتك مش ظاهرة وقت ما حد بيدور</h3><p data-ar="منافسك بيظهر في جوجل والخرائط وانت لأ — والعميل بيروح للي بيلاقيه." data-en="Your competitor shows up on Google and Maps, you don't — the customer goes to whoever they find.">منافسك بيظهر في جوجل والخرائط وانت لأ — والعميل بيروح للي بيلاقيه.</p></div>
+      <div class="pcard"><div class="ico">🎲</div><h3 data-ar="قرارات بالنفس مش بالأرقام" data-en="Gut-feel, not data-driven decisions">قرارات بالنفس مش بالأرقام</h3><p data-ar="مفيش شاشة واحدة تقولك مبيعاتك وتكاليفك وأرباحك الحقيقية لحظة بلحظة." data-en="No single screen telling you real sales, costs and profit, moment by moment.">مفيش شاشة واحدة تقولك مبيعاتك وتكاليفك وأرباحك الحقيقية لحظة بلحظة.</p></div>
+      <div class="pcard"><div class="ico">🌀</div><h3 data-ar="بتدور على أكتر من جهة" data-en="Juggling multiple vendors">بتدور على أكتر من جهة</h3><p data-ar="واحد للموقع وواحد للتصميم وواحد للأنظمة — ومفيش حد مسؤول عن النتيجة النهائية." data-en="One for the website, one for design, one for systems — and no one owns the final result.">واحد للموقع وواحد للتصميم وواحد للأنظمة — ومفيش حد مسؤول عن النتيجة النهائية.</p></div>
+      <div class="pcard"><div class="ico">📵</div><h3 data-ar="استفسارات بتضيع من غير رد" data-en="Inquiries lost with no reply">استفسارات بتضيع من غير رد</h3><p data-ar="الرسائل بتوصل برة الدوام وأوقات الزحمة — وكل رسالة من غير رد عميل ضايع." data-en="Messages arrive after hours and during rush times — every unanswered message is a lost customer.">الرسائل بتوصل برة الدوام وأوقات الزحمة — وكل رسالة من غير رد عميل ضايع.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="container">
+    <div class="center">
+      <span class="kicker" data-ar="الحل" data-en="THE SOLUTION">الحل</span>
+      <h2 data-ar="٤ حلول — مرتبين بترتيب الأولوية" data-en="4 Solutions — ordered by priority">٤ حلول — مرتبين بترتيب الأولوية</h2>
+      <p class="sub" data-ar="مش بأبيعك كل حاجة. بنبدأ باللي هيفرق فعلًا في شغلك، وبالترتيب الصح." data-en="I don't sell you everything. We start with what will actually move your business, in the right order.">مش بأبيعك كل حاجة. بنبدأ باللي هيفرق فعلًا في شغلك، وبالترتيب الصح.</p>
+    </div>
+    <div class="svcgrid">
+      <div class="svc"><span class="num">01</span><div class="ico">🕸️</div><h3 data-ar="حضور رقمي مبني صح" data-en="A Digital Presence Built Right">حضور رقمي مبني صح</h3>
+        <p data-ar="الأصل اللي شغال ليك 24 ساعة: موقع سريع محترم، وظهور في جوجل والخرائط وقت ما العميل بيدور." data-en="The asset that works for you 24/7: a fast, respectable website, and visibility on Google & Maps when customers search.">الأصل اللي شغال ليك 24 ساعة: موقع سريع محترم، وظهور في جوجل والخرائط وقت ما العميل بيدور.</p>
+        <ul>
+          <li data-ar="مواقع شركات ولاندنج بيدج تحويلية" data-en="Corporate websites & conversion landing pages">مواقع شركات ولاندنج بيدج تحويلية</li>
+          <li data-ar="متاجر إلكترونية ببوابات دفع مصرية" data-en="E-commerce stores with Egyptian payment gateways">متاجر إلكترونية ببوابات دفع مصرية</li>
+          <li data-ar="تهيئة Google Business والظهور المحلي" data-en="Google Business setup & local visibility">تهيئة Google Business والظهور المحلي</li>
+          <li data-ar="SEO — تظهر لما حد بيدور على خدمتك" data-en="SEO — appearing when people search your service">SEO — تظهر لما حد بيدور على خدمتك</li>
+          <li data-ar="هوية بصرية تفرقك عن المنافس" data-en="A visual identity that sets you apart">هوية بصرية تفرقك عن المنافس</li>
+        </ul>
+      </div>
+      <div class="svc"><span class="num">02</span><div class="ico">🤖</div><h3 data-ar="أتمتة تشغل مكان الموظف" data-en="Automation That Replaces Manual Labor">أتمتة تشغل مكان الموظف</h3>
+        <p data-ar="كل عملية بتعملها بإيد كل يوم، ممكن تتحول لworkflow بيشتغل لوحده — بالذكاء الاصطناعي." data-en="Every process you do by hand daily can become a self-running workflow — powered by AI.">كل عملية بتعملها بإيد كل يوم، ممكن تتحول لworkflow بيشتغل لوحده — بالذكاء الاصطناعي.</p>
+        <ul>
+          <li data-ar="أتمتة الفواتير والتقارير والردود والبريد" data-en="Automating invoices, reports, replies & email">أتمتة الفواتير والتقارير والردود والبريد</li>
+          <li data-ar="شات بوت واتساب يرد على الاستفسارات 24/7" data-en="WhatsApp chatbot answering inquiries 24/7">شات بوت واتساب يرد على الاستفسارات 24/7</li>
+          <li data-ar="وكلاء AI يؤهلوا العملاء ويسجلوا الأوردرات" data-en="AI agents that qualify leads & take orders">وكلاء AI يؤهلوا العملاء ويسجلوا الأوردرات</li>
+          <li data-ar="ربط أنظمتك ببعض (موقع × مخزن × محاسبة)" data-en="Connecting your systems (site × inventory × accounting)">ربط أنظمتك ببعض (موقع × مخزن × محاسبة)</li>
+          <li data-ar="تنبيهات فورية لحدوث مهمة في شغلك" data-en="Instant alerts for key business events">تنبيهات فورية لحدوث مهمة في شغلك</li>
+        </ul>
+      </div>
+      <div class="svc"><span class="num">03</span><div class="ico">📊</div><h3 data-ar="شاشة واحدة تحكم شغلك" data-en="One Screen That Runs Your Business">شاشة واحدة تحكم شغلك</h3>
+        <p data-ar="قرارك الجاي مش لازم يكون تخمين — لوحة أرقام حية تقولك تمامًا فين الربح وفين النزيف." data-en="Your next decision shouldn't be a guess — a live numbers dashboard shows exactly where profit and leaks are.">قرارك الجاي مش لازم يكون تخمين — لوحة أرقام حية تقولك تمامًا فين الربح وفين النزيف.</p>
+        <ul>
+          <li data-ar="لوحة KPI للمبيعات والمخزون والتحصيل" data-en="KPI dashboard for sales, inventory & collections">لوحة KPI للمبيعات والمخزون والتحصيل</li>
+          <li data-ar="إعداد Google Analytics وتتبع الأرقام" data-en="Google Analytics setup & tracking">إعداد Google Analytics وتتبع الأرقام</li>
+          <li data-ar="أنظمة CRM تنظيم العملاء والصفقات" data-en="CRM systems organizing customers & deals">أنظمة CRM تنظيم العملاء والصفقات</li>
+          <li data-ar="تقارير شهرية بتوصيات تنفيذية مكتوبة" data-en="Monthly reports with written action recommendations">تقارير شهرية بتوصيات تنفيذية مكتوبة</li>
+        </ul>
+      </div>
+      <div class="svc"><span class="num">04</span><div class="ico">🧭</div><h3 data-ar="عقل تجاري جنبك" data-en="A Business Brain Beside You">عقل تجاري جنبك</h3>
+        <p data-ar="استشارات من شخص فاهم إزاي المصانع والشركات المصرية بتشتغل — مش نظرية كتب." data-en="Consulting from someone who understands how Egyptian factories & companies actually run — not textbook theory.">استشارات من شخص فاهم إزاي المصانع والشركات المصرية بتشتغل — مش نظرية كتب.</p>
+        <ul>
+          <li data-ar="دراسات جدوى بأرقام السوق المصري الحقيقية" data-en="Feasibility studies with real Egyptian market figures">دراسات جدوى بأرقام السوق المصري الحقيقية</li>
+          <li data-ar="تحليل تكاليف وتسعير وهامش ربح" data-en="Cost, pricing & margin analysis">تحليل تكاليف وتسعير وهامش ربح</li>
+          <li data-ar="إعادة تصميم العمليات اليدوية والورقية" data-en="Redesigning manual & paper processes">إعادة تصميم العمليات اليدوية والورقية</li>
+          <li data-ar="خطة نمو تنفيذية 90 يوم" data-en="A 90-day executable growth plan">خطة نمو تنفيذية 90 يوم</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="flow" style="background:#fff">
+  <div class="container">
+    <div class="center">
+      <span class="kicker" data-ar="الطريقة" data-en="THE METHOD">الطريقة</span>
+      <h2 data-ar="٤ خطوات — من مكالمة مجانية لشغل شغال" data-en="4 Steps — from a free call to a working system">٤ خطوات — من مكالمة مجانية لشغل شغال</h2>
+      <p class="sub" data-ar="مفيش مفاجآت في النص. تعرف كل خطوة وتكلفتها قبل ما تتم." data-en="No mid-project surprises. You know every step and its cost before it happens.">مفيش مفاجآت في النص. تعرف كل خطوة وتكلفتها قبل ما تتم.</p>
+    </div>
+    <div class="flow">
+      <div class="fstep"><h3 data-ar="مكالمة التشخيص" data-en="Diagnosis Call">مكالمة التشخيص</h3><p data-ar="30 دقيقة مجانية: نفهم شغلك، نحدد أكبر ٣ مشاكل بتأكل من أرباحك، ونقولك بصراحة لو أقدر أساعدك ولا لأ." data-en="30 free minutes: understand your business, identify the 3 biggest profit-eating problems, and honestly tell you if I can help or not.">30 دقيقة مجانية: نفهم شغلك، نحدد أكبر ٣ مشاكل بتأكل من أرباحك، ونقولك بصراحة لو أقدر أساعدك ولا لأ.</p></div>
+      <div class="fstep"><h3 data-ar="خطة وسعر" data-en="Plan & Price">خطة وسعر</h3><p data-ar="خطة مكتوبة: إيه اللي هيتعمل، بكام، وامتى — بالأولوية اللي تفرق فعلًا، مش بالأكتر فلوس." data-en="A written plan: what will be done, for how much, and when — ordered by real impact, not by what costs most.">خطة مكتوبة: إيه اللي هيتعمل، بكام، وامتى — بالأولوية اللي تفرق فعلًا، مش بالأكتر فلوس.</p></div>
+      <div class="fstep"><h3 data-ar="تنفيذ بمراحل" data-en="Staged Execution">تنفيذ بمراحل</h3><p data-ar="كل مرحلة بتنتهي وتعتمدها قبل اللي بعدها. شايف شغلك أول بأول، مش في الآخر." data-en="Each stage ends and is approved by you before the next. You see your project as it progresses, not at the end.">كل مرحلة بتنتهي وتعتمدها قبل اللي بعدها. شايف شغلك أول بأول، مش في الآخر.</p></div>
+      <div class="fstep"><h3 data-ar="تسليم وتدريب" data-en="Delivery & Training">تسليم وتدريب</h3><p data-ar="بسلّمك النظام شغال + تدريب ليك أو لفريقك عليه + دعم بعد التسليم متفق عليه في العقد." data-en="I hand over a working system + training for you or your team + contractually agreed post-delivery support.">بسلّمك النظام شغال + تدريب ليك أو لفريقك عليه + دعم بعد التسليم متفق عليه في العقد.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" class="pricing">
+  <div class="container">
+    <div class="center">
+      <span class="kicker" data-ar="الأسعار" data-en="PRICING">الأسعار</span>
+      <h2 data-ar="أسعار معلنة — لأن الباطن مبقاش سياسة" data-en="Published Prices — Because Hiding Them Is No Longer a Strategy">أسعار معلنة — لأن الباطن مبقاش سياسة</h2>
+      <p class="sub" data-ar="الأسعار دي في حدود السوق المصري 2026. كل سعر بيتأكد نهائيًا بعد مكالمة التشخيص حسب حجم شغلك — والاتجاه للأسفل مش لفوق." data-en="These prices reflect the Egyptian market in 2026. Each is finalized after the diagnosis call based on your scope — and the adjustment tends down, not up.">الأسعار دي في حدود السوق المصري 2026. كل سعر بيتأكد نهائيًا بعد مكالمة التشخيص حسب حجم شغلك — والاتجاه للأسفل مش لفوق.</p>
+    </div>
+    <div class="plans">
+      <div class="plan">
+        <h3 data-ar="انطلاقة رقمية" data-en="Digital Kickoff">انطلاقة رقمية</h3>
+        <p class="for" data-ar="لمشروع بيسيب أثره الصح على النت لأول مرة" data-en="For a project making its right first impression online">لمشروع بيسيب أثره الصح على النت لأول مرة</p>
+        <div class="amount" data-ar="7,900 <small>ج.م دفعة واحدة</small>" data-en="7,900 <small>EGP one-time</small>">7,900 <small>ج.م دفعة واحدة</small></div>
+        <ul>
+          <li data-ar="لاندنج بيدج مبيعات مربوطة بالواتساب" data-en="Sales landing page wired to WhatsApp">لاندنج بيدج مبيعات مربوطة بالواتساب</li>
+          <li data-ar="تفعيل وتهيئة Google Business" data-en="Google Business setup & optimization">تفعيل وتهيئة Google Business</li>
+          <li data-ar="لوجو بسيط وقوالب سوشيال أساسية" data-en="Simple logo & essential social templates">لوجو بسيط وقوالب سوشيال أساسية</li>
+          <li data-ar="تسليم خلال أسبوع" data-en="Delivered within a week">تسليم خلال أسبوع</li>
+        </ul>
+        <a class="btn btn-line" href="https://wa.me/201127788810" target="_blank" data-ar="ابدأ" data-en="Start">ابدأ</a>
+      </div>
+      <div class="plan hot">
+        <span class="pop" data-ar="⭐ الأكثر تأثيرًا" data-en="⭐ HIGHEST IMPACT">⭐ الأكثر تأثيرًا</span>
+        <h3 data-ar="نظام النمو" data-en="Growth System">نظام النمو</h3>
+        <p class="for" data-ar="لشركة أو مصنع عايز حضور كامل + شغل مؤتمت" data-en="For a company or factory wanting full presence + automation">لشركة أو مصنع عايز حضور كامل + شغل مؤتمت</p>
+        <div class="amount" data-ar="24,900 <small>ج.م دفعة واحدة</small>" data-en="24,900 <small>EGP one-time</small>">24,900 <small>ج.م دفعة واحدة</small></div>
+        <ul>
+          <li data-ar="موقع شركة كامل ٥-٧ صفحات + SEO أساسي" data-en="Full corporate site, 5–7 pages + basic SEO">موقع شركة كامل ٥-٧ صفحات + SEO أساسي</li>
+          <li data-ar="هوية بصرية كاملة (لوجو، ألوان، قرطاسية، جايد)" data-en="Full brand identity (logo, colors, stationery, guide)">هوية بصرية كاملة (لوجو، ألوان، قرطاسية، جايد)</li>
+          <li data-ar="أتمتة عملية واحدة كاملة بذكاء اصطناعي" data-en="One full AI-powered workflow automation">أتمتة عملية واحدة كاملة بذكاء اصطناعي</li>
+          <li data-ar="شات بوت واتساب للردود والاستفسارات" data-en="WhatsApp chatbot for replies & inquiries">شات بوت واتساب للردود والاستفسارات</li>
+          <li data-ar="تدريب فريقك + دعم شهرين بعد التسليم" data-en="Team training + 2 months post-delivery support">تدريب فريقك + دعم شهرين بعد التسليم</li>
+        </ul>
+        <a class="btn btn-teal" href="https://wa.me/201127788810" target="_blank" data-ar="اطلب النظام" data-en="Get the System">اطلب النظام</a>
+      </div>
+      <div class="plan">
+        <h3 data-ar="شريك نمو شهري" data-en="Monthly Growth Partner">شريك نمو شهري</h3>
+        <p class="for" data-ar="لتشغيل مستمر: محتوى، أنظمة، وتحسين كل شهر" data-en="For continuous operation: content, systems & monthly improvement">لتشغيل مستمر: محتوى، أنظمة، وتحسين كل شهر</p>
+        <div class="amount" data-ar="6,500 <small>ج.م / شهريًا</small>" data-en="6,500 <small>EGP / month</small>">6,500 <small>ج.م / شهريًا</small></div>
+        <ul>
+          <li data-ar="إدارة سوشيال: 12 تصميم + 8 بوستات شهريًا" data-en="Social management: 12 designs + 8 posts monthly">إدارة سوشيال: 12 تصميم + 8 بوستات شهريًا</li>
+          <li data-ar="تحسين SEO والظهور المحلي بشكل مستمر" data-en="Ongoing SEO & local visibility work">تحسين SEO والظهور المحلي بشكل مستمر</li>
+          <li data-ar="لوحة KPI وتقرير شهري بالأرقام" data-en="KPI dashboard & monthly numbers report">لوحة KPI وتقرير شهري بالأرقام</li>
+          <li data-ar="أتمتة أو تحسين واحد جديد كل شهر" data-en="One new automation or improvement each month">أتمتة أو تحسين واحد جديد كل شهر</li>
+          <li data-ar="مكالمة مراجعة شهرية معايا مباشرة" data-en="Monthly review call with me directly">مكالمة مراجعة شهرية معايا مباشرة</li>
+          <li data-ar="تعاقد 3 شهور بحد أدنى" data-en="3-month minimum engagement">تعاقد 3 شهور بحد أدنى</li>
+        </ul>
+        <a class="btn btn-dark" href="https://wa.me/201127788810" target="_blank" data-ar="تفاهمنا" data-en="Let's Agree">تفاهمنا</a>
+      </div>
+    </div>
+
+    <div class="ala">
+      <div class="center">
+        <span class="kicker" data-ar="خدمة خدمة" data-en="À LA CARTE">خدمة خدمة</span>
+        <h2 data-ar="عايز حاجة واحدة بس؟ خدها كده" data-en="Need just one thing? Take it à la carte">عايز حاجة واحدة بس؟ خدها كده</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th data-ar="الخدمة" data-en="Service">الخدمة</th><th data-ar="بتشمل إيه" data-en="What's included">بتشمل إيه</th><th data-ar="السعر" data-en="Price">السعر</th></tr></thead>
+          <tbody>
+            <tr><td data-ar="لاندنج بيدج مبيعات" data-en="Sales landing page">لاندنج بيدج مبيعات</td><td data-ar="صفحة واحدة مصممة للتحويل، مربوطة واتساب وفورم" data-en="One conversion-focused page wired to WhatsApp & a form">صفحة واحدة مصممة للتحويل، مربوطة واتساب وفورم</td><td class="p" data-ar="من 8,000 ج.م" data-en="from EGP 8,000">من 8,000 ج.م</td></tr>
+            <tr><td data-ar="موقع شركة تعريفي" data-en="Corporate website">موقع شركة تعريفي</td><td data-ar="٥-٧ صفحات متجاوبة، ثنائي اللغة، SEO أساسي" data-en="5–7 responsive pages, bilingual, basic SEO">٥-٧ صفحات متجاوبة، ثنائي اللغة، SEO أساسي</td><td class="p" data-ar="15,000 – 25,000 ج.م" data-en="EGP 15,000–25,000">15,000 – 25,000 ج.م</td></tr>
+            <tr><td data-ar="متجر إلكتروني" data-en="E-commerce store">متجر إلكتروني</td><td data-ar="منتجات، سلة، دفع عند الاستلام أو بوابة، تقارير" data-en="Products, cart, COD or gateway payment, reports">منتجات، سلة، دفع عند الاستلام أو بوابة، تقارير</td><td class="p" data-ar="من 25,000 ج.م" data-en="from EGP 25,000">من 25,000 ج.م</td></tr>
+            <tr><td data-ar="لوجو احترافي" data-en="Professional logo">لوجو احترافي</td><td data-ar="٣ اتجاهات + تعديلات + كل الملفات" data-en="3 directions + revisions + all files">٣ اتجاهات + تعديلات + كل الملفات</td><td class="p" data-ar="1,500 – 5,000 ج.م" data-en="EGP 1,500–5,000">1,500 – 5,000 ج.م</td></tr>
+            <tr><td data-ar="هوية بصرية كاملة" data-en="Full brand identity">هوية بصرية كاملة</td><td data-ar="لوجو + ألوان وخطوط + قرطاسية + جايد لاين" data-en="Logo + colors & fonts + stationery + guidelines">لوجو + ألوان وخطوط + قرطاسية + جايد لاين</td><td class="p" data-ar="6,000 – 15,000 ج.م" data-en="EGP 6,000–15,000">6,000 – 15,000 ج.م</td></tr>
+            <tr><td data-ar="أتمتة عملية واحدة" data-en="Single workflow automation">أتمتة عملية واحدة</td><td data-ar="تحليل العملية + بناء الأتمتة + اختبار + تدريب" data-en="Process analysis + automation build + testing + training">تحليل العملية + بناء الأتمتة + اختبار + تدريب</td><td class="p" data-ar="8,000 – 20,000 ج.م" data-en="EGP 8,000–20,000">8,000 – 20,000 ج.م</td></tr>
+            <tr><td data-ar="شات بوت واتساب" data-en="WhatsApp chatbot">شات بوت واتساب</td><td data-ar="ردود آلية + تأهيل عملاء + تسجيل طلبات" data-en="Auto-replies + lead qualification + order intake">ردود آلية + تأهيل عملاء + تسجيل طلبات</td><td class="p" data-ar="8,000 – 15,000 ج.م" data-en="EGP 8,000–15,000">8,000 – 15,000 ج.م</td></tr>
+            <tr><td data-ar="نظام CRM وتدريب" data-en="CRM setup & training">نظام CRM وتدريب</td><td data-ar="إعداد + استيراد بيانات + تدريب فريقك" data-en="Setup + data import + team training">إعداد + استيراد بيانات + تدريب فريقك</td><td class="p" data-ar="6,000 – 12,000 ج.م" data-en="EGP 6,000–12,000">6,000 – 12,000 ج.م</td></tr>
+            <tr><td data-ar="لوحة KPI وتقارير" data-en="KPI dashboard & reports">لوحة KPI وتقارير</td><td data-ar="ربط مصادرك في شاشة حية واحدة" data-en="Connecting your sources into one live screen">ربط مصادرك في شاشة حية واحدة</td><td class="p" data-ar="من 12,000 ج.م" data-en="from EGP 12,000">من 12,000 ج.م</td></tr>
+            <tr><td data-ar="دراسة جدوى" data-en="Feasibility study">دراسة جدوى</td><td data-ar="سوق ومنافسين + توقعات مالية + خطة 12 شهر" data-en="Market & competitors + financials + 12-month plan">سوق ومنافسين + توقعات مالية + خطة 12 شهر</td><td class="p" data-ar="من 10,000 ج.م" data-en="from EGP 10,000">من 10,000 ج.م</td></tr>
+            <tr><td data-ar="صيانة ودعم شهري" data-en="Monthly maintenance & support">صيانة ودعم شهري</td><td data-ar="تحديثات ونسخ احتياطي وإصلاحات فورية" data-en="Updates, backups & fast fixes">تحديثات ونسخ احتياطي وإصلاحات فورية</td><td class="p" data-ar="800 – 2,500 ج.م / شهر" data-en="EGP 800–2,500 / month">800 – 2,500 ج.م / شهر</td></tr>
+            <tr><td data-ar="ساعة استشارة" data-en="Consulting hour">ساعة استشارة</td><td data-ar="جلسة مركزة + توصيات مكتوبة" data-en="Focused session + written recommendations">جلسة مركزة + توصيات مكتوبة</td><td class="p" data-ar="600 ج.م / ساعة" data-en="EGP 600 / hour">600 ج.م / ساعة</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="pnote" data-ar="💡 ملاحظة أمانة: نطاق السعر بيحدده حجم الشغل الحقيقي — عشان كده مكالمة التشخيص المجانية بتقفل الرقم بدقة قبل أي التزام." data-en="💡 Honest note: the price range is set by real scope — that's why the free diagnosis call pins the number precisely before any commitment.">💡 ملاحظة أمانة: نطاق السعر بيحدده حجم الشغل الحقيقي — عشان كده مكالمة التشخيص المجانية بتقفل الرقم بدقة قبل أي التزام.</p>
+    </div>
+  </div>
+</section>
+
+<section id="guarantee">
+  <div class="container">
+    <div class="gwrap">
+      <div>
+        <span class="kicker" data-ar="ضماناتي ليك" data-en="MY GUARANTEES TO YOU">ضماناتي ليك</span>
+        <h2 data-ar="شخص واحد مسؤول — مش شركة بتخبي ورا اسمها" data-en="One Person Accountable — Not a Company Hiding Behind Its Name">شخص واحد مسؤول — مش شركة بتخبي ورا اسمها</h2>
+        <div class="glist">
+          <div class="gitem"><span class="ico">🎯</span><div><h4 data-ar="بتقول لأ" data-en="I say no">بتقول لأ</h4><p data-ar="لو شغلك محتاج حاجة مش بتقدمها — بس قولك على طول وارشحلك البديل، حتى لو مجانًا." data-en="If you need something I don't do — I tell you immediately and point you to the right alternative, even if it's free.">لو شغلك محتاج حاجة مش بتقدمها — بس قولك على طول وارشحلك البديل، حتى لو مجانًا.</p></div></div>
+          <div class="gitem"><span class="ico">🔒</span><div><h4 data-ar="السعر المتفق هو السعر" data-en="The agreed price is the price">السعر المتفق هو السعر</h4><p data-ar="مفيش "تكاليف إضافية" بتظهر في النص. أي حاجة جديدة بتتسعّر وتتعتمد قبل التنفيذ." data-en="No "extra costs" appearing mid-project. Anything new is quoted and approved before execution.">مفيش "تكاليف إضافية" بتظهر في النص. أي حاجة جديدة بتتسعّر وتتعتمد قبل التنفيذ.</p></div></div>
+          <div class="gitem"><span class="ico">🛠️</span><div><h4 data-ar="تعديلات قبل التسليم" data-en="Revisions before delivery">تعديلات قبل التسليم</h4><p data-ar="كل مرحلة ليها تعديلات مجانية متفق عليها — بتدفع على النتيجة، مش على عدد المراجعات." data-en="Each stage includes agreed free revisions — you pay for the outcome, not the number of rounds.">كل مرحلة ليها تعديلات مجانية متفق عليها — بتدفع على النتيجة، مش على عدد المراجعات.</p></div></div>
+          <div class="gitem"><span class="ico">📣</span><div><h4 data-ar="بسلمك ملكك" data-en="You own everything">بسلمك ملكك</h4><p data-ar="كل الحسابات والملفات والأنظمة بتتسلم باسمك وملكك أنت — مش بتتقفل عليك." data-en="All accounts, files and systems are handed over in your name — you're never locked in.">كل الحسابات والملفات والأنظمة بتتسلم باسمك وملكك أنت — مش بتتقفل عليك.</p></div></div>
+        </div>
+      </div>
+      <div class="gbox">
+        <h3 data-ar="وعد NUMUW الوحيد" data-en="The one NUMUW promise">وعد NUMUW الوحيد</h3>
+        <p data-ar="مش بوعدك "نتايج خيالية" ولا "أول موقع جوجل". بوعدك بحاجة واحدة ممكن أحققها فعلًا:" data-en="I don't promise "magical results" or "Google's #1 spot". I promise one thing I can actually deliver:">مش بوعدك "نتايج خيالية" ولا "أول موقع جوجل". بوعدك بحاجة واحدة ممكن أحققها فعلًا:</p>
+        <ul>
+          <li data-ar="شغل مكتمل، مظبوط، ومسلّم في وقته" data-en="Work that's complete, well-made, and delivered on time">شغل مكتمل، مظبوط، ومسلّم في وقته</li>
+          <li data-ar="أسعار معلنة ومحترمة من البداية للنهاية" data-en="Published, respected pricing from start to finish">أسعار معلنة ومحترمة من البداية للنهاية</li>
+          <li data-ar="نظام يفضل معاك حتى لو اتقطعت العلاقة" data-en="A system that stays with you even if we part ways">نظام يفضل معاك حتى لو اتقطعت العلاقة</li>
+          <li data-ar="صدق كامل في اللي يتعمل واللي مش هيتعمل" data-en="Complete honesty about what will and won't be done">صدق كامل في اللي يتعمل واللي مش هيتعمل</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="background:#fff">
+  <div class="container">
+    <div class="center">
+      <span class="kicker" data-ar="أسئلة صريحة" data-en="STRAIGHT ANSWERS">أسئلة صريحة</span>
+      <h2 data-ar="الأسئلة اللي بتتسأل فعلاً — بإجابات زي ما هي" data-en="The Questions Actually Asked — Answers As They Are">الأسئلة اللي بتتسأل فعلاً — بإجابات زي ما هي</h2>
+    </div>
+    <div class="faq">
+      <details open><summary data-ar="انت واحد لوحدك — مين هيشغل شغل الشغل ده كله؟" data-en="You're one person — who does all this work?">انت واحد لوحدك — مين هيشغل شغل الشغل ده كله؟</summary><p data-ar="صحيح أنا واحد، وأنا بعتبر دي ميزة مش عيب: أنا اللي بيحلل وبينفذ وبيسلم وبيتابع بعد التسليم — مفيش تسليم لغيري ولا "مش لي أنا دي". وبرضه بقبول عدد محدود من المشاريع في نفس الوقت عشان الجودة مبتتأثرش، وبتقول لأ لو السعة مليانة." data-en="True, I'm one person — and I treat that as a feature, not a flaw: I analyze, build, deliver, and support. Nothing is handed off, nothing is "not my job". I also accept a limited number of concurrent projects to protect quality, and I say no when capacity is full.">صحيح أنا واحد، وأنا بعتبر دي ميزة مش عيب: أنا اللي بيحلل وبينفذ وبيسلم وبيتابع بعد التسليم — مفيش تسليم لغيري ولا "مش لي أنا دي". وبرضه بقبل عدد محدود من المشاريع في نفس الوقت عشان الجودة مبتتأثرش، وبتقول لأ لو السعة مليانة.</p></details>
+      <details><summary data-ar="بتعمل إعلانات ممولة؟" data-en="Do you run paid ads?">بتعمل إعلانات ممولة؟</summary><p data-ar="لأ — ودي مش نقص في الخدمة، دي خطة. الإعلانات المدفوعة مصروف بيقف أثره لما الميزانية توقف. شغالي بناء أصول: موقع، ظهور في جوجل، أنظمة أتمتة — حاجات بتفضل شغالة ليك. ولو احتجت إعلانات، بأرشحلك حد تاني بيتقنها." data-en="No — and that's not a missing service, it's a strategy. Paid ads are an expense whose effect stops when the budget stops. My work builds assets: a website, Google visibility, automation systems — things that keep working for you. If you do need ads, I'll refer you to someone who does them well.">لأ — ودي مش نقص في الخدمة، دي خطة. الإعلانات المدفوعة مصروف بيقف أثره لما الميزانية توقف. شغالي بناء أصول: موقع، ظهور في جوجل، أنظمة أتمتة — حاجات بتفضل شغالة ليك. ولو احتجت إعلانات، بأرشحلك حد تاني بيتقنها.</p></details>
+      <details><summary data-ar="الأسعار دي نهائية؟" data-en="Are these prices final?">الأسعار دي نهائية؟</summary><p data-ar="النطاقات المعلنة نهائية في حدود السوق المصري 2026. رقمك النهائي بيتحدد بعد مكالمة التشخيص حسب حجم الشغل — وبنص عقد مكتوب بكل مسلمات وسعر. مفيش "زيادات مفاجئة"." data-en="The published ranges reflect the Egyptian market in 2026. Your exact number is set after the diagnosis call based on scope — fixed in a written contract with all deliverables and the price. No "surprise increases".">النطاقات المعلنة نهائية في حدود السوق المصري 2026. رقمك النهائي بيتحدد بعد مكالمة التشخيص حسب حجم الشغل — وبنص عقد مكتوب بكل مسلمات وسعر. مفيش "زيادات مفاجئة".</p></details>
+      <details><summary data-ar="مفيش أعمال سابقة أقدر أشوفها — ليه أثق فيك؟" data-en="No portfolio to see — why should I trust you?">مفيش أعمال سابقة أقدر أشوفها — ليه أثق فيك؟</summary><p data-ar="سؤال عادل. عشان كده أول مكالمة مجانية ومفيش أي دفع قبل ما توافق على خطة مكتوبة وسعر معروف. وشوف طريقة كلامي في المكالمة — لو حسيت مبالغة أو وعود غير منطقية، اعتبرها إشارة توقف. أنا مبسعيش على كلام كبير، بس على شغل بيتسلم." data-en="Fair question. That's why the first call is free and nothing is paid until you approve a written plan and price. And judge how I talk in the call — if you sense exaggeration or unrealistic promises, treat it as a stop sign. I don't live on big talk, but on delivered work.">سؤال عادل. عشان كده أول مكالمة مجانية ومفيش أي دفع قبل ما توافق على خطة مكتوبة وسعر معروف. وشوف طريقة كلامي في المكالمة — لو حسيت مبالغة أو وعود غير منطقية، اعتبرها إشارة توقف. أنا مبسعيش على كلام كبير، بس على شغل بيتسلم.</p></details>
+      <details><summary data-ar="بتشتغل مع مصانع فعلًا؟" data-en="Do you actually work with factories?">بتشتغل مع مصانع فعلًا؟</summary><p data-ar="أيوه — المصانع والشركات الصناعية من القطاعات اللي بأركز عليها، خاصة في التحوّل الرقمي وأتمتة العمليات (مخازن، فواتير، تقارير إنتاجية) لأنها أكتر ناس بتخسر من الشغل اليدوي. وأنا من مدينة السادات — منطقة صناعية أصلاً." data-en="Yes — factories and industrial companies are a focus sector, especially in digital transformation and process automation (inventory, invoicing, productivity reports) because they lose the most to manual work. And I'm based in Sadat City — an industrial zone itself.">أيوه — المصانع والشركات الصناعية من القطاعات اللي بأركز عليها، خاصة في التحوّل الرقمي وأتمتة العمليات (مخازن، فواتير، تقارير إنتاجية) لأنها أكتر ناس بتخسر من الشغل اليدوي. وأنا من مدينة السادات — منطقة صناعية أصلاً.</p></details>
+      <details><summary data-ar="لو بعد التسليم حصلت مشكلة؟" data-en="What if something breaks after delivery?">لو بعد التسليم حصلت مشكلة؟</summary><p data-ar="كل عقد بيتضمن فترة دعم متفق عليها (شهر لتسليم واحد، وشهرين لنظام النمو) — أي خلل بييجي من الشغل نفسه بيتصلح مجانًا. وبعدها بتقدر تاخد باقة صيانة شهرية أو تسيب النظام شغال معاك — لأنه ملكك." data-en="Every contract includes an agreed support period (one month for single deliverables, two for the Growth System) — any defect from the work itself is fixed free. After that you can take the monthly maintenance plan or leave the system running — it's yours.">كل عقد بيتضمن فترة دعم متفق عليها (شهر لتسليم واحد، وشهرين لنظام النمو) — أي خلل بييجي من الشغل نفسه بيتصلح مجانًا. وبعدها بتقدر تاخد باقة صيانة شهرية أو تسيب النظام شغال معاك — لأنه ملكك.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="container">
+    <h2 data-ar="أول خطوة مكالمة واحدة — ومجانية" data-en="The First Step Is One Call — and It's Free">أول خطوة مكالمة واحدة — ومجانية</h2>
+    <p class="sub" data-ar="30 دقيقة نتكلم فيها عن شغلك وسوقك ومشاكلك الحقيقية. في الآخر بتحصل على توصيات واضحة — تكمّل معايا أو لأ، الاتنين بأمانة وبدون ضغط." data-en="30 minutes talking about your business, your market, and your real problems. You end with clear recommendations — continue with me or not, either way with honesty and zero pressure.">30 دقيقة نتكلم فيها عن شغلك وضحلتك ومشاكلك الحقيقية. في الآخر بتحصل على توصيات واضحة — تكمّل معايا أو لأ، الاتنين بأمانة وبدون ضغط.</p>
+    <a class="btn btn-teal" style="padding:18px 42px;font-size:1.1rem" href="https://wa.me/201127788810" target="_blank" data-ar="احجز المكالمة على واتساب" data-en="Book the Call on WhatsApp">احجز المكالمة على واتساب</a>
+    <p class="meta"><a href="tel:01018541802" dir="ltr">01018541802</a> · <a href="https://wa.me/201127788810" dir="ltr">+20 112 778 8810</a><br><span data-ar="مواعيد العمل: السبت – الخميس · 10ص – 8م" data-en="Working hours: Sat – Thu · 10AM – 8PM">مواعيد العمل: السبت – الخميس · 10ص – 8م</span></p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <b>NUMUW — <span data-ar="استوديو النمو الرقمي · أحمد سعيد تركي" data-en="Digital Growth Studio · Ahmed Saeed Turki">استوديو النمو الرقمي · أحمد سعيد تركي</span></b><br>
+    <span data-ar="حضور رقمي · أتمتة وذكاء اصطناعي · لوحات أرقام · استشارات — مدينة السادات، مصر" data-en="Digital presence · AI & automation · Data dashboards · Consulting — Sadat City, Egypt">حضور رقمي · أتمتة وذكاء اصطناعي · لوحات أرقام · استشارات — مدينة السادات، مصر</span><br>
+    <span data-ar="© 2026 NUMUW" data-en="© 2026 NUMUW">© 2026 NUMUW</span>
+  </div>
+</footer>
+
+<script>
+  let lang = 'ar';
+  function applyLang(l){
+    document.documentElement.lang = l;
+    document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-ar]').forEach(function(el){
+      el.innerHTML = l === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
+    });
+    document.getElementById('langBtn').textContent = l === 'ar' ? 'EN' : 'عربي';
+  }
+  function toggleLang(){
+    lang = lang === 'ar' ? 'en' : 'ar';
+    applyLang(lang);
+  }
+</script>
+</body>
+</html>
