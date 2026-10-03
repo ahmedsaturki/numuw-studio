@@ -37,7 +37,9 @@ function renderEstimator(){
     }
     c.className = 'est-chip' + (estState[it.id] ? ' on' : '');
     c.setAttribute('aria-pressed', estState[it.id] ? 'true' : 'false');
-    c.innerHTML = (L ? it.ar : it.en) + '<small>' + it.min.toLocaleString('en') + '+</small>';
+    c.textContent = '';
+    c.appendChild(document.createTextNode(L ? it.ar : it.en));
+    const sm = document.createElement('small'); sm.textContent = it.min.toLocaleString('en') + '+'; c.appendChild(sm);
   });
   
   document.getElementById('estTotal').textContent = total.toLocaleString('en');
@@ -80,4 +82,14 @@ function toggleLang(){
   applyLang(lang);
 }
 
-renderEstimator();
+
+document.getElementById('langBtn').addEventListener('click', toggleLang);
+const menuBtn = document.getElementById('menuBtn'), topnav = document.getElementById('topnav');
+menuBtn.addEventListener('click', function(){
+  const open = topnav.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+});
+topnav.querySelectorAll('a').forEach(function(a){
+  a.addEventListener('click', function(){ topnav.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); });
+});
+applyLang('ar');
