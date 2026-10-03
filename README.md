@@ -90,8 +90,17 @@ are found; a non-zero exit means the harness itself failed (unreadable
 `sitemap.xml`, failed walk). Rule detail lives in
 `.autoresearch/engineering/numuw-site-quality/program.md`.
 
-`total_bytes` covers every file the walk reaches, so local binaries sitting in the
-repo root count toward it. It is a weight guardrail, not a page-weight metric.
+`total_bytes` counts every file the walk reaches, so it moves with untracked local
+artifacts. Three build PDFs in the repo root (`NUMUW-*.pdf`, 164,523 bytes) swing
+the metric from 464,502 to 629,025 with no tracked content changed at all. The
+harness cannot distinguish tracked files from scratch files, and the evaluator is
+deliberately not modified, so compare `total_bytes` only across runs with the same
+working tree. Use `html_bytes` for content-level weight — it is unaffected by
+non-HTML artifacts.
+
+`issues` and `html_bytes` are both stable properties of the committed site.
+`total_bytes` is a weight guardrail for this working tree, not a page-weight
+metric.
 
 ## Brand clearance
 
