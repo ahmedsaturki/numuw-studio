@@ -1,0 +1,2 @@
+autoresearch.sh text eol=lf
+bench/** text eol=lf
