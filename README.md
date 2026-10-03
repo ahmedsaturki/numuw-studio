@@ -68,3 +68,8 @@ The same audit runs in GitHub Actions on pushes and pull requests. It checks doc
 ## Premium hardening
 
 The latest `main` includes the current release-quality pass for metadata, accessibility, conversion guidance and static QA.
+
+
+## Legal & Trust
+
+The public system includes a Legal & Trust Center covering the current site's privacy notice and disclaimer. These pages are operational disclosures, not a substitute for legal review or a final contract.
