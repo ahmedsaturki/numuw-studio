@@ -63,3 +63,8 @@ Run the dependency-free audit locally with:
 `node scripts/numuw-static-audit.mjs`
 
 The same audit runs in GitHub Actions on pushes and pull requests. It checks document structure, metadata, JSON-LD validity, internal references, external-link safety, sitemap presence and the shared social image.
+
+
+## Premium hardening
+
+The `numuw-premium-hardening` branch carries the current release-quality pass for metadata, accessibility, conversion guidance and static QA.
