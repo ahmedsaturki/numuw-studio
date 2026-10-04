@@ -54,14 +54,20 @@ py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experime
 
 The v2 experiment uses combined metric: `issues * 1e6 + html_bytes` (lower is better).
 
-Harness emits:
+Harness emits (current values):
 - `METRIC issues=0`
-- `METRIC total_bytes=630510`
-- `METRIC html_bytes=204878`
-- `METRIC issues * 1e6 + html_bytes=204878`
+- `METRIC total_bytes=631651`
+- `METRIC html_bytes=330961`
+- `METRIC issues * 1e6 + html_bytes=330961`
 - `issues: 0`
 
-The autoresearch runner extracts the combined metric using grep pattern `^METRIC issues * 1e6 + html_bytes=` and delimiter `=`.
+The autoresearch runner extracts the combined metric using grep pattern `^METRIC issues * 1e6 + html_bytes=`. The runner strips the matched prefix before parsing the value, so a metric name that itself contains `=` is read correctly.
+
+### Discard Safety
+
+A non-improving attempt is reverted to the **anchor commit** — the newest commit recorded as `keep` in `results.tsv` — rather than unconditionally stepping one commit back. If the working tree has no attempt commit on top of the anchor, HEAD is left untouched.
+
+This matters because a blind `reset --hard HEAD~1` deletes real history whenever HEAD is an ordinary commit. Repeated bare runs previously walked the repository backwards commit by commit until the tracked experiment definition was gone, which surfaced as "no config.cfg" and "could not parse metric" failures.
 
 ### Constraints
 
