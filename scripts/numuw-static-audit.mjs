@@ -24,7 +24,7 @@ function attr(html, re) {
 }
 
 function attrsOfTag(tag) {
-  const body = tag.replace(/^<[a-z][^>]*?/i, "").replace(/>$/i, "");
+  const body = tag.replace(/^<[a-z][a-z0-9:-]*\s*/i, "").replace(/>$/i, "");
   const attrs = [];
   const re = /([^\s"'=<>/]+)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?/g;
   let match;
