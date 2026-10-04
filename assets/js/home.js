@@ -5,7 +5,7 @@
   var nav=document.getElementById('nav');
   function apply(l){
     lang=l; document.documentElement.lang=l; document.documentElement.dir=l==='ar'?'rtl':'ltr';
-    document.querySelectorAll('[data-ar]').forEach(function(el){el.innerHTML=l==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en')});
+    document.querySelectorAll('[data-ar]').forEach(function(el){el.textContent=l==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en')});
     langBtn.textContent=l==='ar'?'EN':'عربي';
     langBtn.setAttribute('aria-label',l==='ar'?'Switch to English':'التحويل للعربية');
     document.title=l==='ar'?'نُمو NUMUW — أنظمة نمو رقمية للشركات والمصانع في مصر':'NUMUW — Growth systems for Egyptian businesses';
