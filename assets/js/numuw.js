@@ -6,6 +6,7 @@
   var menu=document.querySelector('[data-menu]');
   var langButtons=document.querySelectorAll('[data-lang-btn]');
   var localized=document.querySelectorAll('[data-ar][data-en]');
+  var i18nMode=document.documentElement.getAttribute('data-i18n')||'none';
 
   function normalize(path){
     path=(path||'').replace(/\/+$/,'');
@@ -32,23 +33,13 @@
 
   function renderGlobalNav(){
     if(!nav)return;
-    var items=[
-      ['الرئيسية','Home',ROOT],
-      ['الحلول','Solutions',ROOT+'landing/'],
-      ['الأدوات','Tools',ROOT+'tools/'],
-      ['المنتجات','Products',ROOT+'products/'],
-      ['الشركة','Company',ROOT+'pages/'],
-      ['المصادر','Resources',ROOT+'resources/'],
-      ['التواصل','Contact',ROOT+'pages/contact/']
-    ];
     nav.id=nav.id||'primary-nav';
-    nav.setAttribute('aria-label','التنقل الرئيسي');
-    nav.innerHTML=items.map(function(item){
-      return '<a href="'+item[2]+'" data-ar="'+item[0]+'" data-en="'+item[1]+'">'+item[0]+'</a>';
-    }).join('');
+    nav.setAttribute('aria-label',lang==='ar'?'التنقل الرئيسي':'Primary navigation');
     var current=normalize(location.pathname);
     nav.querySelectorAll('a[href]').forEach(function(a){
-      var target=normalize(new URL(a.href,location.href).pathname);
+      var href=a.getAttribute('href')||'';
+      if(!href||href.charAt(0)==='#'||/^[a-z][a-z0-9+.-]*:/i.test(href))return;
+      var target=normalize(new URL(href,location.href).pathname);
       if(target===current)a.setAttribute('aria-current','page');
     });
   }
@@ -109,7 +100,7 @@
   function renderGlobalFooter(){
     var footer=document.querySelector('footer.footer');
     if(!footer)return;
-    footer.innerHTML='<div class="container footer-grid"><div><strong>NUMUW | نُمو</strong><span data-ar=" · استوديو أنظمة النمو · مصر" data-en=" · Growth Systems Studio · Egypt"> · استوديو أنظمة النمو · مصر</span></div><nav aria-label="روابط الموقع"><a href="'+ROOT+'landing/" data-ar="الحلول" data-en="Solutions">الحلول</a><a href="'+ROOT+'tools/" data-ar="الأدوات" data-en="Tools">الأدوات</a><a href="'+ROOT+'products/" data-ar="المنتجات" data-en="Products">المنتجات</a><a href="'+ROOT+'pages/" data-ar="الشركة" data-en="Company">الشركة</a><a href="'+ROOT+'resources/" data-ar="المصادر" data-en="Resources">المصادر</a><a href="'+ROOT+'legal/" data-ar="الثقة والقانون" data-en="Trust & Legal">الثقة والقانون</a><a href="'+ROOT+'pages/contact/" data-ar="التواصل" data-en="Contact">التواصل</a></nav><span>© <span data-year></span></span></div>';
+    footer.setAttribute('aria-label',lang==='ar'?'تذييل الموقع':'Site footer');
   }
 
   function applyLanguage(next){
@@ -117,7 +108,13 @@
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
     document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
+      el.innerHTML=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+    });
+    document.querySelectorAll('title[data-ar][data-en]').forEach(function(el){
       el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+    });
+    document.querySelectorAll('meta[data-ar][data-en]').forEach(function(el){
+      el.setAttribute('content',lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en'));
     });
     langButtons.forEach(function(b){
       b.textContent=lang==='ar'?'EN':'عربي';
@@ -130,7 +127,7 @@
   renderGlobalNav();
   renderBreadcrumbs();
   renderGlobalFooter();
-  applyLanguage(lang);
+  (i18nMode!=='full')&&applyLanguage('ar');
 
   (function ensureBreadcrumbSchema(){
     if(!main || normalize(location.pathname)===normalize(ROOT) || /\/404\.html$/i.test(location.pathname))return;
