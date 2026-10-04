@@ -62,7 +62,7 @@ R17 card-grid and live-region headings) still hold. Without it a rule could stop
 and the autoresearch loop would keep optimising against a number that no longer means what
 it claims.
 
-The separate `bench/site-quality.mjs` harness contains the deterministic R1–R17 autoresearch experiment. Its current state (commit `6b2344a`) is:
+The `bench/site-quality.mjs` file is the research benchmark used by the controlled optimization experiment. It is not, by itself, the production-release decision. Its current state (commit `6b2344a`) is:
 
 - `issues = 0` — all 52 pages pass R1–R17; this is the tracked objective, and it is at floor
 - `html_bytes = 335,458` — secondary byte-guard metric, not a tracked objective
@@ -104,3 +104,14 @@ Do not publish invented client logos, testimonials, awards, rankings, revenue, R
 ## Ownership
 
 The repository is public, but no open-source reuse license is granted by default. Brand, commercial content and visual assets remain the property of their respective owners unless separately licensed.
+
+
+## Canonical release gate
+
+Run the single release command before treating a source change as releasable:
+
+```bash
+node scripts/release-gate.mjs
+```
+
+This command runs the production static audit, the R1–R17 benchmark scanner, and its regression suite as one decision gate. Individual tools remain available for diagnosis, but the release command is the canonical entry point.
