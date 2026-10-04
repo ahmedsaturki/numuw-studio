@@ -169,9 +169,11 @@ the reported totals were wrong.
    previously suggested here (demoting all offending `h3` to `h2`) would have been
    wrong for the hero eyebrow labels, which is why the fixes took the form they did.
 2. **Byte optimization exhausted:** 0 bytes safe whitespace headroom; collapsing whitespace in `<script>`/`<style>` would break i18n statements (newline-separated strings).
-3. **R10 limited coverage:** Runtime JavaScript expressions (e.g., `href="${url}"`) cannot be statically verified; only literal string targets are checked.
-
+3. **Byte optimization exhausted:** 0 bytes safe whitespace headroom; collapsing whitespace in `<script>`/`<style>` would break i18n statements (newline-separated strings).
+4. **R10 limited coverage:** Runtime JavaScript expressions (e.g., `href="${url}"`) cannot be statically verified; only literal string targets are checked.
+5. **Weight constraint informational only:** The scanner reports `total_bytes` and `html_bytes` for informational monitoring, but does not enforce a hard constraint. The autoresearch loop optimizes `issues` alone; weight can increase without affecting the loop's decisions. The `issues * 1e6 + html_bytes` combined metric was documented as an optional guard but is not matched by the runner's `metric_grep: ^issues:`, so it is effectively unused.
 ---
+
 
 ## Verification
 
@@ -268,7 +270,7 @@ Line-by-line, and why each exists:
 | `METRIC issues=N` | human / plan contract | the tracked objective, per the plan's step 1 |
 | `METRIC total_bytes=N` | human / plan contract | secondary byte guard |
 | `METRIC html_bytes=N` | human / plan contract | secondary byte guard |
-| `METRIC issues * 1e6 + html_bytes=N` | optional combined guard | lexicographic score: any `issues` win outweighs any byte regression |
+| `METRIC issues * 1e6 + html_bytes=N` | **not used by runner** | never matched by `metric_grep: ^issues:`; kept as documentation of the original combined metric proposal; not part of the current autoresearch scope
 | `issues: N` | **required by the runner** | both segments use `metric_grep: ^issues:` |
 
 The plan specified "exactly three lines" on stdout. Two later additions are
