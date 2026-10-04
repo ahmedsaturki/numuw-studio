@@ -125,7 +125,7 @@ Canonical navigation labels:
 - المصادر / Resources
 - التواصل / Contact
 
-Breadcrumbs are a user-oriented hierarchy, not a blind copy of the URL. Google recommends representing a typical user path and allows the current page to be included or omitted. citeturn104579search7
+Breadcrumbs are a user-oriented hierarchy, not a blind copy of the URL. Google Search Central recommends representing a typical user path and allows the current page to be included or omitted. Source: Google Search Central, Breadcrumb structured data.
 
 Runtime JavaScript may enhance navigation and breadcrumbs, but it must not become the only representation of the site's information architecture without an explicit accessibility review.
 
@@ -201,7 +201,7 @@ Client credentials must stay in client-owned accounts and controlled transfer me
 
 ## 13. Content contract
 
-NUMUW content should primarily help a real reader make a better decision. Google recommends people-first content with original value, first-hand expertise, clear authorship/context and a satisfying answer to the user's purpose. citeturn104579search1turn104579search2
+NUMUW content should primarily help a real reader make a better decision. Google Search Central recommends people-first content with original value, first-hand expertise, clear authorship/context and a satisfying answer to the user's purpose. Source: Google Search Central, Helpful Content guidance.
 
 A new page requires a distinct decision value. Page count is never, by itself, a reason to create another route.
 
