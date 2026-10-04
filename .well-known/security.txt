@@ -1,0 +1,4 @@
+Contact: https://github.com/ahmedsaturki/numuw-studio/security/advisories/new
+Policy: https://github.com/ahmedsaturki/numuw-studio/blob/main/SECURITY.md
+Preferred-Languages: en, ar
+Expires: 2027-04-01T00:00:00Z
