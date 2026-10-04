@@ -11,6 +11,12 @@
     document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
       el.innerHTML=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
     });
+    document.querySelectorAll('meta[data-ar][data-en]').forEach(function(meta){
+      meta.setAttribute('content',lang==='ar'?meta.getAttribute('data-ar'):meta.getAttribute('data-en'));
+    });
+    document.querySelectorAll('title[data-ar][data-en]').forEach(function(title){
+      title.textContent=lang==='ar'?title.getAttribute('data-ar'):title.getAttribute('data-en');
+    });
     langButtons.forEach(function(b){
       b.textContent=lang==='ar'?'EN':'عربي';
       b.setAttribute('aria-label',lang==='ar'?'Switch to English':'التحويل للعربية');
