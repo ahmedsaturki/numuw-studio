@@ -88,42 +88,7 @@
 <section id="numuw-ecosystem" style="padding:82px 0;background:#fff"><div class="container"><div style="text-align:center"><span class="kicker" style="color:#0f9f92">NUMUW GROWTH HUB</span><h2>مش صفحة واحدة. دي منظومة كاملة.</h2><p class="sub" style="margin:0 auto">Landing Pages متخصصة + أدوات تفاعلية + منتجات + Company Profile + ملفات بيع وتشغيل.</p></div><div class="pgrid" style="margin-top:38px"><a class="pcard" href="landing/" style="text-decoration:none;color:inherit"><div class="ico">🎯</div><h3>Landing Pages</h3><p>صفحات مخصصة لكل خدمة وقطاع وعرض.</p></a><a class="pcard" href="tools/" style="text-decoration:none;color:inherit"><div class="ico">🧰</div><h3>Growth Tools</h3><p>تشخيص، تقدير، أتمتة، ROI، Roadmap.</p></a><a class="pcard" href="products/" style="text-decoration:none;color:inherit"><div class="ico">📦</div><h3>Products</h3><p>عروض Productized واضحة قابلة للبيع.</p></a><a class="pcard" href="documents/" style="text-decoration:none;color:inherit"><div class="ico">📄</div><h3>Business Library</h3><p>Company Profile، Capability، Proposal، وغيرها.</p></a><a class="pcard" href="pages/" style="text-decoration:none;color:inherit"><div class="ico">🏛️</div><h3>Company Center</h3><p>عن NUMUW، المنهج، الإثبات، الحالات، والتواصل.</p></a><a class="pcard" href="legal/" style="text-decoration:none;color:inherit"><div class="ico">⚖</div><h3>Legal & Trust</h3><p>Privacy، disclaimer، والمرجع التشغيلي قبل التعاقد.</p></a></div></div></section><section id="numuw-start" style="padding:68px 0;background:#f7f9fb"><div class="container"><div style="text-align:center"><span class="kicker" style="color:#0f9f92">START HERE</span><h2>مش عارف تبدأ منين؟ خليه سؤال مش حيرة.</h2><p class="sub" style="margin:0 auto">Solution Finder يوجّهك للمسار الأنسب، وBrief Builder يحوّل وضعك الحالي إلى رسالة مرتبة جاهزة للمراجعة والإرسال.</p></div><div class="pgrid" style="margin-top:30px"><a class="pcard" href="tools/solution-finder/" style="text-decoration:none;color:inherit"><div class="ico">🧭</div><h3>Solution Finder</h3><p>اختار نقطة البداية حسب المشكلة والهدف ودرجة الوضوح.</p></a><a class="pcard" href="tools/brief-builder/" style="text-decoration:none;color:inherit"><div class="ico">✍️</div><h3>Brief Builder</h3><p>اكتب أقل قدر من المعلومات، واحصل على Brief منظم لمحادثة أولى أفضل.</p></a><a class="pcard" href="tools/diagnostic/" style="text-decoration:none;color:inherit"><div class="ico">🧰</div><h3>Growth Diagnostic</h3><p>لما تكون محتاج تعرف أين أكبر فجوة قبل اتخاذ قرار التنفيذ.</p></a></div></div></section></main>
 <footer><div class="wrap"><strong>NUMUW | نُمو</strong> · <span data-ar="استوديو نمو رقمي · مدينة السادات، مصر" data-en="Digital Growth Studio · Sadat City, Egypt">استوديو نمو رقمي · مدينة السادات، مصر</span> · © 2026</div></footer>
 <a class="wa" href="https://wa.me/201127788810" target="_blank" rel="noopener" aria-label="WhatsApp" data-ar="واتساب · ابدأ" data-en="WhatsApp · Start">واتساب · ابدأ</a>
-<script>
-(function(){
-  var lang='ar';
-  var langBtn=document.getElementById('lang');
-  var menu=document.getElementById('menu');
-  var nav=document.getElementById('nav');
-  function apply(l){
-    lang=l; document.documentElement.lang=l; document.documentElement.dir=l==='ar'?'rtl':'ltr';
-    document.querySelectorAll('[data-ar]').forEach(function(el){el.innerHTML=l==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en')});
-    langBtn.textContent=l==='ar'?'EN':'عربي';
-    langBtn.setAttribute('aria-label',l==='ar'?'Switch to English':'التحويل للعربية');
-    document.title=l==='ar'?'نُمو NUMUW — أنظمة نمو رقمية للشركات والمصانع في مصر':'NUMUW — Growth systems for Egyptian businesses';
-  }
-  langBtn.addEventListener('click',function(){apply(lang==='ar'?'en':'ar')});
-  menu.addEventListener('click',function(){var open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open))});
-  document.querySelectorAll('.navlinks a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');menu.setAttribute('aria-expanded','false')})});
-  apply('ar');
-})();
-</script>
-<script>
-(function(){
-  function emit(name,detail){
-    try{window.dispatchEvent(new CustomEvent('numuw:'+name,{detail:detail||{}}))}catch(e){}
-    if(Array.isArray(window.dataLayer)){try{window.dataLayer.push({event:'numuw_'+name,...(detail||{})})}catch(e){}}
-  }
-  document.addEventListener('click',function(e){
-    var a=e.target.closest('a[href]');if(!a)return;
-    var href=a.getAttribute('href')||'',kind=null;
-    if(/^https:\/\/wa\.me\//i.test(href))kind='whatsapp';
-    else if(/^tel:/i.test(href))kind='phone';
-    else if(/tools\/diagnostic\//i.test(href))kind='diagnostic';
-    else if(/products\//i.test(href))kind='product';
-    else if(/tools\//i.test(href))kind='tool';
-    else if(/documents\//i.test(href))kind='document';
-    if(kind)emit('cta',{kind:kind,path:location.pathname});
-  });
-})();
-</script></body>
+
+<script src="assets/js/home.js" defer></script>
+</body>
 </html>
