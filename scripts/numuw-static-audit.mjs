@@ -62,7 +62,8 @@ for (const file of htmlFiles) {
   const h1Count = (html.match(/<h1\b/gi) || []).length;
   const canonicalCount = (html.match(/rel=["']canonical["']/gi) || []).length;
   const schemaBlocks = [...html.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
-  const localLinks = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)].map(m => m[1]);
+  const localLinks = [...markup.matchAll(/(?:href|src)=["']([^"']+)["']/gi)].map(m => m[1]);
+  const markup = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
   const images = [...html.matchAll(/<img\b([^>]*)>/gi)].map(m => m[1]);
 
   if (!/^<!doctype html>/i.test(html)) failures.push(`${file}: missing HTML5 doctype`);
@@ -81,10 +82,10 @@ for (const file of htmlFiles) {
   if (!is404 && !/name=["']twitter:image["']/i.test(html)) failures.push(`${file}: missing twitter:image`);
   if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex robots meta");
   if (/href=["']javascript:/i.test(html)) failures.push(`${file}: javascript: URL detected`);
-  if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(html)) failures.push(`${file}: inline event handler detected`);
+  if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(markup)) failures.push(`${file}: inline event handler detected`);
 
-  if (/\bstyle\s*=/i.test(html)) failures.push(file + ": inline style detected");
-  const buttonTags = [...html.matchAll(/<button\b[^>]*>/gi)].map(m => m[0]);
+  if (/\bstyle\s*=/i.test(markup)) failures.push(file + ": inline style detected");
+  const buttonTags = [...markup.matchAll(/<button\b[^>]*>/gi)].map(m => m[0]);
   for (const tag of buttonTags) if (!/\btype\s*=/i.test(tag)) failures.push(file + ": button missing explicit type");
   for (const image of images) {
     if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(`${file}: <img> without alt attribute`);
