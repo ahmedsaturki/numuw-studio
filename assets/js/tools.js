@@ -145,18 +145,27 @@
         'تحسين التجارة الإلكترونية':['تدقيق العرض والـUX','تحسين صفحات المنتجات','فحص checkout friction','قياس التحويل والاقتصاديات','Retention experiments']
       };
       var steps=plans[goal]||['تحديد ICP والعرض','Landing + lead capture','Follow-up + qualification','Measurement + optimization'];
+      var phases=[
+        {label:'Days 1-30',items:steps.slice(0,2)},
+        {label:'Days 31-60',items:steps.slice(2,4)},
+        {label:'Days 61-90',items:steps.slice(4,5)}
+      ];
       output.replaceChildren();
       var ol=document.createElement('ol');
-      steps.forEach(function(step,index){
+      phases.forEach(function(phase){
         var li=document.createElement('li');
         li.className='step-item';
-        var strong=textNode('strong','Days '+(index*18+1)+'-'+((index+1)*18));
-        li.appendChild(strong);
-        li.appendChild(document.createTextNode(' — '+step));
+        li.appendChild(textNode('strong',phase.label));
+        phase.items.forEach(function(item,index){
+          li.appendChild(document.createElement('br'));
+          li.appendChild(document.createTextNode((index+1)+'. '+item));
+        });
         ol.appendChild(li);
       });
       output.appendChild(ol);
-      output.appendChild(textNode('div','خطة أولية تحتاج baseline حقيقي قبل الالتزام بالتنفيذ.')).lastChild;
+      var notice=textNode('div','خطة أولية تحتاج baseline حقيقي قبل الالتزام بالتنفيذ.');
+      notice.className='notice mt-md';
+      output.appendChild(notice);
       emitTool('roadmap','complete');
     });
   }
