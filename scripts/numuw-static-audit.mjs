@@ -16,9 +16,20 @@ function walk(dir) {
 }
 function rel(file) { return path.relative(root, file).split(path.sep).join("/"); }
 function attr(html, re) { return (html.match(re)?.[1] ?? "").trim(); }
+
 function resolveLocalHref(sourcePath, href) {
   const clean = href.split("#")[0].split("?")[0];
-  if (!clean || clean.startsWith("/") || /^[a-z][a-z0-9+.-]*:/i.test(clean)) return null;
+  if (!clean || /^[a-z][a-z0-9+.-]*:/i.test(clean)) return null;
+
+  if (clean.startsWith("/")) {
+    if (!clean.startsWith("/numuw-studio/")) return null;
+    let absolute = clean.slice("/numuw-studio/".length);
+    if (!absolute) absolute = "index.html";
+    if (absolute.endsWith("/")) absolute += "index.html";
+    if (!path.posix.extname(absolute)) absolute += "/index.html";
+    return absolute;
+  }
+
   const sourceDir = path.posix.dirname("/" + sourcePath);
   let p = path.posix.normalize(path.posix.join(sourceDir, clean));
   if (p.startsWith("/")) p = p.slice(1);
@@ -35,6 +46,13 @@ const htmlFiles = walk(root)
   .filter(f => f.endsWith(".html"))
   .map(rel)
   .sort();
+
+const sitemap = fs.existsSync(path.join(root, "sitemap.xml"))
+  ? fs.readFileSync(path.join(root, "sitemap.xml"), "utf8")
+  : "";
+const robots = fs.existsSync(path.join(root, "robots.txt"))
+  ? fs.readFileSync(path.join(root, "robots.txt"), "utf8")
+  : "";
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
@@ -91,46 +109,27 @@ for (const file of htmlFiles) {
     const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
     const ogUrl = html.match(/<meta\s+property=["']og:url["']\s+content=["']([^"']+)["']/i)?.[1];
     if (canonical && ogUrl && canonical !== ogUrl) failures.push(`${file}: og:url does not match canonical`);
-
     if (!canonical || !canonical.startsWith(PUBLIC_ORIGIN)) {
       failures.push(`${file}: canonical is outside the configured Pages origin`);
-    } else if (!sitemapPlaceholder.test(canonical)) {
+    } else if (!sitemap.includes(`<loc>${canonical}</loc>`)) {
       failures.push(`${file}: canonical URL is missing from sitemap.xml`);
     }
   }
 }
 
-const sitemap = fs.existsSync(path.join(root, "sitemap.xml"))
-  ? fs.readFileSync(path.join(root, "sitemap.xml"), "utf8")
-  : "";
-const sitemapPlaceholder = /never-match-this-token/;
 if (!sitemap) failures.push("sitemap.xml: missing or empty");
 if (!sitemap.includes(PUBLIC_ORIGIN)) failures.push("sitemap.xml: canonical origin missing");
-
-const robots = fs.existsSync(path.join(root, "robots.txt"))
-  ? fs.readFileSync(path.join(root, "robots.txt"), "utf8")
-  : "";
 if (!/Sitemap:\s*https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/sitemap\.xml/i.test(robots)) {
   failures.push("robots.txt: expected sitemap declaration is missing");
 }
 if (!existsPublic("og-image.png")) failures.push("og-image.png: missing shared social image");
+
 if (!existsPublic(".well-known/security.txt")) failures.push(".well-known/security.txt: missing");
 else {
   const securityTxt = fs.readFileSync(path.join(root, ".well-known/security.txt"), "utf8");
   if (!/^Contact:\s*https:\/\//mi.test(securityTxt)) failures.push(".well-known/security.txt: missing HTTPS Contact");
   if (!/^Policy:\s*https:\/\//mi.test(securityTxt)) failures.push(".well-known/security.txt: missing HTTPS Policy");
   if (!/^Expires:\s*\d{4}-\d{2}-\d{2}T/mi.test(securityTxt)) failures.push(".well-known/security.txt: missing Expires");
-}
-
-const indexable = htmlFiles.filter(f => f !== "404.html");
-for (const file of indexable) {
-  const html = fs.readFileSync(path.join(root, file), "utf8");
-  const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
-  if (!canonical || (!/^https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/$/.test(canonical) && !canonical.startsWith(PUBLIC_ORIGIN))) {
-    failures.push(`${file}: canonical is outside the configured Pages origin`);
-    continue;
-  }
-  if (!sitemap.includes(`<loc>${canonical}</loc>`)) failures.push(`${file}: canonical URL is missing from sitemap.xml`);
 }
 
 for (const file of htmlFiles) {
