@@ -108,6 +108,28 @@
     a.setAttribute('rel',rel.join(' '));
   });
 
+  function emit(name, detail){
+    var payload={name:name,detail:detail||{}};
+    try{window.dispatchEvent(new CustomEvent('numuw:'+name,{detail:payload.detail}))}catch(e){}
+    if(Array.isArray(window.dataLayer)){
+      try{window.dataLayer.push({event:'numuw_'+name,...payload.detail})}catch(e){}
+    }
+  }
+
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href]');
+    if(!a)return;
+    var href=a.getAttribute('href')||'';
+    var kind=null;
+    if(/^https:\/\/wa\.me\//i.test(href)) kind='whatsapp';
+    else if(/^tel:/i.test(href)) kind='phone';
+    else if(/tools\/diagnostic\//i.test(href)) kind='diagnostic';
+    else if(/products\//i.test(href)) kind='product';
+    else if(/tools\//i.test(href)) kind='tool';
+    else if(/documents\//i.test(href)) kind='document';
+    if(kind) emit('cta',{kind:kind,path:location.pathname});
+  });
+
   document.querySelectorAll('[data-year]').forEach(function(e){
     e.textContent=new Date().getFullYear();
   });
