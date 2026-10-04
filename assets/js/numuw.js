@@ -81,14 +81,14 @@
     crumb.setAttribute('aria-label','مسار الصفحة');
     var list=document.createElement('ol');
     var home=document.createElement('li');
-    home.innerHTML='<a href="'+ROOT+'">الرئيسية</a>';
+    home.innerHTML='<a href="'+ROOT+'" data-ar="الرئيسية" data-en="Home">الرئيسية</a>';
     list.appendChild(home);
 
     var section=parts[0];
     var sectionLabel=labels[section]||section;
     var sectionUrl=ROOT+section+'/';
     var li=document.createElement('li');
-    li.innerHTML='<a href="'+sectionUrl+'">'+sectionLabel+'</a>';
+    li.innerHTML='<a href="'+sectionUrl+'" data-ar="'+sectionLabel+'" data-en="'+(sectionLabel==='الحلول'?'Solutions':sectionLabel==='الأدوات'?'Tools':sectionLabel==='المنتجات'?'Products':sectionLabel==='الشركة'?'Company':sectionLabel==='المصادر'?'Resources':sectionLabel==='الثقة والقانون'?'Trust & Legal':sectionLabel==='الهوية'?'Brand':sectionLabel)+'">'+sectionLabel+'</a>';
     list.appendChild(li);
 
     if(parts.length>1){
@@ -132,8 +132,21 @@
   renderGlobalFooter();
   applyLanguage(lang);
 
-  var brandSub=document.querySelector('.brand-sub');
-  if(brandSub)brandSub.textContent='استوديو أنظمة النمو';
+  (function ensureBreadcrumbSchema(){
+    if(!main || normalize(location.pathname)===normalize(ROOT) || /\/404\.html$/i.test(location.pathname))return;
+    var canonical=document.querySelector('link[rel="canonical"]');
+    var crumb=main.querySelector('.breadcrumbs');
+    if(!canonical || !crumb || document.querySelector('script[data-numuw-breadcrumb-schema]'))return;
+    var items=[].slice.call(crumb.querySelectorAll('ol > li')).map(function(li,i){
+      var a=li.querySelector('a');
+      return {'@type':'ListItem',position:i+1,name:li.textContent.trim(),item:a?a.href:canonical.href};
+    });
+    var script=document.createElement('script');
+    script.type='application/ld+json';
+    script.setAttribute('data-numuw-breadcrumb-schema','true');
+    script.textContent=JSON.stringify({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':items});
+    document.head.appendChild(script);
+  })();
 
   if(nav && menu){
     menu.setAttribute('type','button');
