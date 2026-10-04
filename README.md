@@ -49,11 +49,23 @@ node scripts/numuw-static-audit.mjs
 
 The current audit covers HTML structure, metadata, canonical URLs, JSON-LD parsing, links, social metadata, accessibility-related invariants, no-third-party runtime dependencies, sitemap integrity, the 404 contract and security.txt.
 
-The separate `bench/site-quality.mjs` harness contains the deterministic R1–R17 autoresearch experiment. Its current baseline is:
+The separate `bench/site-quality.mjs` harness contains the deterministic R1–R17 autoresearch experiment. Its current state (commit `6b2344a`) is:
 
-- `issues = 31` (all R17 heading-order violations)
-- `html_bytes = 335,030`
-- `combined = 31,335,030`
+- `issues = 0` — all 52 pages pass R1–R17; this is the tracked objective, and it is at floor
+- `html_bytes = 335,458` — secondary byte-guard metric, not a tracked objective
+- `total_bytes = 657,041` — secondary byte-guard metric, not a tracked objective
+- `combined = 335,458` (`issues × 1e6 + html_bytes`)
+
+Reaching the floor required both rule scoping and markup fixes for R17 (heading
+order): headings inside `<a class="card">` and inside `role="status"` / `aria-live`
+regions are deliberately exempt from R17 because they are correct markup, not
+outline defects — do not "fix" them back. The remaining genuine defects were
+resolved by converting hero eyebrow `h3`s to `<p class="panel-label">`, promoting
+the `tools/diagnostic` priorities subhead to `<h2 class="tool-subhead">`, and
+replacing the `tools/automation-finder` KPI `h3`s with `<b>` under a new
+`<h2 class="tool-subhead" id="kpiLabel">`. `assets/css/numuw.css` gained the
+`.panel-label`, `.tool-subhead` and `.kpi .card b` hooks in `6b2344a` (it is no
+longer frozen); each hook reproduces the previous `h3` rendering exactly.
 
 Those metrics evaluate the harness objective, not live user experience.
 
