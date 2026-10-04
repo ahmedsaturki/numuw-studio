@@ -376,6 +376,29 @@ reportDuplicates(titles, "R15", "<title>");
 reportDuplicates(descriptions, "R16", "meta description");
 
 // ---------------------------------------------------------------------------
+// R17 heading order
+// ---------------------------------------------------------------------------
+// A heading may drop at most one level below its predecessor (h2 -> h4 skips
+// h3, which breaks document-outline navigation). Jumping *up* any distance is
+// fine, and the first heading on a page may be any level.
+for (const rel of htmlFiles) {
+  const html = fs.readFileSync(path.join(ROOT, rel), "utf8");
+  const headings = [...html.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)].map((m) => ({
+    level: Number(m[1]),
+    text: truncate(m[2].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()),
+  }));
+  for (let i = 1; i < headings.length; i++) {
+    if (headings[i].level > headings[i - 1].level + 1) {
+      report(
+        rel,
+        "R17",
+        `heading level skips h${headings[i - 1].level} -> h${headings[i].level} at "${headings[i].text}"`
+      );
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Output
 // ---------------------------------------------------------------------------
 problems.sort();
