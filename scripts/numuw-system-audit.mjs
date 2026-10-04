@@ -21,8 +21,8 @@ function attrs(tag){
 }
 function cleanMarkup(h){
   return h
-    .replace(/<script\\b[\\s\\S]*?<\\/script>/gi,"")
-    .replace(/<style\\b[\\s\\S]*?<\\/style>/gi,"");
+    .replace(/<script\b[\s\S]*?<\/script>/gi,"")
+    .replace(/<style\b[\s\S]*?<\/style>/gi,"");
 }
 function tagList(h,name){return h.match(new RegExp("<"+name+"\\b[^>]*>","gi"))||[];}
 function route(file){return BASE+(file==="index.html"?"":file.replace(/\/index\.html$/,"/"));}
