@@ -116,6 +116,15 @@ for(const file of html){
     const a=attrs(c); if((a.type||"").toLowerCase()==="hidden") continue;
     if(!a.id) WARN.push(file+": form control without id");
   }
+  for(const b of tagList(h,"button")){
+    const a=attrs(b);
+    if(!a.type && /<form\\b/i.test(h)) WARN.push(file+": button in form without explicit type");
+    if(a["aria-controls"]){
+      for(const targetId of String(a["aria-controls"]).split(/\\s+/).filter(Boolean)){
+        if(!ids.has(targetId)) FAIL.push(file+": aria-controls target missing #"+targetId);
+      }
+    }
+  }
 
   const schemas=[...h.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
   if(!notFound&&schemas.length===0) FAIL.push(file+": JSON-LD missing");
@@ -154,6 +163,8 @@ for(const [k,v] of descSeen) if(k&&v.length>1) FAIL.push(v[0]+": duplicate descr
 
 const sitemap=fs.existsSync(path.join(ROOT,"sitemap.xml"))?fs.readFileSync(path.join(ROOT,"sitemap.xml"),"utf8"):"";
 const locs=[...sitemap.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/gi)].map(m=>m[1].trim());
+const uniqueLocs=new Set(locs);
+if(uniqueLocs.size!==locs.length) FAIL.push("sitemap contains duplicate <loc> entries");
 for(const p of pages) if(!locs.includes(route(p))) FAIL.push("sitemap missing "+route(p));
 for(const u of locs){
   if(!u.startsWith(BASE)) FAIL.push("sitemap non-canonical "+u);
@@ -161,6 +172,12 @@ for(const u of locs){
   if(!set.has(t)&&!set.has(rel)) FAIL.push("sitemap target missing "+u);
 }
 if(locs.some(u=>/\/404\.html$/i.test(u))) FAIL.push("sitemap lists 404");
+
+for(const file of files.filter(f=>f.endsWith(".css"))){
+  const css=fs.readFileSync(path.join(ROOT,file),"utf8");
+  if(/@import\s+(?:url\()?["']?https?:\/\//i.test(css)) FAIL.push(file+": remote CSS @import detected");
+  if(/url\(\s*["']?https?:\/\//i.test(css)) FAIL.push(file+": remote CSS asset dependency detected");
+}
 
 const robots=fs.existsSync(path.join(ROOT,"robots.txt"))?fs.readFileSync(path.join(ROOT,"robots.txt"),"utf8"):"";
 if(!/Sitemap:\s*https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/sitemap\.xml/i.test(robots)) FAIL.push("robots sitemap declaration missing");
