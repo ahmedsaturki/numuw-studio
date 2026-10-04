@@ -14,13 +14,12 @@ function walk(dir) {
     return entry.isDirectory() ? walk(full) : [full];
   });
 }
-function rel(file) { return path.relative(root, file).split(path.sep).join("/"); }
-function attr(html, re) { return (html.match(re)?.[1] ?? "").trim(); }
-
+function rel(file) {
+  return path.relative(root, file).split(path.sep).join("/");
+}
 function resolveLocalHref(sourcePath, href) {
   const clean = href.split("#")[0].split("?")[0];
   if (!clean || /^[a-z][a-z0-9+.-]*:/i.test(clean)) return null;
-
   if (clean.startsWith("/")) {
     if (!clean.startsWith("/numuw-studio/")) return null;
     let absolute = clean.slice("/numuw-studio/".length);
@@ -29,9 +28,7 @@ function resolveLocalHref(sourcePath, href) {
     if (!path.posix.extname(absolute)) absolute += "/index.html";
     return absolute;
   }
-
-  const sourceDir = path.posix.dirname("/" + sourcePath);
-  let p = path.posix.normalize(path.posix.join(sourceDir, clean));
+  let p = path.posix.normalize(path.posix.join(path.posix.dirname("/" + sourcePath), clean));
   if (p.startsWith("/")) p = p.slice(1);
   if (p.endsWith("/")) p += "index.html";
   if (!path.posix.extname(p)) {
@@ -40,89 +37,122 @@ function resolveLocalHref(sourcePath, href) {
   }
   return p;
 }
-function existsPublic(p) { return fs.existsSync(path.join(root, p)); }
+function existsPublic(p) {
+  return fs.existsSync(path.join(root, p));
+}
+function attr(html, re) {
+  return (html.match(re)?.[1] ?? "").trim();
+}
 
-const htmlFiles = walk(root)
-  .filter(f => f.endsWith(".html"))
-  .map(rel)
-  .sort();
-
-const sitemap = fs.existsSync(path.join(root, "sitemap.xml"))
-  ? fs.readFileSync(path.join(root, "sitemap.xml"), "utf8")
-  : "";
-const robots = fs.existsSync(path.join(root, "robots.txt"))
-  ? fs.readFileSync(path.join(root, "robots.txt"), "utf8")
-  : "";
+const htmlFiles = walk(root).filter(f => f.endsWith(".html")).map(rel).sort();
+const sitemap = existsPublic("sitemap.xml") ? fs.readFileSync(path.join(root, "sitemap.xml"), "utf8") : "";
+const robots = existsPublic("robots.txt") ? fs.readFileSync(path.join(root, "robots.txt"), "utf8") : "";
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
+  const structuralHtml = html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, "");
   const is404 = file === "404.html";
+  const isRoot = file === "index.html";
+  const isInner = !is404 && !isRoot;
+
   const titleCount = (html.match(/<title>/gi) || []).length;
   const descCount = (html.match(/<meta\s+name=["']description["']/gi) || []).length;
-  const h1Count = (html.match(/<h1\b/gi) || []).length;
+  const h1Count = (structuralHtml.match(/<h1\b/gi) || []).length;
   const canonicalCount = (html.match(/rel=["']canonical["']/gi) || []).length;
   const schemaBlocks = [...html.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
   const localLinks = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)].map(m => m[1]);
-  const images = [...html.matchAll(/<img\b([^>]*)>/gi)].map(m => m[1]);
+  const images = [...structuralHtml.matchAll(/<img\b([^>]*)>/gi)].map(m => m[1]);
+  const ids = [...structuralHtml.matchAll(/\bid=["']([^"']+)["']/gi)].map(m => m[1]);
+  const labelsFor = new Set([...structuralHtml.matchAll(/<label\b[^>]*\bfor=["']([^"']+)["']/gi)].map(m => m[1]));
 
-  if (!/^<!doctype html>/i.test(html)) failures.push(`${file}: missing HTML5 doctype`);
-  if (titleCount !== 1) failures.push(`${file}: expected exactly one <title>, found ${titleCount}`);
-  if (!is404 && descCount !== 1) failures.push(`${file}: expected exactly one meta description, found ${descCount}`);
-  if (!is404 && h1Count !== 1) failures.push(`${file}: expected exactly one <h1>, found ${h1Count}`);
-  if (!is404 && canonicalCount !== 1) failures.push(`${file}: expected exactly one canonical link, found ${canonicalCount}`);
-  if (!/<meta\s+name=["']viewport["']/i.test(html)) failures.push(`${file}: missing viewport meta`);
-  if (!/<html\b[^>]*lang=["'][a-z-]+["']/i.test(html)) failures.push(`${file}: missing html lang`);
-  if (!/<html\b[^>]*dir=["'](rtl|ltr)["']/i.test(html)) failures.push(`${file}: missing html dir`);
-  if (!/<main\b/i.test(html)) failures.push(`${file}: missing <main>`);
-  if (!is404 && !/property=["']og:title["']/i.test(html)) failures.push(`${file}: missing og:title`);
-  if (!is404 && !/property=["']og:image["']/i.test(html)) failures.push(`${file}: missing og:image`);
-  if (!is404 && !/property=["']og:url["']/i.test(html)) failures.push(`${file}: missing og:url`);
-  if (!is404 && !/name=["']twitter:card["']/i.test(html)) failures.push(`${file}: missing twitter:card`);
-  if (!is404 && !/name=["']twitter:image["']/i.test(html)) failures.push(`${file}: missing twitter:image`);
-  if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex robots meta");
-  if (/href=["']javascript:/i.test(html)) failures.push(`${file}: javascript: URL detected`);
-  if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(html)) failures.push(`${file}: inline event handler detected`);
+  if (!/^<!doctype html>/i.test(html)) failures.push(file + ": missing HTML5 doctype");
+  if (titleCount !== 1) failures.push(file + ": expected exactly one <title>, found " + titleCount);
+  if (!is404 && descCount !== 1) failures.push(file + ": expected exactly one meta description, found " + descCount);
+  if (!is404 && h1Count !== 1) failures.push(file + ": expected exactly one <h1>, found " + h1Count);
+  if (!is404 && canonicalCount !== 1) failures.push(file + ": expected exactly one canonical link, found " + canonicalCount);
+  if (!/meta\s+name=["']viewport["']/i.test(html)) failures.push(file + ": missing viewport meta");
+  if (!/<html\b[^>]*lang=["'][a-z-]+["']/i.test(html)) failures.push(file + ": missing html lang");
+  if (!/<html\b[^>]*dir=["'](rtl|ltr)["']/i.test(html)) failures.push(file + ": missing html dir");
+  if (!/<main\b/i.test(structuralHtml)) failures.push(file + ": missing <main>");
+  if (!is404 && !/property=["']og:title["']/i.test(html)) failures.push(file + ": missing og:title");
+  if (!is404 && !/property=["']og:image["']/i.test(html)) failures.push(file + ": missing og:image");
+  if (!is404 && !/property=["']og:url["']/i.test(html)) failures.push(file + ": missing og:url");
+  if (!is404 && !/name=["']twitter:card["']/i.test(html)) failures.push(file + ": missing twitter:card");
+  if (!is404 && !/name=["']twitter:image["']/i.test(html)) failures.push(file + ": missing twitter:image");
+  if (is404 && !/meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex robots meta");
+  if (/href=["']javascript:/i.test(html)) failures.push(file + ": javascript: URL detected");
+  if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(structuralHtml)) failures.push(file + ": inline event handler detected");
+
+  if (isInner && !/href=["'][^"']*assets\/css\/numuw\.css["']/i.test(html)) failures.push(file + ": inner page must load shared design-system CSS");
+  if (isInner && !/src=["'][^"']*assets\/js\/numuw\.js["']/i.test(html)) failures.push(file + ": inner page must load shared runtime JS");
+  if (!is404 && !/<header\b/i.test(structuralHtml)) failures.push(file + ": missing site header");
+  if (!is404 && !/<nav\b[^>]*class=["'][^"']*navlinks/i.test(structuralHtml)) failures.push(file + ": missing primary nav");
+  if (!is404 && !/<footer\b/i.test(structuralHtml)) failures.push(file + ": missing footer");
 
   for (const image of images) {
-    if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(`${file}: <img> without alt attribute`);
+    if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(file + ": <img> without alt attribute");
+  }
+
+  const duplicateIds = ids.filter((id, idx) => ids.indexOf(id) !== idx);
+  [...new Set(duplicateIds)].forEach(id => failures.push(file + ': duplicate id "' + id + '"'));
+
+  const headingTokens = [...structuralHtml.matchAll(/<\/?h([1-6])\b[^>]*>/gi)];
+  let openHeading = null;
+  for (const token of headingTokens) {
+    const level = Number(token[1]);
+    const closing = /^<\//.test(token[0]);
+    if (!closing) {
+      if (openHeading !== null) failures.push(file + ": nested heading h" + openHeading + " -> h" + level);
+      openHeading = level;
+    } else if (openHeading !== level) {
+      failures.push(file + ": mismatched heading close h" + level + " after " + (openHeading === null ? "none" : "h" + openHeading));
+      openHeading = null;
+    } else {
+      openHeading = null;
+    }
+  }
+  if (openHeading !== null) failures.push(file + ": unclosed heading h" + openHeading);
+
+  const controls = [...structuralHtml.matchAll(/<(input|select|textarea)\b([^>]*)>/gi)];
+  for (const control of controls) {
+    const tag = control[1].toLowerCase();
+    const attrs = control[2];
+    if (tag === "input" && /\btype=["'](?:hidden|submit|button|reset|image)["']/i.test(attrs)) continue;
+    const id = attrs.match(/\bid=["']([^"']+)["']/i)?.[1];
+    const accessible = /\baria-label=["'][^"']+["']/i.test(attrs) || /\baria-labelledby=["'][^"']+["']/i.test(attrs) || (id && labelsFor.has(id));
+    if (!accessible) failures.push(file + ": " + tag + " control lacks an accessible label");
   }
 
   for (const block of schemaBlocks) {
     try { JSON.parse(block); }
-    catch { failures.push(`${file}: invalid JSON-LD block`); }
+    catch { failures.push(file + ": invalid JSON-LD block"); }
   }
-  if (!is404 && schemaBlocks.length === 0) failures.push(`${file}: missing JSON-LD`);
+  if (!is404 && schemaBlocks.length === 0) failures.push(file + ": missing JSON-LD");
 
   for (const href of localLinks) {
     const target = resolveLocalHref(file, href);
-    if (target && !existsPublic(target)) failures.push(`${file}: broken local reference -> ${href}`);
+    if (target && !existsPublic(target)) failures.push(file + ": broken local reference -> " + href);
   }
 
-  const badBlankLinks = [...html.matchAll(/<a\b[^>]*target=["']_blank["'][^>]*>/gi)]
+  const badBlankLinks = [...structuralHtml.matchAll(/<a\b[^>]*target=["']_blank["'][^>]*>/gi)]
     .map(m => m[0])
     .filter(tag => !/rel=["'][^"']*noopener/i.test(tag));
-  if (badBlankLinks.length) failures.push(`${file}: target="_blank" link without rel="noopener"`);
+  if (badBlankLinks.length) failures.push(file + ': target="_blank" link without rel="noopener"');
 
   if (!is404) {
     const description = attr(html, /<meta\s+name=["']description["']\s+content=["']([^"']*)/i);
-    if (description.length < 50) warnings.push(`${file}: meta description is short (${description.length} chars)`);
-
+    if (description.length < 50) warnings.push(file + ": meta description is short (" + description.length + " chars)");
     const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
     const ogUrl = html.match(/<meta\s+property=["']og:url["']\s+content=["']([^"']+)["']/i)?.[1];
-    if (canonical && ogUrl && canonical !== ogUrl) failures.push(`${file}: og:url does not match canonical`);
-    if (!canonical || !canonical.startsWith(PUBLIC_ORIGIN)) {
-      failures.push(`${file}: canonical is outside the configured Pages origin`);
-    } else if (!sitemap.includes(`<loc>${canonical}</loc>`)) {
-      failures.push(`${file}: canonical URL is missing from sitemap.xml`);
-    }
+    if (canonical && ogUrl && canonical !== ogUrl) failures.push(file + ": og:url does not match canonical");
+    if (!canonical || !canonical.startsWith(PUBLIC_ORIGIN)) failures.push(file + ": canonical is outside configured Pages origin");
+    else if (!sitemap.includes("<loc>" + canonical + "</loc>")) failures.push(file + ": canonical URL is missing from sitemap.xml");
   }
 }
 
 if (!sitemap) failures.push("sitemap.xml: missing or empty");
 if (!sitemap.includes(PUBLIC_ORIGIN)) failures.push("sitemap.xml: canonical origin missing");
-if (!/Sitemap:\s*https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/sitemap\.xml/i.test(robots)) {
-  failures.push("robots.txt: expected sitemap declaration is missing");
-}
+if (!/Sitemap:\s*https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/sitemap\.xml/i.test(robots)) failures.push("robots.txt: expected sitemap declaration is missing");
 if (!existsPublic("og-image.png")) failures.push("og-image.png: missing shared social image");
 
 if (!existsPublic(".well-known/security.txt")) failures.push(".well-known/security.txt: missing");
@@ -159,15 +189,13 @@ for (const file of ["assets/css/numuw.css", "index.html"]) {
   if (teal && contrastRatio(teal, "#ffffff") < 4.5) failures.push(file + ": --teal fails 4.5:1 contrast against white");
 }
 const sharedCss = fs.readFileSync(path.join(root, "assets/css/numuw.css"), "utf8");
-if (!/:focus-visible\{[^}]*outline:2px solid var\(--navy\)[^}]*box-shadow:0 0 0 4px #fff/i.test(sharedCss)) {
-  warnings.push("assets/css/numuw.css: two-tone focus ring pattern not detected");
-}
+if (!/:focus-visible\{[^}]*outline:2px solid var\(--navy\)[^}]*box-shadow:0 0 0 4px #fff/i.test(sharedCss)) warnings.push("assets/css/numuw.css: two-tone focus ring pattern not detected");
 
-console.log(`NUMUW static audit: ${htmlFiles.length} HTML files checked`);
-console.log(`Failures: ${failures.length} | Warnings: ${warnings.length}`);
+console.log("NUMUW static audit: " + htmlFiles.length + " HTML files checked");
+console.log("Failures: " + failures.length + " | Warnings: " + warnings.length);
 for (const item of warnings) console.warn("WARN:", item);
 if (failures.length) {
   for (const item of failures) console.error("FAIL:", item);
   process.exit(1);
 }
-console.log("PASS: static structure, metadata, JSON-LD, links and release invariants are healthy.");
+console.log("PASS: static structure, metadata, IA shell, markup, JSON-LD, links and release invariants are healthy.");
