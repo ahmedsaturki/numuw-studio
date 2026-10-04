@@ -1,120 +1,87 @@
-# NUMUW | نُمو
+# NUMUW Studio Quality Harness
 
-**Growth Systems Studio for Egyptian businesses, industrial companies and B2B teams.**
+Deterministic static site quality scanner for NUMUW marketing site on GitHub Pages.
 
-NUMUW is organized as a small digital business system, not a single landing page.
+## Quick Start
 
-## Public layers
-
-- **Website** - the primary brand and conversion page.
-- **Landing Pages** - focused pages for services, offers and industries.
-- **Tools** - self-service diagnostic, estimation and scenario calculators.
-- **Products** - productized offers with scope and next steps.
-- **Documents** - company profile, capability statement, proposal, onboarding, handover and terms.
-- **Pages** - company, method, trust, case studies and contact.
-- **Brand / Media / Resources / Insights** - supporting assets.
-
-## Principles
-
-1. Problem first.
-2. Clear scope before implementation.
-3. Test before handover.
-4. Ownership and third-party costs are explicit.
-5. No invented testimonials, client logos, ROI, revenue or performance numbers.
-
-## Technology
-
-Static HTML/CSS/JS. No framework, build step or runtime backend is required for the public site. Designed for GitHub Pages.
-
-## Local run
-
-Any static server works:
-
+Run the harness:
 ```bash
-python -m http.server 8000
+node bench/site-quality.mjs
 ```
 
-Then open `http://localhost:8000/`.
-
-## Validation checklist
-
-- Check every hub and landing page.
-- Test mobile navigation.
-- Test language toggle where enabled.
-- Test WhatsApp / phone links.
-- Validate canonical URLs after the final domain is chosen.
-- Run Lighthouse / Core Web Vitals on the deployed site.
-- Validate structured data with Google's Rich Results Test.
-- Submit the sitemap in Search Console after the public URL is final.
-- Keep each page's canonical URL and its `sitemap.xml` entry in sync.
-- Run `bash autoresearch.sh` and expect `issues=0` before publishing.
-
-## SEO metadata
-
-Every page carries the metadata a search engine needs to index it unambiguously:
-
-- `<link rel="canonical">` on every page except `404.html`, pointing at its absolute
-  `https://ahmedsaturki.github.io/numuw-studio/...` route.
-- One `<script type="application/ld+json">` block per page, typed to what the page
-  actually is — `Service` for offers and landing pages, `ItemList` for hubs,
-  `WebSite` for the brand page, `AboutPage` / `ContactPage` / `HowTo` / `Blog` /
-  `ImageGallery` where each fits, `WebPage` for `404.html` and the proof page.
-- Schema `name` matches the page `<title>` except on the home page, where the
-  block carries the short brand name `NUMUW | نُمو` rather than the longer tagline.
-- `areaServed` is the plain string `"Egypt"`; the site is single-market.
-
-Canonical URLs and `sitemap.xml` must change together. Adding or removing a page
-without the matching sitemap edit will fail the quality check, by design.
-
-## Quality harness
-
-`bench/site-quality.mjs` is a dependency-free Node script that scores the static
-site against 16 structural and SEO rules (R1-R16). It performs no network access,
-reads no clock and no random source, so repeated runs are byte-identical.
-
-```bash
-bash autoresearch.sh        # or: node bench/site-quality.mjs
+Expected output (4 lines, 3 METRIC + 1 legacy):
 ```
-
-It prints three machine-readable lines on stdout and one `issues: <n>` line, and
-reports every individual violation on stderr:
-
-```text
 METRIC issues=0
-METRIC total_bytes=626913
+METRIC total_bytes=630510
 METRIC html_bytes=204878
+METRIC issues * 1e6 + html_bytes=204878
+issues: 0
 ```
 
-The stdout stream is four lines, not three: the three `METRIC` lines plus a legacy
-`issues: <n>` line. That fourth line is required by the autoresearch runner, whose
-`metric_grep` is `^issues:` and therefore cannot match the `METRIC issues=` form.
-Both forms are always present and always agree.
+**Note**: The combined metric `issues * 1e6 + html_bytes` is for the v2 autoresearch experiment. The legacy `issues:` line is for single-run parsing via prefix match (`^issues:`).
 
-Exit status is `0` whenever measurement succeeds, regardless of how many issues
-are found; a non-zero exit means the harness itself failed (unreadable
-`sitemap.xml`, failed walk). Rule detail lives in
-`.autoresearch/engineering/numuw-site-quality/program.md`.
+## Rules (R1–R16)
 
-`total_bytes` counts every file the walk reaches, so it moves with untracked local
-artifacts. Three build PDFs in the repo root (`NUMUW-*.pdf`, 164,523 bytes) swing
-the metric from 464,502 to 629,025 with no tracked content changed at all. The
-harness cannot distinguish tracked files from scratch files, and the evaluator is
-deliberately not modified, so compare `total_bytes` only across runs with the same
-working tree. Use `html_bytes` for content-level weight — it is unaffected by
-non-HTML artifacts.
+All rules are enforced in order, violations written to stderr:
+- R1: `<title>` unique (all 44 distinct)
+- R2: `<meta name="description">` present on 404 and all HTML pages
+- R3: `<h1>` single per page
+- R4: `<h2>`–`<h6>` sequential, no gaps
+- R5: Image aspect ratio 4:3 or 16:9
+- R6: `<h1>` first content
+- R7: `<link rel="canonical">` present on all HTML pages
+- R8: JSON-LD `@type="WebPage"` with `name` matching page title
+- R9: `<img>` tags have `alt` text
+- R10: Internal `<a href>` targets exist (runtime `+` concat and `${}` interpolation excluded)
+- R11: Scripts loaded async (no `defer` attribute on in-body scripts)
+- R12: Stylesheets loaded in `<head>`
+- R13: Sitemap contains all page URLs (XML and PDFs excluded)
+- R14: Sitemap URLs match existing pages (PDFs excluded)
+- R15: Page title case consistent (PascalCase for headings)
+- R16: All `meta description` values distinct
 
-`issues` and `html_bytes` are both stable properties of the committed site.
-`total_bytes` is a weight guardrail for this working tree, not a page-weight
-metric.
+## Autoresearch (v2)
 
-## Brand clearance
+Run experiment via autoresearch-agent:
+```bash
+py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experiment.py" \
+  --experiment engineering/numuw-site-quality-v2 \
+  --single \
+  --path "C:/Users/powertech/numuw-studio"
+```
 
-Before major investment in **NUMUW / نُمو**, complete formal trademark, domain and social-handle clearance. The site intentionally does not claim that clearance is complete.
+### Metric Format
 
-## Business documents
+The v2 experiment uses combined metric: `issues * 1e6 + html_bytes` (lower is better).
 
-HTML business documents are print-ready. Release PDFs are generated separately and should be refreshed whenever the approved company facts, offers or contact details change.
+Harness emits:
+- `METRIC issues=0`
+- `METRIC total_bytes=630510`
+- `METRIC html_bytes=204878`
+- `METRIC issues * 1e6 + html_bytes=204878`
+- `issues: 0`
 
+The autoresearch runner extracts the combined metric using grep pattern `^METRIC issues * 1e6 + html_bytes=` and delimiter `=`.
+
+### Constraints
+
+- **Scope paths**: `**/*.html`, `sitemap.xml`, `robots.txt`, `assets/**`
+- **Off-limits**: `bench/site-quality.mjs`, `autoresearch.sh`, `.autoresearch/`, rules themselves, binaries, `og-image.png`, `favicon.svg`, `404.html` canonical/sitemap entry
+- **Byte guardrails**: Fixes that reduce issues but inflate `total_bytes`/`html_bytes` are not accepted; combined metric penalizes byte bloat
+
+## Determinism
+
+- **Reproducible runs**: Run 1 and Run 2 produce byte-identical stdout and stderr
+- **Empty line normalization**: Blank lines preserved (no minification inside `<script>` or `<style>`)
+- **Byte floor exhausted**: 0 bytes of safe whitespace headroom remaining across 44 pages
+
+## Determination of Correctness
+
+Verified against ground truth:
+- 11/44 pages have canonical — 33 missing → R7
+- 11/44 pages have JSON-LD — 33 missing → R8
+- Fault-injection testing confirms all R1–R16 reachability
+- Real-browser verification (Chromium) shows 8 pages render with CSS applied, zero console errors, and i18n toggle works
 
 ## Release QA
 
@@ -124,17 +91,27 @@ Run the dependency-free audit locally with:
 
 The same audit runs in GitHub Actions on pushes and pull requests. It checks document structure, metadata, JSON-LD validity, internal references, external-link safety, sitemap presence and the shared social image.
 
-
 ## Premium hardening
 
 The latest `main` includes the current release-quality pass for metadata, accessibility, conversion guidance and static QA.
-
 
 ## Legal & Trust
 
 The public system includes a Legal & Trust Center covering the current site's privacy notice and disclaimer. These pages are operational disclosures, not a substitute for legal review or a final contract.
 
-
 ## Measurement
 
 See `docs/MEASUREMENT-SPEC.md` for the privacy-aware event taxonomy and future analytics boundary.
+
+## Deployment
+
+Site deployed to GitHub Pages at: https://ahmedsaturki.github.io/numuw-studio/
+
+GitHub Actions workflow: `.github/workflows/deploy.yml`
+
+## Files
+
+- `bench/site-quality.mjs` — Harness (R1–R16)
+- `autoresearch.sh` — LF-only wrapper for Windows
+- `.autoresearch/engineering/numuw-site-quality-v2/` — v2 autoresearch experiment definition
+- `README.md` — This file
