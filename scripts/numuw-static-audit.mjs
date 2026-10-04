@@ -210,7 +210,7 @@ if (!/:focus-visible\{[^}]*outline:2px solid var\(--navy\)[^}]*box-shadow:0 0 0 
 
 const sitemapLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
 const indexablePageCount = htmlFiles.filter(file => file !== "404.html" && !isNoIndex(fs.readFileSync(path.join(root, file), "utf8"))).length;
-const sitemapPageCount = sitemapLocs.filter(u => /\/numuw-studio\/(?!documents\/exports\/)[^?]+\/$/.test(u)).length;
+const sitemapPageCount = sitemapLocs.filter(u => u.startsWith(PUBLIC_ORIGIN) && !/\.pdf$/i.test(u)).length;
 if (sitemapLocs.length !== sitemapPageCount + sitemapLocs.filter(u => /\.pdf$/i.test(u)).length) {
   warnings.push("sitemap.xml: contains unexpected non-page/non-PDF locations");
 }
