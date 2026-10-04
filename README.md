@@ -94,6 +94,9 @@ See:
 - `docs/RELEASE-MANIFEST.md`
 - `docs/PERFORMANCE-BUDGET.md`
 - `docs/MEASUREMENT-SPEC.md`
+- `docs/SYSTEM-ARCHITECTURE-V2.md`
+- `docs/DESIGN-SYSTEM.md`
+- `docs/COMPETITIVE-BENCHMARK.md`
 - `docs/CONTENT-POLICY.md`
 - `SECURITY.md`
 
