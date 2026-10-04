@@ -20,3 +20,7 @@
 
 ## Scaling rule
 A new public page should reuse `assets/css/numuw.css` and `assets/js/numuw.js`, include canonical/description metadata, have a single primary CTA, be added to the sitemap, and add a distinct decision value rather than keyword-only duplication.
+
+
+## Measurement
+`docs/MEASUREMENT-SPEC.md` defines inert conversion events. No analytics vendor is required by the public site; any future consumer must be deliberate and privacy-reviewed.
