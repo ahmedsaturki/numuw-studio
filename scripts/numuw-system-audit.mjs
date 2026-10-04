@@ -16,8 +16,32 @@ function walk(dir){
 }
 function attrs(tag){
   const out={};
-  for(const m of tag.matchAll(/([A-Za-z_:][A-Za-z0-9_:.-]*)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)){
-    out[m[1].toLowerCase()]=m[2]!==undefined?m[2]:m[3];
+  let i=1;
+  const isNameChar=function(ch){return !!ch&&/[A-Za-z0-9_:.-]/.test(ch)};
+  const isSpace=function(ch){return !!ch&&/\s/.test(ch)};
+  while(i<tag.length&&tag[i]!==">"){
+    while(i<tag.length&&isSpace(tag[i])) i++;
+    if(i>=tag.length||tag[i]===">"||tag[i]==="/") break;
+    const start=i;
+    while(i<tag.length&&isNameChar(tag[i])) i++;
+    if(i===start){i++;continue}
+    const name=tag.slice(start,i).toLowerCase();
+    while(i<tag.length&&isSpace(tag[i])) i++;
+    if(tag[i]!=="="){while(i<tag.length&&tag[i]!==">"&&!isSpace(tag[i])) i++;continue}
+    i++;
+    while(i<tag.length&&isSpace(tag[i])) i++;
+    const quote=tag[i];
+    if(quote==="'"||quote==='"'){
+      i++;
+      const valueStart=i;
+      while(i<tag.length&&tag[i]!==quote) i++;
+      out[name]=tag.slice(valueStart,i);
+      if(i<tag.length) i++;
+    }else{
+      const valueStart=i;
+      while(i<tag.length&&tag[i]!==">"&&!isSpace(tag[i])) i++;
+      out[name]=tag.slice(valueStart,i);
+    }
   }
   return out;
 }
@@ -36,7 +60,7 @@ function target(file,ref,set){
   const resolved=new URL(raw,base);
   if(resolved.origin!==BASE_URL.origin) return null;
   const prefix=BASE_URL.pathname.endsWith("/")?BASE_URL.pathname.slice(0,-1):BASE_URL.pathname;
-  if(!resolved.pathname.startsWith(prefix)) return null;
+  if(resolved.pathname!==prefix&&!resolved.pathname.startsWith(prefix+"/")) return null;
   let p=resolved.pathname.slice(prefix.length).replace(/^\/+/,"");
   if(p==="") p="index.html";
   if(p.endsWith("/")) p+="index.html";
@@ -70,6 +94,11 @@ for(const file of html){
   const localizedPairs=(markup.match(/\bdata-ar=/gi)||[]).length;
   if(langControls.length && !localizedPage) FAIL.push(file+": language control present without data-localized-page=true");
   if(localizedPage && localizedPairs<4) FAIL.push(file+": localized page lacks enough localized content");
+  if(file==="index.html"){
+    const homeCss=fs.existsSync(path.join(ROOT,"assets/css/home.css"))?fs.readFileSync(path.join(ROOT,"assets/css/home.css"),"utf8"):"";
+    if(!homeCss.includes(".home-page .section-lead")) FAIL.push("assets/css/home.css: homepage section-lead contract missing");
+    if(markup.includes('class="wrap"')) FAIL.push("index.html: legacy wrap class remains; use shared container");
+  }
   if(!/^<!doctype html>/i.test(h)) FAIL.push(file+": missing doctype");
   if(titleTags.length!==1||!title) FAIL.push(file+": invalid title");
   if(!notFound&&desc.length!==1) FAIL.push(file+": description count");
@@ -113,7 +142,7 @@ for(const file of html){
   if(!notFound){
     const currentUrl=new URL(route(file));
     const expectedUrls=NAV.map(function(p){return new URL(p||"./",BASE).href;});
-    const navUrls=[...nav.matchAll(/<a\b[^>]*href=["']([^"']+)/gi)].map(function(m){try{return new URL(m[1],currentUrl).href;}catch{return null;}}).filter(Boolean);
+    const navUrls=tagList(nav,"a").map(function(a){try{return new URL(attrs(a).href||"",currentUrl).href;}catch{return null;}}).filter(Boolean);
     for(const e of expectedUrls) if(!navUrls.includes(e)) FAIL.push(file+": nav missing "+e);
     const header=h.match(/<header\b[\s\S]*?<\/header>/i)?.[0]||"";
     const headerUrls=tagList(header,"a").map(function(a){try{return new URL(attrs(a).href||"",currentUrl).href}catch{return null}}).filter(Boolean);
@@ -178,8 +207,8 @@ for(const file of html){
   }
 
   const plain=markup.toLowerCase();
-  const headingText=headings.map(x=>x.text);
-  const hasAny=terms=>terms.some(term=>headingText.some(x=>x.includes(term))||plain.includes(term));
+  const headingLabels=headingText.map(x=>x.text);
+  const hasAny=terms=>terms.some(term=>headingLabels.some(x=>x.includes(term))||plain.includes(term));
 
   if(file.startsWith("products/")&&file!=="products/index.html"){
     const req=[
@@ -193,6 +222,10 @@ for(const file of html){
     ];
     const missing=req.filter(([terms])=>!hasAny(terms)).map(([,label])=>label);
     if(missing.length) FAIL.push(file+": incomplete product contract ("+missing.join(", ")+")");
+  }
+
+  if(file.startsWith("documents/")&&file!=="documents/index.html"){
+    if(!/data-print|Print \/ Save PDF/i.test(markup)) WARN.push(file+": document has no print control");
   }
 
   if(file.startsWith("tools/")&&file!=="tools/index.html"){
