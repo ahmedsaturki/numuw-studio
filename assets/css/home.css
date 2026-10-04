@@ -1,4 +1,3 @@
-.home-page .wrap{width:min(var(--max),calc(100% - 36px));margin:auto}.home-page .section-lead{color:var(--muted);max-width:720px;margin:13px auto 0}
 .home-page{background:#f7f5ef}
 .home-page .home-hero{padding:92px 0 58px;position:relative;overflow:hidden;background:#f7f5ef}
 .home-page .home-hero:before{content:"";position:absolute;width:620px;height:620px;border-radius:50%;background:radial-gradient(circle,rgba(33,198,182,.14),transparent 67%);inset-inline-end:-240px;top:-270px}
