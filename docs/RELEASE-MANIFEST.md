@@ -19,6 +19,7 @@ Included:
 - Sitemap / robots / resilient 404
 - Dependency-free static audit + GitHub Actions gate
 - Explicit performance budget for third-party runtime dependencies
+- Cacheable homepage CSS/JS assets
 - Privacy-aware measurement specification with inert client-side hooks
 - Conversion, QA, architecture and content policy
 
