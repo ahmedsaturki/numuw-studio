@@ -21,6 +21,21 @@ The audit checks:
 - No inline print/event handler is required for the business-document templates.
 - `sitemap.xml` and the shared `og-image.png` exist.
 
+## Structural / system gate
+
+Before release, verify:
+
+- Root exposes the six global destinations: Solutions, Tools, Products, Proof, Company and Resources.
+- Inner pages load the shared design system and runtime.
+- Inner pages have a global header/nav/footer shell.
+- Human site map is present and included in sitemap.xml.
+- Headings open and close at matching levels.
+- IDs are unique per document.
+- User-input controls have accessible labels.
+- Inline event handlers are absent.
+- Product pages have distinct content rather than a repeated generic template.
+- Homepage reference prices match the product catalog.
+
 ## Conversion gate
 
 Before publishing commercial copy, verify:
