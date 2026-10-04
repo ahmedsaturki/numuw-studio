@@ -99,8 +99,19 @@ function routeUrl(rel) {
 }
 
 // Resolve a site-relative reference to a repo-relative file, or null.
+// A root-absolute reference (e.g. `/numuw-studio/assets/css/numuw.css`) is
+// resolved against the GitHub Pages base path, since the repo root is the
+// site root. Refs under a *different* root prefix are not ours to resolve.
 function resolveTarget(fromRel, ref) {
-  const joined = path.posix.join(path.posix.dirname(fromRel), ref);
+  const raw = decodeURIComponent(ref);
+  const basePath = new URL(BASE).pathname; // "/numuw-studio/"
+  let target = raw;
+  if (raw.startsWith("/")) {
+    if (!raw.startsWith(basePath)) return null;
+    target = raw.slice(basePath.length);
+  }
+  // The site root ("/numuw-studio/") maps to the repo root index.html.
+  const joined = target === "" ? "index.html" : path.posix.join(path.posix.dirname(fromRel), target);
   if (joined.startsWith("..")) return null;
   if (fileSet.has(joined)) return joined;
   const viaIndex = path.posix.join(joined, "index.html");
