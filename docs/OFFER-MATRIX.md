@@ -1,12 +1,12 @@
 # NUMUW Offer Matrix
 
-| Offer | Buyer problem | Entry condition | Core output | Expansion trigger |
-|---|---|---|---|---|
-| Diagnostic | We do not know the biggest bottleneck | uncertainty is high | baseline + priority + recommendation | clear bounded bottleneck |
-| Automation Sprint | One repeated workflow wastes time / creates errors | workflow is identifiable | mapped + built + tested workflow | multiple connected workflows |
-| Digital Kickoff | Digital foundation is weak | need a credible, owned starting layer | landing/site foundation + basic SEO/identity | conversion/ops bottlenecks emerge |
-| Growth System | Several layers fail together | dependencies are cross-functional | connected digital + process + measurement system | ongoing optimization required |
-| Growth Partner | Improvement is continuous | system exists and has measurable priorities | recurring improvement cycle | new strategic scope |
+| Offer | Buyer problem | Entry condition | Reference anchor | Core output | Expansion trigger |
+|---|---|---|---:|---|---|
+| Diagnostic | We do not know the biggest bottleneck | uncertainty is high | Free initial fit call; scoped diagnostic quoted separately | baseline + priority + recommendation | clear bounded bottleneck |
+| Digital Kickoff | Digital foundation is weak | need a credible, owned starting layer | From 7,900 EGP | landing/site foundation + basic SEO/identity | conversion/ops bottlenecks emerge |
+| Automation Sprint | One repeated workflow wastes time / creates errors | workflow is identifiable | From 8,000 EGP | mapped + built + tested workflow | multiple connected workflows |
+| Growth System | Several layers fail together | dependencies are cross-functional | From 24,900 EGP | connected digital + process + measurement system | ongoing optimization required |
+| Growth Partner | Improvement is continuous | system exists and has measurable priorities | From 6,500 EGP/month | recurring improvement cycle | new strategic scope |
 
 ## Productization contract
 
@@ -23,9 +23,10 @@ Every offer page must state:
 - support
 - next action
 
-## Pricing
+## Pricing truth
 
-Published prices are anchors only unless a signed scope says otherwise.
+Published anchors are reference starting points, not blanket quotes. The signed scope or proposal is the commercial authority.
+
 Third-party fees, ad spend, software, hosting and external services are separate unless explicitly included.
 
 ## Delivery principle

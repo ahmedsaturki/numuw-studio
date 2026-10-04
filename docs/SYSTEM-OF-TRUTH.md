@@ -10,6 +10,16 @@ This file defines the authoritative operating model for the public NUMUW system.
 
 Every major asset must strengthen at least one transition in this chain and must not silently break another.
 
+## Canonical commercial model
+
+The public product ladder is authoritative across Home, Solutions, Industries, Tools, Products and commercial documents:
+
+Diagnostic → Digital Kickoff → Automation Sprint → Growth System → Growth Partner
+
+The homepage may present the four execution offers plus Diagnostic as the low-commitment entry path, but must not invent substitute product names such as Presence.
+
+Reference pricing anchors are maintained only in docs/OFFER-MATRIX.md and must match product pages.
+
 ## Information architecture
 
 ### Primary navigation
