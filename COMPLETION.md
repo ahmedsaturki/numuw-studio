@@ -228,13 +228,34 @@ py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experime
 
 ### Output format
 
-Actual output at `6b2344a` — `total_bytes` varies with documentation edits; `issues` and `html_bytes` are stable. The tracked objective is `issues`; the byte metrics are guards only.
+Actual output at `6b2344a` — `total_bytes` varies with documentation edits; `issues`
+and `html_bytes` are stable. The tracked objective is `issues`; the byte metrics
+are guards only.
 ```
 METRIC issues=0
-METRIC total_bytes=657041
+METRIC total_bytes=656676
 METRIC html_bytes=335458
+METRIC issues * 1e6 + html_bytes=335458
 issues: 0
 ```
+
+Line-by-line, and why each exists:
+
+| Line | Consumer | Purpose |
+|------|----------|---------|
+| `METRIC issues=N` | human / plan contract | the tracked objective, per the plan's step 1 |
+| `METRIC total_bytes=N` | human / plan contract | secondary byte guard |
+| `METRIC html_bytes=N` | human / plan contract | secondary byte guard |
+| `METRIC issues * 1e6 + html_bytes=N` | optional combined guard | lexicographic score: any `issues` win outweighs any byte regression |
+| `issues: N` | **required by the runner** | both segments use `metric_grep: ^issues:` |
+
+The plan specified "exactly three lines" on stdout. Two later additions are
+load-bearing rather than vestigial, so they are kept and documented instead of
+removed: the `issues:` line is what `extract_metric` matches (see Technical
+Decisions §3), and the combined line encodes the "fixes cannot bloat the site"
+constraint the plan states as the goal for the secondary metrics. Neither can
+shadow the other — `^issues:` matches exactly one line, because the combined
+line begins with `METRIC`.
 
 ---
 
