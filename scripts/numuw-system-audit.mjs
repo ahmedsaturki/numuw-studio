@@ -148,7 +148,6 @@ for (const file of htmlFiles) {
   }
 
   const staticMarkup = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ");
-  const staticMarkup = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ");
   for (const name of ["input", "select", "textarea"]) {
     for (const tag of tags(staticMarkup, name)) {
       const type = attr(tag, "type").toLowerCase();
