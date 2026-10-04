@@ -83,6 +83,9 @@ for (const file of htmlFiles) {
   if (/href=["']javascript:/i.test(html)) failures.push(`${file}: javascript: URL detected`);
   if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(html)) failures.push(`${file}: inline event handler detected`);
 
+  if (/\bstyle\s*=/i.test(html)) failures.push(file + ": inline style detected");
+  const buttonTags = [...html.matchAll(/<button\b[^>]*>/gi)].map(m => m[0]);
+  for (const tag of buttonTags) if (!/\btype\s*=/i.test(tag)) failures.push(file + ": button missing explicit type");
   for (const image of images) {
     if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(`${file}: <img> without alt attribute`);
   }
