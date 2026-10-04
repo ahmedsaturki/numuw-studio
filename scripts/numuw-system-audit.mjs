@@ -21,15 +21,17 @@ function attrs(tag){
 }
 function tagList(h,name){return h.match(new RegExp("<"+name+"\\b[^>]*>","gi"))||[];}
 function route(file){return BASE+(file==="index.html"?"":file.replace(/\/index\.html$/,"/"));}
+const BASE_URL=new URL(BASE);
 function target(file,ref,set){
   const raw=ref.split("#")[0].split("?")[0];
   if(!raw || raw.startsWith("//") || /^[a-z][a-z0-9+.-]*:/i.test(raw)) return null;
-  let p=raw;
-  if(raw.startsWith("/")){
-    if(!raw.startsWith("/numuw-studio/")) return null;
-    p=raw.slice("/numuw-studio/".length);
-  }else p=path.posix.normalize(path.posix.join(path.posix.dirname(file),raw));
-  if(p==="."||p==="") p="index.html";
+  const base=new URL(route(file));
+  const resolved=new URL(raw,base);
+  if(resolved.origin!==BASE_URL.origin) return null;
+  const prefix=BASE_URL.pathname.endsWith("/")?BASE_URL.pathname.slice(0,-1):BASE_URL.pathname;
+  if(!resolved.pathname.startsWith(prefix)) return null;
+  let p=resolved.pathname.slice(prefix.length).replace(/^\/+/,"");
+  if(p==="") p="index.html";
   if(p.endsWith("/")) p+="index.html";
   if(!path.posix.extname(p) && set.has(p+"/index.html")) p+="/index.html";
   return p;
