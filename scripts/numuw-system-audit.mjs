@@ -16,7 +16,9 @@ function walk(dir){
 }
 function attrs(tag){
   const out={};
-  for(const m of tag.matchAll(/([A-Za-z_:][A-Za-z0-9_:.-]*)\s*=\s*["']([^"']*)["']/g)) out[m[1].toLowerCase()]=m[2];
+  for(const m of tag.matchAll(/([A-Za-z_:][A-Za-z0-9_:.-]*)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)){
+    out[m[1].toLowerCase()]=m[2]!==undefined?m[2]:m[3];
+  }
   return out;
 }
 function cleanMarkup(h){
@@ -63,6 +65,11 @@ for(const file of html){
   const links=tagList(markup,"a");
   const canonical=tagList(markup,"link").filter(t=>String(attrs(t).rel||"").toLowerCase().split(/\s+/).includes("canonical"));
   const htmlTag=markup.match(/<html\b[^>]*>/i)?.[0]||"";
+  const langControls=tagList(markup,"button").filter(t=>/\bdata-lang-btn\b/i.test(t));
+  const localizedPage=attrs(htmlTag)["data-localized-page"]==="true";
+  const localizedPairs=(markup.match(/\bdata-ar=/gi)||[]).length;
+  if(langControls.length && !localizedPage) FAIL.push(file+": language control present without data-localized-page=true");
+  if(localizedPage && localizedPairs<4) FAIL.push(file+": localized page lacks enough localized content");
   if(!/^<!doctype html>/i.test(h)) FAIL.push(file+": missing doctype");
   if(titleTags.length!==1||!title) FAIL.push(file+": invalid title");
   if(!notFound&&desc.length!==1) FAIL.push(file+": description count");
@@ -86,11 +93,20 @@ for(const file of html){
   }
 
   const ids=new Set();
-  for(const m of markup.matchAll(/\bid=["']([^"']+)["']/gi)){if(ids.has(m[1])) FAIL.push(file+": duplicate id="+m[1]);ids.add(m[1]);}
+  for(const tag of markup.match(/<[A-Za-z][^>]*>/g)||[]){
+    const id=attrs(tag).id;
+    if(!id) continue;
+    if(ids.has(id)) FAIL.push(file+": duplicate id="+id);
+    ids.add(id);
+  }
   for(const img of tagList(markup,"img")) if(!/\balt\s*=\s*["'][^"']*["']/i.test(img)) FAIL.push(file+": img alt missing");
   if(/<[^>]+\s+on[a-z]+\s*=/i.test(markup)) FAIL.push(file+": inline event handler");
   if(/<script\b[^>]*src=["']https?:\/\//i.test(h)) FAIL.push(file+": external script");
   if(/<link\b[^>]*rel=["'][^"']*stylesheet[^"']*["'][^>]*href=["']https?:\/\//i.test(h)) FAIL.push(file+": external stylesheet");
+
+  const skipIndex=markup.search(/<a\b[^>]*class=["'][^"']*\bskip\b[^"']*["'][^>]*>/i);
+  const headerIndex=markup.search(/<header\b/i);
+  if(skipIndex>=0&&headerIndex>=0&&skipIndex>headerIndex) FAIL.push(file+": skip link must precede header");
 
   const nav=markup.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/i)?.[0]||"";
   if(!notFound && !/data-nav|class=["'][^"']*navlinks/i.test(nav)) FAIL.push(file+": canonical nav missing");
@@ -99,8 +115,9 @@ for(const file of html){
     const expectedUrls=NAV.map(function(p){return new URL(p||"./",BASE).href;});
     const navUrls=[...nav.matchAll(/<a\b[^>]*href=["']([^"']+)/gi)].map(function(m){try{return new URL(m[1],currentUrl).href;}catch{return null;}}).filter(Boolean);
     for(const e of expectedUrls) if(!navUrls.includes(e)) FAIL.push(file+": nav missing "+e);
-    const expectedStart=new URL(file==="start/index.html"?"./":(file==="index.html"?"start/":"../".repeat(file.split("/").length-1)+"start/"),currentUrl).href;
-    if(!h.includes('href="'+(file==="index.html"?"start/":"../".repeat(file.split("/").length-1)+"start/")+'"') && file!=="start/index.html"){
+    const header=h.match(/<header\b[\s\S]*?<\/header>/i)?.[0]||"";
+    const headerUrls=tagList(header,"a").map(function(a){try{return new URL(attrs(a).href||"",currentUrl).href}catch{return null}}).filter(Boolean);
+    if(!headerUrls.includes(new URL(BASE+"start/").href) && file!=="start/index.html"){
       FAIL.push(file+": Start CTA missing from header");
     }
   }
@@ -109,11 +126,14 @@ for(const file of html){
     const aa=attrs(a);
     if((aa.target||"")==="_blank"&&!String(aa.rel||"").toLowerCase().split(/\s+/).includes("noopener")) FAIL.push(file+": _blank without noopener");
   }
-  for(const ref of [...markup.matchAll(/(?:href|src)=["']([^"']+)["']/gi)].map(m=>m[1])){
-    const t=target(file,ref,set);
-    if(t&&!set.has(t)) FAIL.push(file+": broken local reference -> "+ref);
-    if(ref.startsWith("#")&&ref.length>1&&!ids.has(ref.slice(1))) FAIL.push(file+": broken anchor "+ref);
-    if(t&&t!==file&&inbound.has(t)) inbound.set(t,inbound.get(t)+1);
+  for(const tag of markup.match(/<[A-Za-z][^>]*>/g)||[]){
+    const a=attrs(tag);
+    for(const ref of [a.href,a.src].filter(Boolean)){
+      const t=target(file,ref,set);
+      if(t&&!set.has(t)) FAIL.push(file+": broken local reference -> "+ref);
+      if(ref.startsWith("#")&&ref.length>1&&!ids.has(ref.slice(1))) FAIL.push(file+": broken anchor "+ref);
+      if(t&&t!==file&&inbound.has(t)) inbound.set(t,inbound.get(t)+1);
+    }
   }
 
   const controls=[...tagList(markup,"input"),...tagList(markup,"select"),...tagList(markup,"textarea")];
@@ -125,7 +145,7 @@ for(const file of html){
     const a=attrs(b);
     if(!a.type && /<form\b/i.test(markup)) FAIL.push(file+": button in form without explicit type");
     if(a["aria-controls"]){
-      for(const targetId of String(a["aria-controls"]).split(/\\s+/).filter(Boolean)){
+      for(const targetId of String(a["aria-controls"]).split(/\s+/).filter(Boolean)){
         if(!ids.has(targetId)) FAIL.push(file+": aria-controls target missing #"+targetId);
       }
     }
@@ -135,10 +155,26 @@ for(const file of html){
   if(!notFound&&schemas.length===0) FAIL.push(file+": JSON-LD missing");
   for(const s of schemas){try{JSON.parse(s[1]);}catch{FAIL.push(file+": invalid JSON-LD");}}
   
-  const headings=[...markup.matchAll(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi)]
+  const headingTokens=[...markup.matchAll(/<\/?h([1-6])\b[^>]*>/gi)];
+  const headings=[];
+  const headingStack=[];
+  for(const m of headingTokens){
+    const level=Number(m[1]);
+    const closing=m[0].startsWith("</");
+    if(closing){
+      const opened=headingStack.pop();
+      if(opened!==level) FAIL.push(file+": heading tag mismatch h"+(opened||"?")+" -> h"+level);
+    }else{
+      if(headingStack.length) FAIL.push(file+": nested heading h"+headingStack[headingStack.length-1]+" -> h"+level);
+      headings.push({level,text:""});
+      headingStack.push(level);
+    }
+  }
+  if(headingStack.length) FAIL.push(file+": unclosed heading h"+headingStack[headingStack.length-1]);
+  const headingText=[...markup.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)]
     .map(m=>({level:Number(m[1]),text:m[2].replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().toLowerCase()}));
-  for(let i=1;i<headings.length;i++){
-    if(headings[i].level-headings[i-1].level>1) FAIL.push(file+": heading level jump h"+headings[i-1].level+" -> h"+headings[i].level);
+  for(let i=1;i<headingText.length;i++){
+    if(headingText[i].level-headingText[i-1].level>1) FAIL.push(file+": heading level jump h"+headingText[i-1].level+" -> h"+headingText[i].level);
   }
 
   const plain=markup.toLowerCase();
