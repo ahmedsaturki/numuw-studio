@@ -130,6 +130,11 @@
     if(kind) emit('cta',{kind:kind,path:location.pathname});
   });
 
+  document.addEventListener('click',function(e){
+    var printButton=e.target.closest('[data-print]');
+    if(printButton){window.print();}
+  });
+
   document.querySelectorAll('[data-year]').forEach(function(e){
     e.textContent=new Date().getFullYear();
   });
