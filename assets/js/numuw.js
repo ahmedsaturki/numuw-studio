@@ -101,6 +101,14 @@
     }
   });
 
+  document.querySelectorAll('a[href^="https://wa.me/"]').forEach(function(a){
+    a.target='_blank';
+    var rel=(a.getAttribute('rel')||'').split(/\s+/).filter(Boolean);
+    if(rel.indexOf('noopener')<0)rel.push('noopener');
+    if(rel.indexOf('noreferrer')<0)rel.push('noreferrer');
+    a.setAttribute('rel',rel.join(' '));
+  });
+
   document.querySelectorAll('a[target="_blank"]').forEach(function(a){
     var rel=(a.getAttribute('rel')||'').split(/\s+/).filter(Boolean);
     if(rel.indexOf('noopener')<0)rel.push('noopener');
