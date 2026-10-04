@@ -117,6 +117,15 @@ function isExternal(raw) {
   return false;
 }
 
+// An href assembled by JavaScript, e.g. `href="'+url+'"` or `href="${url}"`.
+// The final value only exists at runtime, so R10 cannot resolve it statically.
+// Deliberately narrow: a literal `+` in a real path (`../a+b/`) is still a
+// link that must be checked.
+function isRuntimeExpression(raw) {
+  if (/^\s*'.*\+.*'\s*$/.test(raw)) return true;
+  return /\$\{[^}]*\}/.test(raw);
+}
+
 // ---------------------------------------------------------------------------
 // Minimal tag / attribute parsing
 // ---------------------------------------------------------------------------
@@ -279,7 +288,7 @@ for (const rel of htmlFiles) {
     const a = attrsOf(tag);
     if (!("href" in a)) continue;
     const raw = a.href.trim();
-    if (raw === "" || isExternal(raw)) continue;
+    if (raw === "" || isExternal(raw) || isRuntimeExpression(raw)) continue;
     if (raw.startsWith("#")) {
       const id = decodeURIComponent(raw.slice(1));
       if (id !== "" && !idSetHas(html, id)) report(rel, "R12", `href="${raw}" has no matching id in this page`);
@@ -333,6 +342,9 @@ for (const rel of htmlFiles) {
       report(SITEMAP, "R14", `loc has no matching page: ${url}`);
       continue;
     }
+    // A non-HTML asset (PDF, image, stylesheet, ...) has no HTML route but is
+    // still a resolvable, deployed sitemap target when the file exists.
+    if (fileSet.has(rest)) continue;
     report(SITEMAP, "R14", `loc has no matching page: ${url}`);
   }
 }
