@@ -2,12 +2,21 @@
 
 ## Goal
 
-Reduce `issues` (lower is better) across the NUMUW static site. (Weight is tracked for
-informational purposes; it is not enforced as a hard constraint.)
+Reduce `issues * 1e6 + html_bytes` (lower is better) across the NUMUW static site. `issues`
+is weighted a million times heavier than `html_bytes`, so the combined metric behaves like
+`issues` in practice while making any HTML growth visible as a regression.
 
 - primary: `issues`
 - secondary: `total_bytes`, `html_bytes`
-- combined: `issues * 1e6 + html_bytes`
+- combined (optimized): `issues * 1e6 + html_bytes`
+
+`total_bytes` is reported for information only; it is not part of the optimized metric.
+The loop reads exactly one metric per run, so the byte weights enter via the combined line.
+
+Note: `metric_grep` is a **literal prefix match**, not a regex. `run_experiment.py` does
+`line.strip().startswith(prefix)` after stripping `^` and a trailing `=` from the pattern.
+A backslash escape (`\*`) therefore does *not* match — the pattern must contain the bare
+characters, and must include the leading `METRIC ` to reach the metric line.
 
 ## Scope — read this first
 
@@ -101,10 +110,12 @@ rather than correcting it. Edit only the pages the scanner flags.
 bash autoresearch.sh        # exits 0; METRIC lines on stdout, violations on stderr
 ```
 
-The scanner reports `issues`, `total_bytes`, and `html_bytes`. The autoresearch runner
-only reads `issues` via `metric_grep: ^issues:`, so it optimizes `issues` alone. The
-byte metrics are informational guards: observe changes to them but do not attempt to
-enforce a weight constraint.
+The scanner emits four lines: `METRIC issues=`, `METRIC total_bytes=`, `METRIC html_bytes=`,
+and `METRIC issues * 1e6 + html_bytes=`, followed by the legacy `issues: <n>` form.
+
+The runner reads the combined line (`metric_grep: ^METRIC issues * 1e6 + html_bytes=`) and
+optimizes that. A run now reads `issues * 1e6 + html_bytes: 335458.000000`; any HTML growth
+shows up as a regression even though `issues` alone would still be 0.
 
 ## Baseline note
 
