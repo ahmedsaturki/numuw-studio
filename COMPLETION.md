@@ -336,8 +336,14 @@ PATH that defeats directory lookup, so `bash autoresearch.sh` failed outright. I
 - `C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/setup_experiment.py` — setup helper
 
 ### Experiment Definition
-- `.autoresearch/engineering/numuw-site-quality-v3/program.md` — rule definitions, constraints, baseline
-- `.autoresearch/engineering/numuw-site-quality/config.cfg` — R1–R16 segment (kept for reference; at floor)
+- `.autoresearch/engineering/numuw-site-quality-v3/` — the only segment. Holds `config.cfg`,
+  `program.md` (rule definitions, constraints, baseline), `results.tsv` and `run.log`.
+
+The earlier `numuw-site-quality` (R1–R16) segment has been removed. It was not a distinct
+target: both segments ran the identical `bash autoresearch.sh`, and R17 lives in that shared
+scanner, so "R1–R16 only" was never enforceable through `evaluate_cmd`. Its own history
+recorded two runs, both `no_improvement_0.0000_vs_0.0000`. Keeping it risked an agent
+burning a full 5-minute budget against a segment that could not improve.
 
 ### Documentation
 - `README.md` — usage, contract, notes
@@ -345,8 +351,8 @@ PATH that defeats directory lookup, so `bash autoresearch.sh` failed outright. I
 - `.gitattributes` — LF pinning
 
 ### Tracking
-- `.autoresearch/engineering/numuw-site-quality/results.tsv` — iteration history (R1–R16 segment)
-- `.autoresearch/engineering/numuw-site-quality-v3/results.tsv` — iteration history (R1–R17 segment); 4 rows, run #4 a KEEP at metric 0.0 (`6b2344a`)
+- `.autoresearch/engineering/numuw-site-quality-v3/results.tsv` — iteration history; 4 rows,
+  run #4 a KEEP at metric 0.0 (`6b2344a`)
 
 ---
 
