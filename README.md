@@ -38,6 +38,7 @@ The site is intentionally build-free. Pages are plain HTML, with shared assets u
 - `assets/` — shared and homepage CSS / JS
 - `scripts/numuw-static-audit.mjs` — release-time source audit
 - `.github/workflows/numuw-static-audit.yml` — CI quality gate
+- `bench/test-site-quality.mjs` — regression suite asserting every R1–R17 rule still fires
 
 ## Quality gate
 
@@ -48,6 +49,18 @@ node scripts/numuw-static-audit.mjs
 ```
 
 The current audit covers HTML structure, metadata, canonical URLs, JSON-LD parsing, links, social metadata, accessibility-related invariants, no-third-party runtime dependencies, sitemap integrity, the 404 contract and security.txt.
+
+The scanner's rule set is covered by its own regression suite, which also runs in CI:
+
+```bash
+node bench/test-site-quality.mjs
+```
+
+It builds throwaway site trees and asserts each of R1–R17 still fires on a violating
+fixture, and that the deliberate exemptions (404 canonical/sitemap, R9 empty `alt`,
+R17 card-grid and live-region headings) still hold. Without it a rule could stop reporting
+and the autoresearch loop would keep optimising against a number that no longer means what
+it claims.
 
 The separate `bench/site-quality.mjs` harness contains the deterministic R1–R17 autoresearch experiment. Its current state (commit `6b2344a`) is:
 

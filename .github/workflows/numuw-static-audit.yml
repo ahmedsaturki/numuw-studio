@@ -27,3 +27,5 @@ jobs:
           node-version: "20"
       - name: Run static audit
         run: node scripts/numuw-static-audit.mjs
+      - name: Run scanner rule regression suite
+        run: node bench/test-site-quality.mjs

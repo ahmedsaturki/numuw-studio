@@ -206,6 +206,28 @@ short-description WARNs); both GitHub workflows are green at `6b2344a`.
 node bench/site-quality.mjs
 ```
 
+### Test the scanner's rules
+```bash
+node bench/test-site-quality.mjs   # 35 tests; exit 0 on all-pass
+```
+
+Every rule R1–R17 has at least one test asserting it **fires** on a violating fixture,
+plus tests for the exemptions (R7/R13 on `404.html`, R9 empty `alt`, R10
+external/mailto/tel/anchor hrefs, R17 card-grid and live-region headings). The suite builds
+throwaway site trees in a temp directory and runs the real scanner in them, so it tests
+behaviour rather than source text.
+
+This matters because the scanner *is* the metric definition for an autoresearch loop. If a
+rule silently stops firing, the loop keeps running and starts making decisions on a number
+that no longer means what it claims, with no visible failure until the damage is committed.
+The suite runs in `.github/workflows/numuw-static-audit.yml`, so a rule regression fails CI.
+
+Validated by mutation: disabling R17's detection fails 3 tests; removing its live-region
+exemption fails 1. A suite that cannot fail is worthless.
+
+Fixtures live under `bench/`, which is in the scanner's `SKIP_DIRS`, so adding tests does
+not change `issues` or `html_bytes`.
+
 ### Run autoresearch iteration
 ```bash
 # Default (no changes, HEAD unchanged)
