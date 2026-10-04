@@ -231,20 +231,20 @@ not change `issues` or `html_bytes`.
 ### Run autoresearch iteration
 ```bash
 # Default (no changes, HEAD unchanged)
-py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experiment.py" \
+py -3 "<local-autoresearch-agent>/scripts/run_experiment.py" \
   --experiment engineering/numuw-site-quality-v3 \
-  --single --path "C:/Users/powertech/numuw-studio"
+  --single --path "<local-checkout>/numuw-studio"
 
 # Explicit attempt commit (rewinds to parent on discard)
-py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experiment.py" \
+py -3 "<local-autoresearch-agent>/scripts/run_experiment.py" \
   --experiment engineering/numuw-site-quality-v3 \
-  --single --path "C:/Users/powertech/numuw-studio" \
+  --single --path "<local-checkout>/numuw-studio" \
   --attempt-commit <hash>
 
 # Drop uncommitted edits (no HEAD move)
-py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experiment.py" \
+py -3 "<local-autoresearch-agent>/scripts/run_experiment.py" \
   --experiment engineering/numuw-site-quality-v3 \
-  --single --path "C:/Users/powertech/numuw-studio" \
+  --single --path "<local-checkout>/numuw-studio" \
   --attempt-dirty
 ```
 
@@ -332,7 +332,7 @@ PATH that defeats directory lookup, so `bash autoresearch.sh` failed outright. I
 - `autoresearch.sh` — LF-only runner; resolves `node` via a candidate list
 
 ### Autoresearch Agent
-- `C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experiment.py` — runner with explicit attempt semantics
+- `<local-autoresearch-agent>/scripts/run_experiment.py` — runner with explicit attempt semantics
 - `C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/setup_experiment.py` — setup helper
 
 ### Experiment Definition
