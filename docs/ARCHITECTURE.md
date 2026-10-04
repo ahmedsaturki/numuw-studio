@@ -1,26 +1,47 @@
 # NUMUW Architecture
 
+## System layers
+
+Brand → Acquisition → Diagnosis → Fit → Product → Scope → Delivery → Handover → Improvement
+
+`index.html` is the commercial entry point. `landing/` is acquisition. `tools/` is decision support. `products/` is commercial packaging. `documents/` is sales/delivery operations. `pages/` is company/proof. `legal/` is trust/privacy.
+
 ## Root
-`index.html` = brand / conversion home. Homepage-specific CSS and behavior live in `assets/css/home.css` and `assets/js/home.js` so the large surface can be cached independently.
+
+Homepage-specific CSS and behavior live in `assets/css/home.css` and `assets/js/home.js`.
 
 ## Landing system
-`landing/` contains focused service and industry acquisition pages. Every landing should have one audience, one core promise, one primary CTA and one clear next step.
+
+Every capability/vertical route must carry a distinct problem model, evidence expectation, scope logic and next action.
 
 ## Tools
-`tools/` contains browser-only tools with no external API dependency. Any numeric result is a self-reported scenario unless a page explicitly says otherwise. The current decision stack includes diagnostic, automation, ROI, estimation, roadmap, website readiness, solution finding and brief generation. Solution Finder routes intent to the right next step; Brief Builder turns qualified intent into a structured human-reviewed contact message.
+
+All eight tools use `assets/js/tools.js` so DOM safety, validation, interaction state and CTA construction are not duplicated across pages.
 
 ## Products
-`products/` contains productized offers. Product pages describe scope, audience, deliverables and commercial next step.
+
+All product routes use consistent fit, scope, price language, acceptance and handover principles.
 
 ## Business Library
-`documents/` contains HTML documents that can be printed or saved as PDF.
 
-## Proof
-`pages/proof/` and `pages/case-studies/` intentionally reserve space for real evidence. Do not populate them with fabricated proof.
+HTML is the editable source. Public PDFs are release copies and must be reviewed when commercial facts change.
 
-## Scaling rule
-A new public page should reuse `assets/css/numuw.css` and `assets/js/numuw.js`, include canonical/description metadata, have a single primary CTA, be added to the sitemap, and add a distinct decision value rather than keyword-only duplication.
+## Canonical documentation
 
+- `docs/MASTER-SYSTEM.md` — master product, architecture, design, conversion and release rules.
+- `docs/SITE-INVENTORY.md` — route-level source of truth.
+- `docs/COMMERCIAL-SOURCE-OF-TRUTH.md` — products, prices, brand and claims.
+- `docs/OPERATING-CADENCE.md` — recurring maintenance and publishing cadence.
 
-## Measurement
-`docs/MEASUREMENT-SPEC.md` defines inert conversion events. No analytics vendor is required by the public site; any future consumer must be deliberate and privacy-reviewed.
+## Quality layers
+
+Production release gate: `scripts/numuw-static-audit.mjs`.
+Research benchmark: `bench/site-quality.mjs`.
+Regression suite: `bench/test-site-quality.mjs`.
+Canonical command: `node scripts/release-gate.mjs`.
+
+Research metrics are not live-production proof.
+
+## Deployment
+
+GitHub Pages serves the static tree. Repository checks can prove source state and deployment-job status; live UX, field performance, external CTA behavior, indexing and formal legal approval require direct verification.
