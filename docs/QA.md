@@ -1,46 +1,83 @@
 # NUMUW QA Protocol
 
-## Static release gate
+## Gate A — route/system integrity
 
-The repository is intentionally build-free and GitHub Pages-compatible. Every public HTML route must pass the dependency-free audit:
+- Every indexable HTML route exists in `docs/SITE-MANIFEST.json`.
+- Every manifest entry has family, purpose, audience, primary action and next step.
+- No orphan manifest routes.
+- New pages must add distinct user value.
+
+## Gate B — static structure
+
+Run:
 
 `node scripts/numuw-static-audit.mjs`
 
-The audit checks:
+Checks include:
+- HTML5 structure
+- title / description / H1
+- language direction
+- canonical / OG / Twitter metadata
+- JSON-LD syntax
+- main landmark
+- local link and asset resolution
+- no javascript URLs
+- external blank-link hardening
+- image alt attributes
+- 404 noindex
+- sitemap/robots integrity
+- security.txt contract
+- no third-party script/style dependency
+- brand contrast
+- no inline HTML event handlers
+- route-manifest coverage
 
-- HTML5 doctype, viewport, title, description and one primary H1.
-- A canonical URL on every indexable HTML page; `404.html` remains `noindex`.
-- Open Graph title/image and Twitter summary metadata.
-- Parseable JSON-LD on public pages.
-- A real `<main>` landmark and Arabic RTL document language.
-- Internal relative links and asset references resolve to existing repository files.
-- No `javascript:` URLs.
-- External `_blank` links include `rel="noopener"`.
-- Images include an explicit `alt` attribute.
-- `security.txt` exposes a security-reporting contact and expiry.
-- No inline print/event handler is required for the business-document templates.
-- `sitemap.xml` and the shared `og-image.png` exist.
+## Gate C — regression harness
 
-## Conversion gate
+Run:
 
-Before publishing commercial copy, verify:
+`node bench/test-site-quality.mjs`
 
-1. One primary action is obvious.
-2. The first step is a diagnosis/fit check when scope is uncertain.
-3. Pricing is framed as a reference or written scope where final price depends on requirements.
-4. Claims are evidence-backed; no invented testimonials, logos, awards, rankings, revenue or ROI.
-5. Product pages explain fit, non-fit, delivery and the next action.
-6. Tools explain what they do not measure and route useful results toward the next step.
+This protects the deterministic R1–R17 experiment rules from silently losing their detection ability.
 
-## Live release gate
+## Gate D — commercial/content
 
-Still required outside the source-only environment:
+Before shipping:
+- one primary action is obvious
+- diagnosis/fit precedes uncertain scope
+- price is a reference or explicit written scope
+- claims are evidence-backed
+- product fit/non-fit is clear
+- tools explain limitations
+- proof is real and contextual
+- no page exists only for keyword coverage
 
-- GitHub Pages live build serves current `main`.
-- Browser/mobile UX review.
-- Lighthouse/Core Web Vitals.
-- WhatsApp and phone CTA verification.
-- Rich Results / structured-data validation.
-- Search Console sitemap submission and indexing review.
+## Gate E — delivery/commercial documents
 
-Do not mark these complete from source inspection alone.
+Confirm:
+- scope and exclusions
+- change control
+- milestones/payment terms
+- responsibilities/dependencies
+- ownership/licensing
+- acceptance criteria
+- support boundaries
+- secure credential handling
+- handover and sign-off
+
+## Gate F — live production
+
+Must be verified separately:
+- deployed URL serves the intended release commit
+- browser/mobile UX
+- keyboard/focus behavior on deployed pages
+- Lighthouse / Core Web Vitals
+- WhatsApp / phone CTAs
+- structured-data validation against deployed URLs
+- Search Console sitemap/indexing
+
+Do not close Gate F using source inspection alone.
+
+## Gate G — legal
+
+Legal Center is operational disclosure, not final legal advice. Formal legal review is required before treating terms/privacy/disclaimer language as final contractual or regulatory policy.
