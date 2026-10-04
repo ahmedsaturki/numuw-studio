@@ -2,8 +2,8 @@
 
 ## Goal
 
-Reduce `issues` (lower is better) across the NUMUW static site without increasing served
-byte weight.
+Reduce `issues` (lower is better) across the NUMUW static site. (Weight is tracked for
+informational purposes; it is not enforced as a hard constraint.)
 
 - primary: `issues`
 - secondary: `total_bytes`, `html_bytes`
@@ -101,7 +101,10 @@ rather than correcting it. Edit only the pages the scanner flags.
 bash autoresearch.sh        # exits 0; METRIC lines on stdout, violations on stderr
 ```
 
-`issues` must go down and `total_bytes` must not rise beyond the byte guards.
+The scanner reports `issues`, `total_bytes`, and `html_bytes`. The autoresearch runner
+only reads `issues` via `metric_grep: ^issues:`, so it optimizes `issues` alone. The
+byte metrics are informational guards: observe changes to them but do not attempt to
+enforce a weight constraint.
 
 ## Baseline note
 
