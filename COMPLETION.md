@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-A deterministic static site-quality scanner (R1–R16) and autoresearch runner v2 have been built for the NUMUW marketing site. The scanner measures SEO and structural issues across 44 pages; the autoresearch loop iteratively applies fixes while respecting byte-weight guards.
+A deterministic static site-quality scanner (R1–R16) and autoresearch runner v2 have been built for the NUMUW marketing site. The scanner measures SEO and structural issues across all 52 pages; the autoresearch loop iteratively applies fixes while respecting byte-weight guards.
 
 **Current State:**
 - `issues = 0` (floor; all R1–R16 rules passing)
@@ -64,25 +64,28 @@ A deterministic static site-quality scanner (R1–R16) and autoresearch runner v
 | `html_bytes` | 330,961 | Reliable content-weight metric |
 | `combined` | 330,961 | `issues × 1e6 + html_bytes` |
 
-**Rules Coverage (as of baseline):**
-- R1 `<title>`: 44/44 pages ✓
-- R2 `<meta description>`: 44/44 pages ✓
-- R3 `<html lang>`: 44/44 pages ✓
-- R4 `<meta charset>`: 44/44 pages ✓
-- R5 `<meta viewport>`: 44/44 pages ✓
-- R6 exactly one `<h1>`: 44/44 pages ✓
-- R7 canonical: 1/44 pages (32 violations)
-- R8 JSON-LD: 1/44 pages (33 violations)
-- R9 `<img alt>`: 44/44 pages ✓
+**Rules Coverage (all 52 pages, 0 violations):**
+- R1 `<title>`: 52/52 ✓
+- R2 `<meta description>`: 52/52 ✓
+- R3 `<html lang>`: 52/52 ✓
+- R4 `<meta charset>`: 52/52 ✓
+- R5 `<meta viewport>`: 52/52 ✓
+- R6 exactly one `<h1>`: 52/52 ✓
+- R7 canonical: 52/52 ✓
+- R8 JSON-LD: 52/52 ✓
+- R9 `<img alt>`: 52/52 ✓
 - R10 internal links: 0 broken ✓
 - R11 internal scripts: 0 broken ✓
 - R12 same-page anchors: 0 broken ✓
-- R13 sitemap: 43/44 pages ✓
-- R14 sitemap integrity: 0 bad entries ✓
+- R13 sitemap coverage: 52/52 pages listed ✓
+- R14 sitemap integrity: 54 `<loc>`, 0 bad entries ✓
 - R15 duplicate titles: 0 ✓
 - R16 duplicate descriptions: 0 ✓
 
-**Baseline violations:** 64 (R7×32 + R8×33)
+**Page count correction.** Early documentation of this project stated 44 pages.
+The tree contains **52** tracked HTML files; the 44 figure was never re-derived
+from `git ls-files '*.html'`. R1–R16 were always applied to the full set — only
+the reported totals were wrong.
 
 ---
 

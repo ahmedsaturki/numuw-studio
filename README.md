@@ -79,13 +79,13 @@ This matters because a blind `reset --hard HEAD~1` deletes real history whenever
 
 - **Reproducible runs**: Run 1 and Run 2 produce byte-identical stdout and stderr
 - **Empty line normalization**: Blank lines preserved (no minification inside `<script>` or `<style>`)
-- **Byte floor exhausted**: 0 bytes of safe whitespace headroom remaining across 44 pages
+- **Byte floor exhausted**: 0 bytes of safe whitespace headroom remaining across 52 pages
 
 ## Determination of Correctness
 
 Verified against ground truth:
-- 11/44 pages have canonical — 33 missing → R7
-- 11/44 pages have JSON-LD — 33 missing → R8
+- 52 pages total; canonical and JSON-LD were added across the whole set during Phase 1 (R7/R8 now 0 violations)
+- Sitemap lists 54 `<loc>` entries covering all 52 pages (R13/R14 pass)
 - Fault-injection testing confirms all R1–R16 reachability
 - Real-browser verification (Chromium) shows 8 pages render with CSS applied, zero console errors, and i18n toggle works
 
