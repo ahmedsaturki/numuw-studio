@@ -19,6 +19,11 @@ function attrs(tag){
   for(const m of tag.matchAll(/([A-Za-z_:][A-Za-z0-9_:.-]*)\s*=\s*["']([^"']*)["']/g)) out[m[1].toLowerCase()]=m[2];
   return out;
 }
+function cleanMarkup(h){
+  return h
+    .replace(/<script\\b[\\s\\S]*?<\\/script>/gi,"")
+    .replace(/<style\\b[\\s\\S]*?<\\/style>/gi,"");
+}
 function tagList(h,name){return h.match(new RegExp("<"+name+"\\b[^>]*>","gi"))||[];}
 function route(file){return BASE+(file==="index.html"?"":file.replace(/\/index\.html$/,"/"));}
 const BASE_URL=new URL(BASE);
@@ -50,13 +55,13 @@ const inbound=new Map(pages.map(f=>[f,0]));
 const titleSeen=new Map(),descSeen=new Map();
 
 for(const file of html){
-  const h=bodies.get(file), notFound=file==="404.html";
+  const h=bodies.get(file), markup=cleanMarkup(bodies.get(file)), notFound=file==="404.html";
   const titleTags=h.match(/<title\b[^>]*>[\s\S]*?<\/title>/gi)||[];
   const title=(titleTags[0]||"").replace(/<[^>]+>/g,"").trim();
-  const metas=tagList(h,"meta");
+  const metas=tagList(markup,"meta");
   const desc=metas.filter(t=>(attrs(t).name||"").toLowerCase()==="description");
-  const links=tagList(h,"a");
-  const canonical=tagList(h,"link").filter(t=>String(attrs(t).rel||"").toLowerCase().split(/\s+/).includes("canonical"));
+  const links=tagList(markup,"a");
+  const canonical=tagList(markup,"link").filter(t=>String(attrs(t).rel||"").toLowerCase().split(/\s+/).includes("canonical"));
   const htmlTag=h.match(/<html\b[^>]*>/i)?.[0]||"";
   if(!/^<!doctype html>/i.test(h)) FAIL.push(file+": missing doctype");
   if(titleTags.length!==1||!title) FAIL.push(file+": invalid title");
@@ -82,7 +87,7 @@ for(const file of html){
 
   const ids=new Set();
   for(const m of h.matchAll(/\bid=["']([^"']+)["']/gi)){if(ids.has(m[1])) FAIL.push(file+": duplicate id="+m[1]);ids.add(m[1]);}
-  for(const img of tagList(h,"img")) if(!/\balt\s*=\s*["'][^"']*["']/i.test(img)) FAIL.push(file+": img alt missing");
+  for(const img of tagList(markup,"img")) if(!/\balt\s*=\s*["'][^"']*["']/i.test(img)) FAIL.push(file+": img alt missing");
   if(/<[^>]+\s+on[a-z]+\s*=/i.test(h)) FAIL.push(file+": inline event handler");
   if(/<script\b[^>]*src=["']https?:\/\//i.test(h)) FAIL.push(file+": external script");
   if(/<link\b[^>]*rel=["'][^"']*stylesheet[^"']*["'][^>]*href=["']https?:\/\//i.test(h)) FAIL.push(file+": external stylesheet");
@@ -104,19 +109,19 @@ for(const file of html){
     const aa=attrs(a);
     if((aa.target||"")==="_blank"&&!String(aa.rel||"").toLowerCase().split(/\s+/).includes("noopener")) FAIL.push(file+": _blank without noopener");
   }
-  for(const ref of [...h.matchAll(/(?:href|src)=["']([^"']+)["']/gi)].map(m=>m[1])){
+  for(const ref of [...markup.matchAll(/(?:href|src)=["']([^"']+)["']/gi)].map(m=>m[1])){
     const t=target(file,ref,set);
     if(t&&!set.has(t)) FAIL.push(file+": broken local reference -> "+ref);
     if(ref.startsWith("#")&&ref.length>1&&!ids.has(ref.slice(1))) FAIL.push(file+": broken anchor "+ref);
     if(t&&t!==file&&inbound.has(t)) inbound.set(t,inbound.get(t)+1);
   }
 
-  const controls=[...tagList(h,"input"),...tagList(h,"select"),...tagList(h,"textarea")];
+  const controls=[...tagList(markup,"input"),...tagList(markup,"select"),...tagList(markup,"textarea")];
   for(const c of controls){
     const a=attrs(c); if((a.type||"").toLowerCase()==="hidden") continue;
     if(!a.id) WARN.push(file+": form control without id");
   }
-  for(const b of tagList(h,"button")){
+  for(const b of tagList(markup,"button")){
     const a=attrs(b);
     if(!a.type && /<form\\b/i.test(h)) WARN.push(file+": button in form without explicit type");
     if(a["aria-controls"]){
@@ -136,7 +141,7 @@ for(const file of html){
     if(headings[i].level-headings[i-1].level>1) FAIL.push(file+": heading level jump h"+headings[i-1].level+" -> h"+headings[i].level);
   }
 
-  const plain=h.toLowerCase();
+  const plain=markup.toLowerCase();
   const headingText=headings.map(x=>x.text);
   const hasAny=terms=>terms.some(term=>headingText.some(x=>x.includes(term))||plain.includes(term));
 
