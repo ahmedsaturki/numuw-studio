@@ -177,7 +177,7 @@ for (const file of htmlFiles) {
   const is404 = file === "404.html";
   const noindex = /<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
   const fullI18n = /<html\b[^>]*data-i18n=["']full["']/i.test(html);
-  const titleCount = (html.match(/<title>/gi) || []).length;
+  const titleCount = (html.match(/<title\b/gi) || []).length;
   const descriptionCount = (html.match(/<meta\s+name=["']description["']/gi) || []).length;
   const h1Count = (html.match(/<h1\b/gi) || []).length;
   const canonicalCount = (html.match(/<link\s+rel=["']canonical["']/gi) || []).length;
@@ -253,7 +253,7 @@ for (const file of htmlFiles) {
   }
 
   if (!is404) {
-    const title = attr(html, /<title>([\s\S]*?)<\/title>/i).replace(/\s+/g, " ").trim();
+    const title = attr(html, /<title\b[^>]*>([\s\S]*?)<\/title>/i).replace(/\s+/g, " ").trim();
     const description = attr(html, /<meta\s+name=["']description["']\s+content=["']([^"']*)/i);
     titleValues.set(file, title);
     descriptionValues.set(file, description);
