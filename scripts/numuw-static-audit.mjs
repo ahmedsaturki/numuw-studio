@@ -103,6 +103,13 @@ for (const file of indexable) {
   }
 }
 
+for (const file of htmlFiles) {
+  const html = fs.readFileSync(path.join(root, file), "utf8");
+  if (/<script\\b[^>]*src=["\']https?:\\/\\//i.test(html)) failures.push(file + ": external script dependency detected");
+  if (/<link\\b[^>]*rel=["\'][^"\']*stylesheet[^"\']*["\'][^>]*href=["\']https?:\\/\\//i.test(html)) failures.push(file + ": external stylesheet dependency detected");
+  if (/@import\\s+url\\((?:["\']?)https?:\\/\\//i.test(html)) failures.push(file + ": external CSS import detected");
+}
+
 console.log(`NUMUW static audit: ${htmlFiles.length} HTML files checked`);
 console.log(`Failures: ${failures.length} | Warnings: ${warnings.length}`);
 for (const item of warnings) console.warn("WARN:", item);
