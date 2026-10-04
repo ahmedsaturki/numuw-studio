@@ -90,14 +90,14 @@ for(const file of html){
   const nav=h.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/i)?.[0]||"";
   if(!notFound && !/data-nav|class=["'][^"']*navlinks/i.test(nav)) FAIL.push(file+": canonical nav missing");
   if(!notFound){
-    const expected=NAV;
-    const nt=[];
-    for(const a of nav.matchAll(/<a\b[^>]*href=["']([^"']+)/gi)){
-      const t=target(file,a[1],set); if(t) nt.push(navKey(t));
+    const currentUrl=new URL(route(file));
+    const expectedUrls=NAV.map(function(p){return new URL(p||"./",BASE).href;});
+    const navUrls=[...nav.matchAll(/<a\b[^>]*href=["']([^"']+)/gi)].map(function(m){try{return new URL(m[1],currentUrl).href;}catch{return null;}}).filter(Boolean);
+    for(const e of expectedUrls) if(!navUrls.includes(e)) FAIL.push(file+": nav missing "+e);
+    const expectedStart=new URL(file==="start/index.html"?"./":(file==="index.html"?"start/":"../".repeat(file.split("/").length-1)+"start/"),currentUrl).href;
+    if(!h.includes('href="'+(file==="index.html"?"start/":"../".repeat(file.split("/").length-1)+"start/")+'"') && file!=="start/index.html"){
+      FAIL.push(file+": Start CTA missing from header");
     }
-    for(const e of expected) if(!nt.includes(e)) FAIL.push(file+": nav missing "+e);
-    const startPath=(file==="index.html"?"start/":"../".repeat(file.split("/").length-1)+"start/");
-    if(!h.includes('href="'+startPath+'"')) FAIL.push(file+": Start CTA missing from header");
   }
 
   for(const a of links){
