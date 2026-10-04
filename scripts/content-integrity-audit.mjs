@@ -3,9 +3,10 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { EXPECTED_HTML_COUNT, EXPECTED_INDEXABLE_HTML_COUNT, LANDING_ROUTES, TOOL_ROUTES, PRODUCT_ROUTES, PDF_EXPORTS, PUBLIC_BASE } from "./site-manifest.mjs";
 
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
-const BASE="https://ahmedsaturki.github.io/numuw-studio/";
+const BASE=PUBLIC_BASE;
 const failures=[];
 
 function walk(dir){
@@ -21,12 +22,12 @@ const files=walk(ROOT).map(rel).sort();
 const html=files.filter(function(f){return f.endsWith(".html")});
 const indexable=html.filter(function(f){return f!=="404.html"});
 
-if(html.length!==52) failures.push("expected 52 tracked HTML files, found "+html.length);
-if(indexable.length!==51) failures.push("expected 51 indexable HTML files, found "+indexable.length);
+if(html.length!==EXPECTED_HTML_COUNT) failures.push("expected "+EXPECTED_HTML_COUNT+" tracked HTML files, found "+html.length);
+if(indexable.length!==EXPECTED_INDEXABLE_HTML_COUNT) failures.push("expected "+EXPECTED_INDEXABLE_HTML_COUNT+" indexable HTML files, found "+indexable.length);
 
-const toolRoutes=["automation-finder","brief-builder","diagnostic","estimator","roadmap","roi-calculator","solution-finder","website-readiness"];
-const productRoutes=["automation-sprint","diagnostic","digital-kickoff","growth-partner","growth-system"];
-const landingRoutes=["ai","automation","b2b","brand","ecommerce","growth-partner","manufacturing","real-estate","seo-local","website"];
+const toolRoutes=TOOL_ROUTES;
+const productRoutes=PRODUCT_ROUTES;
+const landingRoutes=LANDING_ROUTES;
 
 function routeFile(prefix,route){return prefix+"/"+route+"/index.html"}
 
@@ -100,11 +101,7 @@ for(const f of sourceTextFiles){
 
 const sitemap=fs.readFileSync(path.join(ROOT,"sitemap.xml"),"utf8");
 if((sitemap.match(/<loc>/g)||[]).length!==54) failures.push("sitemap: expected 54 loc entries");
-for(const pdf of [
-  "documents/exports/NUMUW-Company-Profile.pdf",
-  "documents/exports/NUMUW-Capability-Statement.pdf",
-  "documents/exports/NUMUW-Service-Catalog.pdf"
-]){
+for(const pdf of PDF_EXPORTS){
   if(!sitemap.includes(BASE+pdf)) failures.push("sitemap: missing "+pdf);
 }
 
