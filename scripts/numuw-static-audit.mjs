@@ -134,6 +134,7 @@ function resolveLocalHref(sourcePath, href) {
   const sourceDir = path.posix.dirname("/" + sourcePath);
   let p = path.posix.normalize(path.posix.join(sourceDir, clean));
   if (p.startsWith("/")) p = p.slice(1);
+  if (!p) p = "index.html";
   if (p.endsWith("/")) p += "index.html";
   if (!path.posix.extname(p)) {
     if (fs.existsSync(path.join(root, p))) return p;
