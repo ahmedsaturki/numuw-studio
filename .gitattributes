@@ -1,2 +1,10 @@
-autoresearch.sh text eol=lf
-bench/** text eol=lf
+* text=auto eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.md text eol=lf
+*.xml text eol=lf
+*.svg text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
