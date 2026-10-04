@@ -1,5 +1,5 @@
 (function(){
-  var ROOT='/numuw-studio/';
+  var ROOT=(function(){var marker='/numuw-studio/';var i=location.pathname.indexOf(marker);return i>=0?location.pathname.slice(0,i)+marker:'/';})();
   var lang=document.documentElement.lang==='en'?'en':'ar';
   var main=document.querySelector('main');
   var nav=document.querySelector('[data-nav]');
