@@ -1,4 +1,4 @@
-name: NUMUW Static Audit
+name: NUMUW Release Gate
 
 on:
   push:
@@ -25,7 +25,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Run static audit
-        run: node scripts/numuw-static-audit.mjs
-      - name: Run scanner rule regression suite
-        run: node bench/test-site-quality.mjs
+      - name: Run canonical release gate
+        run: node scripts/release-gate.mjs
