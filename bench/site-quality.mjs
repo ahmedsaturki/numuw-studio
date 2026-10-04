@@ -385,17 +385,20 @@ for (const rel of htmlFiles) {
   const html = fs.readFileSync(path.join(ROOT, rel), "utf8");
   // Two constructs are excluded, because they are not section headings and a
   // level skip there is not an outline defect:
-  //   1. Headings inside a card link (<a class="card">) - these label the
-  //      items of a list-like grid, and sit under whatever h2 names the grid.
+  //   1. Headings inside a card link (<a class="card"> / "pcard") - these label
+  //      the items of a list-like grid, and sit under whatever h2 names it.
+  //      Only those two grid classes are exempt; a heading inside a prose
+  //      anchor is still checked.
   //   2. Headings inside a live region (role="status" / aria-live) - these are
   //      script-written KPI values, not prose, and their level is not a
   //      document-structure decision.
   const headings = [...html.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)]
     .filter((m) => {
-      const before = html.slice(0, m.index);
       if (/\brole="status"|\baria-live=/.test(m[0])) return false;
+      const before = html.slice(0, m.index);
       const lastOpen = before.lastIndexOf("<a ");
-      return lastOpen <= before.lastIndexOf("</a>");
+      if (lastOpen <= before.lastIndexOf("</a>")) return true;
+      return !/\bclass="[^"]*\b(?:card|pcard)\b[^"]*"/.test(before.slice(lastOpen, before.indexOf(">", lastOpen)));
     })
     .map((m) => ({
       level: Number(m[1]),
