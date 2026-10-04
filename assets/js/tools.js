@@ -69,6 +69,7 @@
     }
     items.forEach(function(item){
       var button=node("button","card tool-choice");
+      button.type="button";
       button.type="button";button.setAttribute("aria-pressed","false");
       button.appendChild(node("div","icon","＋"));
       button.appendChild(node("h3","",item.name));
