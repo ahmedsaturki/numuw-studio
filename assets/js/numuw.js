@@ -1,6 +1,7 @@
 (function(){
   var lang=document.documentElement.lang==='en'?'en':'ar';
   var localized=document.querySelectorAll('[data-ar][data-en]');
+  var i18nMode=document.documentElement.getAttribute('data-i18n')||'none';
   var langButtons=document.querySelectorAll('[data-lang-btn]');
 
   function applyLang(next){
@@ -8,7 +9,7 @@
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
     document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
-      el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+      el.innerHTML=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
     });
     langButtons.forEach(function(b){
       b.textContent=lang==='ar'?'EN':'عربي';
@@ -54,7 +55,7 @@
   }
 
   /* Do not advertise a bilingual switch on pages that are not actually localized. */
-  if(localized.length<4){
+  if(i18nMode!=='full'){
     langButtons.forEach(function(b){b.hidden=true});
   }else{
     var saved;
