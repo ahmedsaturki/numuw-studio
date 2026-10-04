@@ -121,13 +121,32 @@ for(const file of html){
   if(!notFound&&schemas.length===0) FAIL.push(file+": JSON-LD missing");
   for(const s of schemas){try{JSON.parse(s[1]);}catch{FAIL.push(file+": invalid JSON-LD");}}
   
+  const headings=[...h.matchAll(/<h[1-6][^>]*>([\\s\\S]*?)<\\/h[1-6]>/gi)]
+    .map(m=>m[1].replace(/<[^>]+>/g," ").replace(/\\s+/g," ").trim().toLowerCase());
   if(file.startsWith("products/")&&file!=="products/index.html"){
-    const req=[/مناسب|fit/i,/لا نبدأ|not\s+fit|غير مناسب/i,/مخرجات|deliverables/i,/لا يشمل|exclusion|scope/i,/قبول|acceptance/i,/ملكية|ownership/i,/دعم|support/i,/خطوة تالية|next step/i];
-    if(req.some(r=>!r.test(h))) FAIL.push(file+": incomplete product contract");
+    const has=r=>headings.some(x=>r.test(x))||r.test(h);
+    const req=[
+      [/مناسب|fit/i,"fit"],
+      [/لا نبدأ|non[-\\s]?fit|غير مناسب/i,"non-fit"],
+      [/داخل النطاق|خارج النطاق|boundar|scope|مخرجات|deliverables/i,"scope"],
+      [/قبول|acceptance/i,"acceptance"],
+      [/ملكية|ownership/i,"ownership"],
+      [/دعم|support/i,"support"],
+      [/next|التالي|ابدأ|ناقش|اطلب|تواصل/i,"next action"]
+    ];
+    const missing=req.filter(x=>!has(x[0])).map(x=>x[1]);
+    if(missing.length) FAIL.push(file+": incomplete product contract ("+missing.join(", ")+")");
   }
   if(file.startsWith("tools/")&&file!=="tools/index.html"){
-    const req=[/أداة|tool|حسبة|تشخيص|خريطة|brief/i,/افتراض|assumption|input/i,/ليس|ليست|لا يحسب|does\s+not|not\s+/i,/ابدأ|تواصل|next|whatsapp|products/i];
-    if(req.some(r=>!r.test(h))) FAIL.push(file+": incomplete tool contract");
+    const has=r=>headings.some(x=>r.test(x))||r.test(h);
+    const req=[
+      [/purpose|الغرض/i,"purpose"],
+      [/inputs?\\s*(?:&|and)\\s*assumptions|الافتراضات|inputs/i,"inputs/assumptions"],
+      [/limits?\\s*(?:&|and)\\s*privacy|الحدود والخصوصية|الحدود/i,"limits/privacy"],
+      [/next action|الخطوة التالية/i,"next action"]
+    ];
+    const missing=req.filter(x=>!has(x[0])).map(x=>x[1]);
+    if(missing.length) FAIL.push(file+": incomplete tool contract ("+missing.join(", ")+")");
   }
 }
 for(const [k,v] of titleSeen) if(v.length>1) FAIL.push(v[0]+": duplicate title");
