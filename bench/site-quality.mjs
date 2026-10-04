@@ -364,6 +364,63 @@ function reportDuplicates(map, rule, label) {
 reportDuplicates(titles, "R15", "<title>");
 reportDuplicates(descriptions, "R16", "meta description");
 
+// R17: H2-H6 usage (not excessive - max 6 H2s per page)
+for (const rel of htmlFiles) {
+  const html = fs.readFileSync(path.join(ROOT, rel), "utf8");
+  const h2s = (html.match(/<h2\b[^>]*>/gi) ?? []).length;
+  
+  if (h2s > 6) {
+    report(rel, "R17", `Too many H2 headings (${h2s}); max 6 recommended per page`);
+  }
+}
+
+// R18: Semantic HTML elements (header, main, footer, section)
+for (const rel of htmlFiles) {
+  const html = fs.readFileSync(path.join(ROOT, rel), "utf8");
+  const hasHeader = /<header\b[^>]*>/i.test(html);
+  const hasMain = /<main\b[^>]*>/i.test(html);
+  const hasFooter = /<footer\b[^>]*>/i.test(html);
+  const hasSection = /<section\b[^>]*>/i.test(html);
+  
+  if (!hasHeader && !hasMain && !hasFooter && !hasSection) {
+    report(rel, "R18", "Missing semantic elements (header, main, footer, or section)");
+  }
+}
+
+// R19: Meta robots tag (important for SEO)
+for (const rel of htmlFiles) {
+  const html = fs.readFileSync(path.join(ROOT, rel), "utf8");
+  const hasRobots = /<meta\s+name=["']robots["']\s+content=["']([^"']+)["']\s*\/>?/i.test(html);
+  
+  if (!hasRobots) {
+    report(rel, "R19", "Missing <meta name='robots'> tag");
+  }
+}
+
+// R20: Open Graph tags (standard social sharing metadata)
+const ogTags = ["og:title", "og:description", "og:image", "og:url", "og:type"];
+for (const rel of htmlFiles) {
+  const html = fs.readFileSync(path.join(ROOT, rel), "utf8");
+  const missing = ogTags.filter(tag => !new RegExp(tag, "i").test(html));
+  
+  if (missing.length > 0) {
+    report(rel, "R20", `Missing Open Graph tags: ${missing.join(", ")}`);
+  }
+}
+
+// R21: Twitter card tags (alternative social sharing metadata)
+const twitterTags = ["twitter:card", "twitter:title", "twitter:description"];
+for (const rel of htmlFiles) {
+  const html = fs.readFileSync(path.join(ROOT, rel), "utf8");
+  const hasTwitterCard = twitterTags.every(tag => 
+    /<meta\s+name=["']twitter:" + tag + "["']\s+content=["']([^"']+)["']\s*\/>?/i.test(html)
+  );
+  
+  if (!hasTwitterCard) {
+    report(rel, "R21", "Missing Twitter card tags");
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Output
 // ---------------------------------------------------------------------------

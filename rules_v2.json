@@ -1,0 +1,44 @@
+{
+  "rules": [
+    {
+      "id": "R17",
+      "name": "H2 usage limit",
+      "description": "Ensure not too many H2 headings per page",
+      "pattern": "<h2\\b[^>]*>",
+      "max": 6,
+      "type": "per_page"
+    },
+    {
+      "id": "R18",
+      "name": "Semantic HTML elements",
+      "description": "Require at least one of: header, main, footer, or section",
+      "patterns": ["<header\\b[^>]*>", "<main\\b[^>]*>", "<footer\\b[^>]*>", "<section\\b[^>]*>"],
+      "min_required": 1,
+      "type": "per_page"
+    },
+    {
+      "id": "R19",
+      "name": "Meta robots tag",
+      "description": "Require <meta name='robots'> tag for SEO",
+      "pattern": "<meta\\s+name=['\"]robots['\"]\\s+content=['\"]([^'\"]+)['\"]\\s*/?>",
+      "type": "per_page"
+    },
+    {
+      "id": "R20",
+      "name": "Open Graph tags",
+      "description": "Require all standard Open Graph tags for social sharing",
+      "tags": ["og:title", "og:description", "og:image", "og:url", "og:type"],
+      "type": "per_page"
+    },
+    {
+      "id": "R21",
+      "name": "Twitter card tags",
+      "description": "Require basic Twitter card tags for social sharing",
+      "tags": ["twitter:card", "twitter:title", "twitter:description"],
+      "type": "per_page"
+    }
+  ],
+  "total_rules": 21,
+  "baseline_issues": 0,
+  "baseline_html_bytes": 330961
+}
