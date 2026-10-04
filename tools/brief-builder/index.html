@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#081321">
+<title>NUMUW | Brief Builder</title>
+<meta name="description" content="أنشئ Brief أولي واضح لمحادثتك مع NUMUW، ثم أرسله مباشرة عبر WhatsApp بدون نموذج خادمي.">
+<link rel="canonical" href="https://ahmedsaturki.github.io/numuw-studio/tools/brief-builder/">
+<meta property="og:type" content="website"><meta property="og:site_name" content="NUMUW | نُمو"><meta property="og:title" content="NUMUW | Brief Builder"><meta property="og:description" content="أنشئ Brief أولي واضح لمحادثتك مع NUMUW، ثم أرسله مباشرة عبر WhatsApp."><meta property="og:url" content="https://ahmedsaturki.github.io/numuw-studio/tools/brief-builder/"><meta property="og:image" content="https://ahmedsaturki.github.io/numuw-studio/og-image.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="NUMUW | Brief Builder"><meta name="twitter:description" content="أنشئ Brief أولي واضح لمحادثتك مع NUMUW."><meta name="twitter:image" content="https://ahmedsaturki.github.io/numuw-studio/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"NUMUW Brief Builder","description":"Client-side brief builder for an initial business-growth conversation.","url":"https://ahmedsaturki.github.io/numuw-studio/tools/brief-builder/","applicationCategory":"BusinessApplication","operatingSystem":"Any"}</script>
+<link rel="icon" href="../../favicon.svg"><link rel="stylesheet" href="../../assets/css/numuw.css">
+</head>
+<body>
+<header class="site-header"><div class="container nav"><a class="brand" href="../../"><span class="brand-mark">N</span><span><span class="brand-name">NUMUW</span><span class="brand-sub">Brief Builder</span></span></a><nav class="navlinks" data-nav><a href="../">Tools</a><a href="../solution-finder/">Solution Finder</a><a href="../../products/">Products</a><a href="../../documents/">Documents</a></nav><div class="nav-actions"><button class="lang-btn" data-lang-btn>EN</button><button class="menu-btn" data-menu>☰</button><a class="btn btn-dark" href="https://wa.me/201127788810" target="_blank" rel="noopener">WhatsApp</a></div></div></header>
+<main id="main">
+<section class="hero"><div class="container"><span class="eyebrow">CONVERSION TOOL</span><h1>حوّل فكرتك إلى <span class="accent">Brief واضح.</span></h1><p class="lead">املأ أقل قدر ممكن من المعلومات، وسيتم تجهيز رسالة مرتبة تستطيع مراجعتها ثم إرسالها إلى NUMUW على WhatsApp.</p></div></section>
+<section class="section alt"><div class="container grid-2">
+<form id="brief" class="panel form">
+<div class="notice">لا يتم تخزين الـBrief على خادم. يتم تكوين النص داخل المتصفح وتستطيع مراجعته قبل الإرسال.</div>
+<div class="field"><label for="industry">نوع النشاط</label><select id="industry" required><option value="شركة B2B">شركة B2B</option><option value="مصنع / صناعة">مصنع / صناعة</option><option value="عقارات">عقارات</option><option value="تجارة إلكترونية">تجارة إلكترونية</option><option value="نشاط آخر">نشاط آخر</option></select></div>
+<div class="field"><label for="goal">الهدف الأساسي</label><select id="goal" required><option value="زيادة وضوح العرض">زيادة وضوح العرض</option><option value="تحسين الموقع أو Landing">تحسين الموقع أو Landing</option><option value="تحسين الـSEO والظهور">تحسين الـSEO والظهور</option><option value="تقليل العمل المتكرر بالأتمتة">تقليل العمل المتكرر بالأتمتة</option><option value="بناء منظومة نمو مترابطة">بناء منظومة نمو مترابطة</option><option value="تحسين مستمر مع شريك نمو">تحسين مستمر مع شريك نمو</option></select></div>
+<div class="field"><label for="problem">ما المشكلة الآن؟</label><textarea id="problem" required placeholder="مثال: عندنا Leads لكن المتابعة غير منتظمة..."></textarea></div>
+<div class="field"><label for="success">كيف ستعرف أن المشروع نجح؟</label><textarea id="success" placeholder="مثال: نريد مسارًا أوضح ووقت متابعة أقل..."></textarea></div>
+<div class="field"><label for="timeline">الوقت المرغوب</label><select id="timeline"><option>هذا الشهر</option><option>خلال 30–60 يوم</option><option>خلال 60–90 يوم</option><option>غير محدد بعد</option></select></div>
+<button class="btn btn-primary" type="submit">كوّن الـBrief</button>
+</form>
+<div class="panel"><span class="eyebrow">OUTPUT</span><div id="output" role="status" aria-live="polite"><h2>الـBrief سيظهر هنا</h2><p class="lead" style="margin-top:10px">اكتب وضعك الحالي أولًا، ثم راجع الرسالة قبل الإرسال.</p></div></div>
+</div></section>
+<section class="section"><div class="container"><div class="center"><span class="eyebrow">BETTER CONVERSATIONS</span><h2>كلما كانت المشكلة أوضح، كان الـscope أسرع</h2><p class="lead">لا تحتاج إلى كتابة وثيقة استشارية. يكفي هدف، مشكلة، معيار نجاح، وتوقيت تقريبي.</p></div></div></section>
+</main><footer class="footer"><div class="container footer-grid"><strong>NUMUW</strong><a href="../">Tools</a><span>© <span data-year></span></span></div></footer>
+<script src="../../assets/js/numuw.js" defer></script>
+<script>
+(function(){
+var f=document.getElementById('brief'),o=document.getElementById('output');
+function v(id){return document.getElementById(id).value.trim()}
+f.addEventListener('submit',function(e){e.preventDefault();var industry=v('industry'),goal=v('goal'),problem=v('problem'),success=v('success')||'لم أحدد معيار النجاح بعد',timeline=v('timeline');var msg='مرحبًا NUMUW 👋\n\nنوع النشاط: '+industry+'\nالهدف: '+goal+'\nالمشكلة الحالية: '+problem+'\nمعيار النجاح: '+success+'\nالتوقيت: '+timeline+'\n\nأريد معرفة أفضل نقطة بداية والنطاق المناسب.';var url='https://wa.me/201127788810?text='+encodeURIComponent(msg);o.innerHTML='<h2>Brief جاهز للمراجعة</h2><div class="notice" style="white-space:pre-wrap;margin-top:16px">'+msg.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div><div class="actions"><a class="btn btn-primary" href="'+url+'" target="_blank" rel="noopener noreferrer">مراجعة ثم إرسال على WhatsApp</a><a class="btn btn-outline" href="../solution-finder/">اكتشف الحل أولًا</a></div>';});
+})();
+</script>
+</body></html>
