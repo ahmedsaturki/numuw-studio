@@ -12,6 +12,9 @@ Included:
 - Legal / Trust Center (privacy notice and disclaimer)
 - Repository Security Policy + `/.well-known/security.txt`
 - Solution Finder + Brief Builder conversion layer
+- Unified global information architecture + human site map
+- Distinct product catalog with offer-specific scope and acceptance
+- Master system architecture, design-system and competitive benchmark documents
 - Sales Discovery + Delivery QA playbooks
 - Brand / Media / Insights / Resources
 - Shared CSS / JavaScript
