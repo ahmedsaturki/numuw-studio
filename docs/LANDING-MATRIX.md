@@ -1,16 +1,25 @@
-# NUMUW Landing Page Matrix
+# NUMUW Landing Matrix
 
-| Route | Audience | Primary job |
+## Capability routes
+
+| Route | Primary trigger | Core decision |
 |---|---|---|
-| /landing/website/ | Businesses needing a site | Turn visits into inquiries |
-| /landing/automation/ | Process-heavy businesses | Remove repetitive manual work |
-| /landing/ai/ | Knowledge-heavy teams | Apply practical AI |
-| /landing/seo-local/ | Local businesses | Improve discovery |
-| /landing/brand/ | New / repositioning businesses | Clarify positioning and identity |
-| /landing/growth-partner/ | Ongoing clients | Continuous improvement |
-| /landing/manufacturing/ | Factories / industrial B2B | Connect marketing and operations |
-| /landing/b2b/ | B2B sellers | Improve trust and qualification |
-| /landing/real-estate/ | Real estate businesses | Improve lead handling |
-| /landing/ecommerce/ | Online stores | Improve buying-path conversion |
+| /landing/website/ | Site/presence bottleneck | Is the website part of the sales/conversion problem? |
+| /landing/brand/ | Positioning/identity friction | Does the market understand and recognize the offer? |
+| /landing/seo-local/ | Search/local dependency | Is discoverability/content architecture the bottleneck? |
+| /landing/automation/ | Repetitive operational work | Which process is worth simplifying first? |
+| /landing/ai/ | Practical AI opportunity | Is there a measurable use case with human review? |
+| /landing/growth-partner/ | Existing foundation | Is recurring optimization justified by evidence? |
 
-Rule: do not clone a generic landing page and only change the headline. Audience, pain, proof, scope and CTA must remain specific.
+## Vertical routes
+
+| Route | Buyer context | Distinct problem model |
+|---|---|---|
+| /landing/manufacturing/ | Factory / industrial B2B | product information, RFQ, quotation, routing, operations |
+| /landing/b2b/ | B2B sales team | multi-stakeholder buying, proof, qualification, pipeline |
+| /landing/real-estate/ | Real estate sales | project/unit information, response, qualification, follow-up |
+| /landing/ecommerce/ | Online store | PDP, checkout, conversion, retention, unit economics |
+
+## Rule
+
+A landing page must add a distinct decision model. A headline-only industry swap is not a new route. Merge or remove pages that cannot sustain distinct audience, problem, proof, scope and next action.
