@@ -1,0 +1,572 @@
+{
+  "schema_version": "1.0.0",
+  "description": "NUMUW route-level source of truth. Every public route must have a job, audience, primary action and next step.",
+  "routes": [
+    {
+      "path": "/brand/",
+      "family": "brand",
+      "purpose": "brand reference",
+      "audience": [
+        "partners",
+        "collaborators"
+      ],
+      "primary_action": "brand-reference",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/capability-statement/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/company-profile/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/handover/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/onboarding/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/playbooks/delivery-qa/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/playbooks/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/playbooks/sales-discovery/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/proposal-template/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/service-catalog/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/documents/terms/",
+      "family": "document",
+      "purpose": "commercial or delivery enablement",
+      "audience": [
+        "prospects",
+        "clients",
+        "operators"
+      ],
+      "primary_action": "document-use",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/",
+      "family": "home",
+      "purpose": "primary acquisition and orientation",
+      "audience": [
+        "Egyptian businesses",
+        "factories",
+        "B2B teams"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/insights/",
+      "family": "insights",
+      "purpose": "education and strategic content",
+      "audience": [
+        "business owners",
+        "operators"
+      ],
+      "primary_action": "read",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/ai/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/automation/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/b2b/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/brand/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/ecommerce/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/growth-partner/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/manufacturing/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/real-estate/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/seo-local/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/landing/website/",
+      "family": "landing",
+      "purpose": "audience-specific acquisition",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "diagnostic",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/legal/disclaimer/",
+      "family": "legal",
+      "purpose": "trust and disclosure",
+      "audience": [
+        "all visitors",
+        "prospective clients"
+      ],
+      "primary_action": "review-policy",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/legal/",
+      "family": "legal",
+      "purpose": "trust and disclosure",
+      "audience": [
+        "all visitors",
+        "prospective clients"
+      ],
+      "primary_action": "review-policy",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/legal/privacy/",
+      "family": "legal",
+      "purpose": "trust and disclosure",
+      "audience": [
+        "all visitors",
+        "prospective clients"
+      ],
+      "primary_action": "review-policy",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/media-kit/",
+      "family": "brand-support",
+      "purpose": "approved external communication",
+      "audience": [
+        "partners",
+        "media",
+        "collaborators"
+      ],
+      "primary_action": "reference-assets",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/pages/about/",
+      "family": "company",
+      "purpose": "company context, proof or communication",
+      "audience": [
+        "prospects",
+        "partners",
+        "clients"
+      ],
+      "primary_action": "trust-review",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/pages/case-studies/",
+      "family": "company",
+      "purpose": "company context, proof or communication",
+      "audience": [
+        "prospects",
+        "partners",
+        "clients"
+      ],
+      "primary_action": "trust-review",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/pages/contact/",
+      "family": "company",
+      "purpose": "company context, proof or communication",
+      "audience": [
+        "prospects",
+        "partners",
+        "clients"
+      ],
+      "primary_action": "contact",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/pages/",
+      "family": "company",
+      "purpose": "company context, proof or communication",
+      "audience": [
+        "prospects",
+        "partners",
+        "clients"
+      ],
+      "primary_action": "trust-review",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/pages/method/",
+      "family": "company",
+      "purpose": "company context, proof or communication",
+      "audience": [
+        "prospects",
+        "partners",
+        "clients"
+      ],
+      "primary_action": "trust-review",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/pages/proof/",
+      "family": "company",
+      "purpose": "company context, proof or communication",
+      "audience": [
+        "prospects",
+        "partners",
+        "clients"
+      ],
+      "primary_action": "trust-review",
+      "next_step": "/pages/contact/"
+    },
+    {
+      "path": "/products/automation-sprint/",
+      "family": "product",
+      "purpose": "scoped commercial offer",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "scope-request",
+      "next_step": "/tools/brief-builder/"
+    },
+    {
+      "path": "/products/diagnostic/",
+      "family": "product",
+      "purpose": "scoped commercial offer",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "scope-request",
+      "next_step": "/tools/brief-builder/"
+    },
+    {
+      "path": "/products/digital-kickoff/",
+      "family": "product",
+      "purpose": "scoped commercial offer",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "scope-request",
+      "next_step": "/tools/brief-builder/"
+    },
+    {
+      "path": "/products/growth-partner/",
+      "family": "product",
+      "purpose": "scoped commercial offer",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "scope-request",
+      "next_step": "/tools/brief-builder/"
+    },
+    {
+      "path": "/products/growth-system/",
+      "family": "product",
+      "purpose": "scoped commercial offer",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "scope-request",
+      "next_step": "/tools/brief-builder/"
+    },
+    {
+      "path": "/products/",
+      "family": "product",
+      "purpose": "scoped commercial offer",
+      "audience": [
+        "qualified prospects"
+      ],
+      "primary_action": "scope-request",
+      "next_step": "/tools/brief-builder/"
+    },
+    {
+      "path": "/resources/",
+      "family": "resources",
+      "purpose": "self-service resources",
+      "audience": [
+        "business owners",
+        "operators"
+      ],
+      "primary_action": "use-resource",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/tools/automation-finder/",
+      "family": "tool",
+      "purpose": "decision support",
+      "audience": [
+        "prospects",
+        "operators"
+      ],
+      "primary_action": "tool-completion",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/tools/brief-builder/",
+      "family": "tool",
+      "purpose": "decision support",
+      "audience": [
+        "prospects",
+        "operators"
+      ],
+      "primary_action": "tool-completion",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/tools/diagnostic/",
+      "family": "tool",
+      "purpose": "decision support",
+      "audience": [
+        "prospects",
+        "operators"
+      ],
+      "primary_action": "tool-completion",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/tools/estimator/",
+      "family": "tool",
+      "purpose": "decision support",
+      "audience": [
+        "prospects",
+        "operators"
+      ],
+      "primary_action": "tool-completion",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/tools/",
+      "family": "tool",
+      "purpose": "decision support",
+      "audience": [
+        "prospects",
+        "operators"
+      ],
+      "primary_action": "tool-completion",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/tools/roadmap/",
+      "family": "tool",
+      "purpose": "decision support",
+      "audience": [
+        "prospects",
+        "operators"
+      ],
+      "primary_action": "tool-completion",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/tools/roi-calculator/",
+      "family": "tool",
+      "purpose": "decision support",
+      "audience": [
+        "prospects",
+        "operators"
+      ],
+      "primary_action": "tool-completion",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/tools/solution-finder/",
+      "family": "tool",
+      "purpose": "decision support",
+      "audience": [
+        "prospects",
+        "operators"
+      ],
+      "primary_action": "tool-completion",
+      "next_step": "/tools/diagnostic/"
+    },
+    {
+      "path": "/tools/website-readiness/",
+      "family": "tool",
+      "purpose": "decision support",
+      "audience": [
+        "prospects",
+        "operators"
+      ],
+      "primary_action": "tool-completion",
+      "next_step": "/tools/diagnostic/"
+    }
+  ],
+  "totals": {
+    "indexable_html": 51
+  }
+}
