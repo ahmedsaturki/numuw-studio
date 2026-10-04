@@ -34,6 +34,11 @@ function target(file,ref,set){
   if(!path.posix.extname(p) && set.has(p+"/index.html")) p+="/index.html";
   return p;
 }
+function navKey(p){
+  if(p==="index.html") return "";
+  if(p.endsWith("/index.html")) return p.slice(0,-10)+"/";
+  return p;
+}
 walk(ROOT); files.sort();
 const set=new Set(files);
 const html=files.filter(f=>f.endsWith(".html"));
