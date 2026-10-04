@@ -7,17 +7,6 @@
   try{canonicalPath=new URL(canonical.getAttribute('href'),location.href).pathname}catch(e){}
   var firstSegment=canonicalPath.split('/').filter(Boolean)[0]||'';
   var base='/' + (firstSegment?firstSegment+'/':'');
-  var labels={
-    landing:['الحلول','Solutions'],
-    tools:['الأدوات','Tools'],
-    products:['المنتجات','Products'],
-    proof:['الإثبات','Proof'],
-    company:['الشركة','Company'],
-    resources:['الموارد','Resources'],
-    documents:['Business Library','Business Library'],
-    legal:['الثقة والخصوصية','Trust & Legal']
-  };
-
   function applyLang(next){
     lang=next==='en'?'en':'ar';
     document.documentElement.lang=lang;
@@ -106,7 +95,8 @@
         links.push('<span aria-hidden="true">/</span>'+(isLast?'<span aria-current="page">'+label+'</span>':'<a href="'+current+'">'+label+'</a>'));
       });
       crumb.innerHTML=links.join('');
-      nav.parentNode.parentNode.insertBefore(crumb,nav.parentNode.parentNode.querySelector('main'));
+      var header=nav.closest('header');
+      if(header && header.parentNode && main) header.parentNode.insertBefore(crumb,main);
     }
   }
 
