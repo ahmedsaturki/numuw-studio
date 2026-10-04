@@ -2,34 +2,95 @@
   var lang='ar';
   var langBtn=document.getElementById('lang');
   var menu=document.getElementById('menu');
-  var nav=document.getElementById('nav');
-  function apply(l){
-    lang=l; document.documentElement.lang=l; document.documentElement.dir=l==='ar'?'rtl':'ltr';
-    document.querySelectorAll('[data-ar]').forEach(function(el){el.textContent=l==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en')});
-    langBtn.textContent=l==='ar'?'EN':'عربي';
-    langBtn.setAttribute('aria-label',l==='ar'?'Switch to English':'التحويل للعربية');
-    document.title=l==='ar'?'نُمو NUMUW — أنظمة نمو رقمية للشركات والمصانع في مصر':'NUMUW — Growth systems for Egyptian businesses';
-  }
-  langBtn.addEventListener('click',function(){apply(lang==='ar'?'en':'ar')});
-  menu.addEventListener('click',function(){var open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open))});
-  document.querySelectorAll('.navlinks a').forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');menu.setAttribute('aria-expanded','false')})});
-  apply('ar');
-})();
+  var nav=document.getElementById('primary-nav');
+  var navShell=document.querySelector('.nav');
+  var skip=document.querySelector('.skip');
 
-(function(){
-  function emit(name,detail){
-    try{window.dispatchEvent(new CustomEvent('numuw:'+name,{detail:detail||{}}))}catch(e){}
-    if(Array.isArray(window.dataLayer)){try{window.dataLayer.push({event:'numuw_'+name,...(detail||{})})}catch(e){}}
+  var meta={
+    ar:{
+      title:'نُمو NUMUW — أنظمة نمو رقمية للشركات والمصانع في مصر',
+      description:'نُمو يبني أنظمة نمو عملية للشركات والمصانع المصرية: تموضع، حضور رقمي، SEO وحضور محلي، أتمتة وAI وقياس — تحت استراتيجية واحدة ومسار واضح من التشخيص إلى التسليم.',
+      ogTitle:'نُمو NUMUW — نظام نمو، مش مجرد خدمة',
+      ogDescription:'استراتيجية + حضور رقمي + أتمتة + قياس للشركات والمصانع المصرية، مع نطاق واضح وملكية أصول واضحة.'
+    },
+    en:{
+      title:'NUMUW — Growth Systems for Egyptian Businesses',
+      description:'NUMUW builds practical growth systems for Egyptian businesses and manufacturers: positioning, digital presence, search, automation, AI and measurement.',
+      ogTitle:'NUMUW — A growth system, not another service',
+      ogDescription:'Strategy, digital presence, automation and measurement for Egyptian businesses, with clear scope and asset ownership.'
+    }
+  };
+
+  function setMeta(selector,value){
+    var el=document.querySelector(selector);
+    if(el)el.setAttribute('content',value);
   }
-  document.addEventListener('click',function(e){
-    var a=e.target.closest('a[href]');if(!a)return;
-    var href=a.getAttribute('href')||'',kind=null;
-    if(/^https:\/\/wa\.me\//i.test(href))kind='whatsapp';
-    else if(/^tel:/i.test(href))kind='phone';
-    else if(/tools\/diagnostic\//i.test(href))kind='diagnostic';
-    else if(/products\//i.test(href))kind='product';
-    else if(/tools\//i.test(href))kind='tool';
-    else if(/documents\//i.test(href))kind='document';
-    if(kind)emit('cta',{kind:kind,path:location.pathname});
+
+  function apply(next){
+    lang=next==='en'?'en':'ar';
+    document.documentElement.lang=lang;
+    document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+
+    document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
+      el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+    });
+
+    var copy=meta[lang];
+    document.title=copy.title;
+    setMeta('meta[name="description"]',copy.description);
+    setMeta('meta[property="og:title"]',copy.ogTitle);
+    setMeta('meta[property="og:description"]',copy.ogDescription);
+    setMeta('meta[name="twitter:title"]',copy.ogTitle);
+    setMeta('meta[name="twitter:description"]',copy.ogDescription);
+
+    langBtn.textContent=lang==='ar'?'EN':'عربي';
+    langBtn.setAttribute('aria-label',lang==='ar'?'Switch to English':'التحويل للعربية');
+    langBtn.setAttribute('aria-pressed',lang==='en'?'true':'false');
+    if(skip)skip.textContent=lang==='ar'?'تخطّي للمحتوى':'Skip to content';
+  }
+
+  function closeMenu(returnFocus){
+    if(!nav||!menu)return;
+    navShell.classList.remove('open');
+    menu.setAttribute('aria-expanded','false');
+    menu.setAttribute('aria-label',lang==='ar'?'فتح القائمة':'Open menu');
+    if(returnFocus)menu.focus();
+  }
+
+  if(langBtn)langBtn.addEventListener('click',function(){
+    var next=lang==='ar'?'en':'ar';
+    try{localStorage.setItem('numuw-home-lang',next)}catch(e){}
+    apply(next);
   });
+
+  if(menu&&nav){
+    menu.addEventListener('click',function(){
+      var open=!navShell.classList.contains('open');
+      navShell.classList.toggle('open',open);
+      menu.setAttribute('aria-expanded',String(open));
+      menu.setAttribute('aria-label',open?(lang==='ar'?'غلق القائمة':'Close menu'):(lang==='ar'?'فتح القائمة':'Open menu'));
+      if(open){
+        var first=nav.querySelector('a[href]');
+        if(first)first.focus();
+      }else{
+        menu.focus();
+      }
+    });
+
+    nav.querySelectorAll('a[href]').forEach(function(a){
+      a.addEventListener('click',function(){closeMenu(false)});
+    });
+
+    document.addEventListener('click',function(e){
+      if(navShell.classList.contains('open')&&!navShell.contains(e.target))closeMenu(false);
+    });
+
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&navShell.classList.contains('open'))closeMenu(true);
+    });
+  }
+
+  var saved=null;
+  try{saved=localStorage.getItem('numuw-home-lang')}catch(e){}
+  apply(saved==='en'?'en':'ar');
 })();
