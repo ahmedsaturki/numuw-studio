@@ -103,6 +103,39 @@ for (const file of indexable) {
   }
 }
 
+for (const file of htmlFiles) {
+  const html = fs.readFileSync(path.join(root, file), "utf8");
+  if (/<script\b[^>]*src=["']https?:\/\//i.test(html)) failures.push(file + ": external script dependency detected");
+  if (/<link\b[^>]*rel=["'][^"']*stylesheet[^"']*["'][^>]*href=["']https?:\/\//i.test(html)) failures.push(file + ": external stylesheet dependency detected");
+  if (/@import\s+url\((?:["']?)https?:\/\//i.test(html)) failures.push(file + ": external CSS import detected");
+}
+
+function hexLuminance(hex) {
+  const value = hex.replace("#", "");
+  const rgb = [0, 2, 4].map(i => Number.parseInt(value.slice(i, i + 2), 16) / 255);
+  const linear = rgb.map(v => v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+}
+function contrastRatio(a, b) {
+  const la = hexLuminance(a);
+  const lb = hexLuminance(b);
+  const hi = Math.max(la, lb);
+  const lo = Math.min(la, lb);
+  return (hi + 0.05) / (lo + 0.05);
+}
+const themeFiles = ["assets/css/numuw.css", "index.html"];
+for (const file of themeFiles) {
+  const source = fs.readFileSync(path.join(root, file), "utf8");
+  const teal = source.match(/--teal:\s*(#[0-9a-f]{6})/i)?.[1];
+  if (teal && contrastRatio(teal, "#ffffff") < 4.5) {
+    failures.push(file + ": --teal fails 4.5:1 contrast against white");
+  }
+}
+const sharedCss = fs.readFileSync(path.join(root, "assets/css/numuw.css"), "utf8");
+if (!/:focus-visible\{[^}]*outline:2px solid var\(--navy\)[^}]*box-shadow:0 0 0 4px #fff/i.test(sharedCss)) {
+  warnings.push("assets/css/numuw.css: two-tone focus ring pattern not detected");
+}
+
 console.log(`NUMUW static audit: ${htmlFiles.length} HTML files checked`);
 console.log(`Failures: ${failures.length} | Warnings: ${warnings.length}`);
 for (const item of warnings) console.warn("WARN:", item);

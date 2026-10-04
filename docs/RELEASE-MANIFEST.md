@@ -5,18 +5,21 @@ This repository is a static GitHub Pages-compatible growth hub.
 Included:
 - Main brand / conversion site
 - 10 specialized landing pages plus landing hub
-- 6 self-service tools plus tools hub
+- 8 self-service tools plus tools hub
 - 5 product pages plus products hub
 - Company / Method / Proof / Case Studies / Contact
 - Business Library and public PDF exports
 - Legal / Trust Center (privacy notice and disclaimer)
+- Solution Finder + Brief Builder conversion layer
+- Sales Discovery + Delivery QA playbooks
 - Brand / Media / Insights / Resources
 - Shared CSS / JavaScript
 - Canonical, Open Graph, Twitter and JSON-LD metadata across public HTML pages
 - Accessibility hardening for navigation and dynamic tool results
 - Sitemap / robots / resilient 404
 - Dependency-free static audit + GitHub Actions gate
-- QA, architecture and content policy
+- Explicit performance budget for third-party runtime dependencies
+- Conversion, QA, architecture and content policy
 
 Quality boundaries:
 - Git/source/tree validation can be completed in the repository.
