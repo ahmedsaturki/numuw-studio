@@ -15,7 +15,6 @@ function walk(dir) {
   });
 }
 function rel(file) { return path.relative(root, file).split(path.sep).join("/"); }
-function escRegex(s) { return s.replace(/[.*+?^$&{}()|[\]\\]/g, "\\$&"); }
 function attr(html, re) { return (html.match(re)?.[1] ?? "").trim(); }
 function resolveLocalHref(sourcePath, href) {
   const clean = href.split("#")[0].split("?")[0];
@@ -46,6 +45,7 @@ for (const file of htmlFiles) {
   const canonicalCount = (html.match(/rel=["']canonical["']/gi) || []).length;
   const schemaBlocks = [...html.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
   const localLinks = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)].map(m => m[1]);
+  const images = [...html.matchAll(/<img\b([^>]*)>/gi)].map(m => m[1]);
 
   if (!/^<!doctype html>/i.test(html)) failures.push(`${file}: missing HTML5 doctype`);
   if (titleCount !== 1) failures.push(`${file}: expected exactly one <title>, found ${titleCount}`);
@@ -53,12 +53,20 @@ for (const file of htmlFiles) {
   if (!is404 && h1Count !== 1) failures.push(`${file}: expected exactly one <h1>, found ${h1Count}`);
   if (!is404 && canonicalCount !== 1) failures.push(`${file}: expected exactly one canonical link, found ${canonicalCount}`);
   if (!/<meta\s+name=["']viewport["']/i.test(html)) failures.push(`${file}: missing viewport meta`);
-  if (!/<main\b/i.test(html)) failures.push(`${file}: missing <main>`);
   if (!/<html\b[^>]*lang=["'][a-z-]+["']/i.test(html)) failures.push(`${file}: missing html lang`);
+  if (!/<html\b[^>]*dir=["'](rtl|ltr)["']/i.test(html)) failures.push(`${file}: missing html dir`);
+  if (!/<main\b/i.test(html)) failures.push(`${file}: missing <main>`);
   if (!is404 && !/property=["']og:title["']/i.test(html)) failures.push(`${file}: missing og:title`);
   if (!is404 && !/property=["']og:image["']/i.test(html)) failures.push(`${file}: missing og:image`);
+  if (!is404 && !/property=["']og:url["']/i.test(html)) failures.push(`${file}: missing og:url`);
   if (!is404 && !/name=["']twitter:card["']/i.test(html)) failures.push(`${file}: missing twitter:card`);
+  if (!is404 && !/name=["']twitter:image["']/i.test(html)) failures.push(`${file}: missing twitter:image`);
+  if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex robots meta");
   if (/href=["']javascript:/i.test(html)) failures.push(`${file}: javascript: URL detected`);
+
+  for (const image of images) {
+    if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(`${file}: <img> without alt attribute`);
+  }
 
   for (const block of schemaBlocks) {
     try { JSON.parse(block); }
@@ -79,28 +87,50 @@ for (const file of htmlFiles) {
   if (!is404) {
     const description = attr(html, /<meta\s+name=["']description["']\s+content=["']([^"']*)/i);
     if (description.length < 50) warnings.push(`${file}: meta description is short (${description.length} chars)`);
+
+    const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
+    const ogUrl = html.match(/<meta\s+property=["']og:url["']\s+content=["']([^"']+)["']/i)?.[1];
+    if (canonical && ogUrl && canonical !== ogUrl) failures.push(`${file}: og:url does not match canonical`);
+
+    if (!canonical || !canonical.startsWith(PUBLIC_ORIGIN)) {
+      failures.push(`${file}: canonical is outside the configured Pages origin`);
+    } else if (!sitemapPlaceholder.test(canonical)) {
+      failures.push(`${file}: canonical URL is missing from sitemap.xml`);
+    }
   }
 }
 
 const sitemap = fs.existsSync(path.join(root, "sitemap.xml"))
   ? fs.readFileSync(path.join(root, "sitemap.xml"), "utf8")
   : "";
+const sitemapPlaceholder = /never-match-this-token/;
 if (!sitemap) failures.push("sitemap.xml: missing or empty");
 if (!sitemap.includes(PUBLIC_ORIGIN)) failures.push("sitemap.xml: canonical origin missing");
+
+const robots = fs.existsSync(path.join(root, "robots.txt"))
+  ? fs.readFileSync(path.join(root, "robots.txt"), "utf8")
+  : "";
+if (!/Sitemap:\s*https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/sitemap\.xml/i.test(robots)) {
+  failures.push("robots.txt: expected sitemap declaration is missing");
+}
 if (!existsPublic("og-image.png")) failures.push("og-image.png: missing shared social image");
+if (!existsPublic(".well-known/security.txt")) failures.push(".well-known/security.txt: missing");
+else {
+  const securityTxt = fs.readFileSync(path.join(root, ".well-known/security.txt"), "utf8");
+  if (!/^Contact:\s*https:\/\//mi.test(securityTxt)) failures.push(".well-known/security.txt: missing HTTPS Contact");
+  if (!/^Policy:\s*https:\/\//mi.test(securityTxt)) failures.push(".well-known/security.txt: missing HTTPS Policy");
+  if (!/^Expires:\s*\d{4}-\d{2}-\d{2}T/mi.test(securityTxt)) failures.push(".well-known/security.txt: missing Expires");
+}
 
 const indexable = htmlFiles.filter(f => f !== "404.html");
-const canonicalOrigin = /^https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/$/;
 for (const file of indexable) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
   const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
-  if (!canonical || (!canonicalOrigin.test(canonical) && !canonical.startsWith(PUBLIC_ORIGIN))) {
+  if (!canonical || (!/^https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/$/.test(canonical) && !canonical.startsWith(PUBLIC_ORIGIN))) {
     failures.push(`${file}: canonical is outside the configured Pages origin`);
     continue;
   }
-  if (!sitemap.includes(`<loc>${canonical}</loc>`)) {
-    failures.push(`${file}: canonical URL is missing from sitemap.xml`);
-  }
+  if (!sitemap.includes(`<loc>${canonical}</loc>`)) failures.push(`${file}: canonical URL is missing from sitemap.xml`);
 }
 
 for (const file of htmlFiles) {
@@ -123,13 +153,10 @@ function contrastRatio(a, b) {
   const lo = Math.min(la, lb);
   return (hi + 0.05) / (lo + 0.05);
 }
-const themeFiles = ["assets/css/numuw.css", "index.html"];
-for (const file of themeFiles) {
+for (const file of ["assets/css/numuw.css", "index.html"]) {
   const source = fs.readFileSync(path.join(root, file), "utf8");
   const teal = source.match(/--teal:\s*(#[0-9a-f]{6})/i)?.[1];
-  if (teal && contrastRatio(teal, "#ffffff") < 4.5) {
-    failures.push(file + ": --teal fails 4.5:1 contrast against white");
-  }
+  if (teal && contrastRatio(teal, "#ffffff") < 4.5) failures.push(file + ": --teal fails 4.5:1 contrast against white");
 }
 const sharedCss = fs.readFileSync(path.join(root, "assets/css/numuw.css"), "utf8");
 if (!/:focus-visible\{[^}]*outline:2px solid var\(--navy\)[^}]*box-shadow:0 0 0 4px #fff/i.test(sharedCss)) {
