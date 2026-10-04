@@ -81,6 +81,7 @@ for (const file of htmlFiles) {
   if (!is404 && !/name=["']twitter:image["']/i.test(html)) failures.push(`${file}: missing twitter:image`);
   if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex robots meta");
   if (/href=["']javascript:/i.test(html)) failures.push(`${file}: javascript: URL detected`);
+  if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+on[a-z]+\\s*=/i.test(html)) failures.push(`${file}: inline event handler detected`);
 
   for (const image of images) {
     if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(`${file}: <img> without alt attribute`);
