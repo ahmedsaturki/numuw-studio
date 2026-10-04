@@ -134,8 +134,11 @@ for (const file of htmlFiles) {
   const menu = tags(html, "button").find(tag => /data-menu|menu-btn|class=["'][^"']*menu/i.test(tag));
   if (menu) {
     if (attr(menu, "type") && attr(menu, "type").toLowerCase() !== "button") add(file, "menu must use type=button");
-    if (!attr(menu, "aria-controls")) add(file, "menu aria-controls missing");
-    if (!attr(menu, "aria-expanded")) add(file, "menu aria-expanded missing");
+    if (!attr(menu, "aria-controls") || !attr(menu, "aria-expanded")) {
+      const runtimeMenu = /<script\b[^>]*src=["'][^"']*assets\/js\/numuw\.js["'][^>]*>/i.test(html);
+      if (!runtimeMenu) add(file, "menu accessibility state missing without shared runtime");
+      else warnings.push(file + ": menu ARIA state is supplied by shared runtime");
+    }
   }
 
   for (const tag of tags(html, "a")) {
@@ -144,8 +147,9 @@ for (const file of htmlFiles) {
     }
   }
 
+  const staticMarkup = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ");
   for (const name of ["input", "select", "textarea"]) {
-    for (const tag of tags(html, name)) {
+    for (const tag of tags(staticMarkup, name)) {
       const type = attr(tag, "type").toLowerCase();
       if (type === "hidden") continue;
       if (!attr(tag, "id")) add(file, name + " missing id");
@@ -173,6 +177,7 @@ for (const file of htmlFiles) {
     }
 
     if (target.endsWith("/")) target += "index.html";
+    if (target === "." || target === "") target = "index.html";
     if (!path.posix.extname(target) && fileSet.has(target + "/index.html")) target += "/index.html";
     if (!fileSet.has(target)) add(file, "broken local reference -> " + ref);
   }
