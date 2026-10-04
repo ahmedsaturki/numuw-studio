@@ -99,9 +99,9 @@
     list.replaceChildren();
     items.forEach(function(item){
       var b=make('button',{class:'card estimate-option',type:'button','aria-pressed':'false'});
-      b.appendChild(make('div',{class:'icon'},item.type==='monthly'?'M':'＋'));
-      b.appendChild(make('h3',{},item.name));
-      b.appendChild(make('p',{},'من '+formatEGP(item.price)+(item.type==='monthly'?' شهريًا':'')));
+      b.appendChild(make('span',{class:'icon','aria-hidden':'true'},item.type==='monthly'?'M':'＋'));
+      b.appendChild(make('strong',{class:'estimate-title'},item.name));
+      b.appendChild(make('span',{class:'estimate-price'},'من '+formatEGP(item.price)+(item.type==='monthly'?' شهريًا':'')));
       b.addEventListener('click',function(){
         var i=selected.indexOf(item);
         if(i>=0){selected.splice(i,1);b.setAttribute('aria-pressed','false');b.classList.remove('is-selected');}
