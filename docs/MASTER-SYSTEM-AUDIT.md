@@ -37,8 +37,12 @@ The website must make the same logic visible. Every route should help a buyer un
 - Case-study architecture needs real case readiness without fabricated results.
 - Commercial templates need to stay connected to delivery QA, ownership, acceptance and change control.
 - Search content should earn its page through distinct user intent and first-hand knowledge, not page-count growth.
-- All public pages need one coherent navigation, footer, breadcrumb and CTA system.
+- All public pages need one coherent navigation, footer, breadcrumb and CTA system represented in source HTML; runtime code should only enhance behavior.
 - Inline styling should continue to be reduced in favor of shared tokens/utilities.
+
+### Additional business gate
+- The working master brand must pass a formal trademark/search/domain/social collision review before major irreversible brand investment.
+- Public versus operating-document indexability must be explicit.
 
 ### External release gates
 Source/CI cannot prove live:
