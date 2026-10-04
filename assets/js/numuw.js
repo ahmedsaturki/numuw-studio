@@ -1,6 +1,6 @@
 (function(){
   var lang=document.documentElement.lang==='en'?'en':'ar';
-  var localized=document.querySelectorAll('[data-ar][data-en]');
+  var localized=document.querySelectorAll('[data-ar][data-en],[data-html-ar][data-html-en]');
   var langButtons=document.querySelectorAll('[data-lang-btn]');
 
   function applyLang(next){
@@ -9,6 +9,9 @@
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
     document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
       el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+    });
+    document.querySelectorAll('[data-html-ar][data-html-en]').forEach(function(el){
+      el.innerHTML=lang==='ar'?el.getAttribute('data-html-ar'):el.getAttribute('data-html-en');
     });
     langButtons.forEach(function(b){
       b.textContent=lang==='ar'?'EN':'عربي';
