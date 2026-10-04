@@ -15,35 +15,11 @@ function walk(dir){
   }
 }
 function attrs(tag){
+  if(typeof tag!=="string"||!tag) return {};
   const out={};
-  if(typeof tag!=="string"||!tag) return out;
-  let i=1;
-  const isNameChar=function(ch){return !!ch&&/[A-Za-z0-9_:.-]/.test(ch)};
-  const isSpace=function(ch){return !!ch&&/\s/.test(ch)};
-  while(i<tag.length&&tag[i]!==">"){
-    while(i<tag.length&&isSpace(tag[i])) i++;
-    if(i>=tag.length||tag[i]===">"||tag[i]==="/") break;
-    const start=i;
-    while(i<tag.length&&isNameChar(tag[i])) i++;
-    if(i===start){i++;continue}
-    const name=tag.slice(start,i).toLowerCase();
-    while(i<tag.length&&isSpace(tag[i])) i++;
-    if(tag[i]!=="="){while(i<tag.length&&tag[i]!==">"&&!isSpace(tag[i])) i++;continue}
-    i++;
-    while(i<tag.length&&isSpace(tag[i])) i++;
-    const quote=tag[i];
-    if(quote==="'"||quote==='"'){
-      i++;
-      const valueStart=i;
-      while(i<tag.length&&tag[i]!==quote) i++;
-      out[name]=tag.slice(valueStart,i);
-      if(i<tag.length) i++;
-    }else{
-      const valueStart=i;
-      while(i<tag.length&&tag[i]!==">"&&!isSpace(tag[i])) i++;
-      out[name]=tag.slice(valueStart,i);
-    }
-  }
+  const re=/(?:^|\\s)([A-Za-z_:][A-Za-z0-9_:.-]*)\\s*=\\s*(?:"([^"]*)"|'([^']*)')/g;
+  let m;
+  while((m=re.exec(tag))!==null) out[m[1].toLowerCase()]=m[2]!==undefined?m[2]:m[3];
   return out;
 }
 function cleanMarkup(h){
@@ -51,7 +27,9 @@ function cleanMarkup(h){
     .replace(/<script\b[\s\S]*?<\/script>/gi,"")
     .replace(/<style\b[\s\S]*?<\/style>/gi,"");
 }
-function tagList(h,name){return h.match(new RegExp("<"+name+"\\b[^>]*>","gi"))||[];}
+function tagList(h,name){
+  return h.match(new RegExp("<"+name+"(?=\\s|>)[^>]*>","gi"))||[];
+}
 function route(file){return BASE+(file==="index.html"?"":file.replace(/\/index\.html$/,"/"));}
 const BASE_URL=new URL(BASE);
 function target(file,ref,set){
