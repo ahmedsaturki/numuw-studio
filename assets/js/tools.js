@@ -99,7 +99,17 @@
     if(!list)return;
     var total=document.getElementById('estTotal');
     var wa=document.getElementById('estWa');
-    var items=[['لاندنج بيدج',8000],['موقع شركة',15000],['هوية بصرية',6000],['أتمتة عملية',8000],['AI Workflow',8000],['SEO / Local',6000],['CRM',6000],['KPI Dashboard',12000],['Growth Partner شهري',6500]];
+    var items=[
+      {name:'لاندنج بيدج',price:8000,type:'oneTime'},
+      {name:'موقع شركة',price:15000,type:'oneTime'},
+      {name:'هوية بصرية',price:6000,type:'oneTime'},
+      {name:'أتمتة عملية',price:8000,type:'oneTime'},
+      {name:'AI Workflow',price:8000,type:'oneTime'},
+      {name:'SEO / Local',price:6000,type:'oneTime'},
+      {name:'CRM',price:6000,type:'oneTime'},
+      {name:'KPI Dashboard',price:12000,type:'oneTime'},
+      {name:'Growth Partner',price:6500,type:'monthly'}
+    ];
     var selected=[];
     list.replaceChildren();
     items.forEach(function(item){
@@ -109,7 +119,7 @@
       button.setAttribute('aria-pressed','false');
       button.appendChild(textNode('strong','+'));
       button.appendChild(textNode('h3',item[0]));
-      button.appendChild(textNode('p','من '+item[1].toLocaleString('en-EG')+' ج.م'));
+      button.appendChild(textNode('p',(item.type==='monthly'?'من ':'من ')+item.price.toLocaleString('en-EG')+' ج.م'+(item.type==='monthly'?' / شهر':'')));
       button.addEventListener('click',function(){
         var index=selected.indexOf(item);
         if(index>-1){
@@ -121,9 +131,10 @@
           button.classList.add('selected');
           button.setAttribute('aria-pressed','true');
         }
-        var sum=selected.reduce(function(totalValue,current){return totalValue+current[1]},0);
-        total.textContent=sum.toLocaleString('en-EG')+' ج.م';
-        var message=selected.length?'مرحبًا NUMUW - اخترت '+selected.map(function(x){return x[0]}).join('، ')+'؛ التقدير الأدنى '+sum.toLocaleString('en-EG')+' ج.م. أريد تحديد النطاق.':'مرحبًا NUMUW - أريد معرفة نقطة البداية المناسبة لمشروعي.';
+        var oneTime=selected.filter(function(x){return x.type==='oneTime'}).reduce(function(totalValue,current){return totalValue+current.price},0);
+        var monthly=selected.filter(function(x){return x.type==='monthly'}).reduce(function(totalValue,current){return totalValue+current.price},0);
+        total.textContent=(oneTime.toLocaleString('en-EG')+' ج.م مرة واحدة'+(monthly?' + '+monthly.toLocaleString('en-EG')+' ج.م / شهر':''));
+        var message=selected.length?'مرحبًا NUMUW - اخترت '+selected.map(function(x){return x.name}).join('، ')+'؛ تقدير البداية: '+oneTime.toLocaleString('en-EG')+' ج.م مرة واحدة'+(monthly?' + '+monthly.toLocaleString('en-EG')+' ج.م / شهر':'')+'. أريد تحديد النطاق.':'مرحبًا NUMUW - أريد معرفة نقطة البداية المناسبة لمشروعي.';
         wa.href='https://wa.me/201127788810?text='+encodeURIComponent(message);
         emitTool('estimator','start');
       });
@@ -138,6 +149,7 @@
     f.addEventListener('submit',function(e){
       e.preventDefault();
       var goal=f.elements.goal.value;
+      var maturity=f.elements.maturity.value;
       var plans={
         'تقليل العمل اليدوي':['رسم العملية الحالية','تحديد ما يمكن تبسيطه','بناء Automation Sprint','اختبار الحالات والاستثناءات','توثيق وتسليم'],
         'بناء حضور رقمي':['تحديد العرض والـICP','بناء الصفحة/الموقع','SEO + local foundation','تحسين مسار التحويل','قياس الجولة الأولى'],
@@ -145,6 +157,11 @@
         'تحسين التجارة الإلكترونية':['تدقيق العرض والـUX','تحسين صفحات المنتجات','فحص checkout friction','قياس التحويل والاقتصاديات','Retention experiments']
       };
       var steps=plans[goal]||['تحديد ICP والعرض','Landing + lead capture','Follow-up + qualification','Measurement + optimization'];
+      if(maturity==='متقدم'){
+        steps=steps.slice(2).concat(['قياس الأداء والتوسع','توثيق الجولة التالية']);
+      }else if(maturity==='متوسط'){
+        steps=steps.slice(1).concat(['قياس الجولة التالية']);
+      }
       var phases=[
         {label:'Days 1-30',items:steps.slice(0,2)},
         {label:'Days 31-60',items:steps.slice(2,4)},
