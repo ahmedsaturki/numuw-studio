@@ -18,22 +18,22 @@ function walk(dir, out = []) {
 }
 
 function tags(html, name) {
-  return html.match(new RegExp("<" + name + "\\b[^>]*>", "gi")) || [];
+  return html.match(new RegExp("<" + name + "\b[^>]*>", "gi")) || [];
 }
 
 function attr(tag, name) {
-  const re = new RegExp("\\b" + name + "\\s*=\\s*[\"']([^\"']*)[\"']", "i");
+  const re = new RegExp("\b" + name + "\s*=\s*[\"']([^\"']*)[\"']", "i");
   return tag.match(re)?.[1] || "";
 }
 
 function bodyText(html) {
   return html
-    .replace(/<script[\\s\\S]*?<\\/script>/gi, " ")
-    .replace(/<style[\\s\\S]*?<\\/style>/gi, " ")
-    .replace(/<header[\\s\\S]*?<\\/header>/gi, " ")
-    .replace(/<footer[\\s\\S]*?<\\/footer>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<header[\s\S]*?<\/header>/gi, " ")
+    .replace(/<footer[\s\S]*?<\/footer>/gi, " ")
     .replace(/<[^>]+>/g, " ")
-    .replace(/\\s+/g, " ")
+    .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
 }
@@ -56,7 +56,7 @@ for (const file of htmlFiles) {
 
   if (!/^<!doctype html>/i.test(html)) fail(file, "missing HTML5 doctype");
 
-  const titleTags = html.match(/<title\\b[^>]*>[\\s\\S]*?<\\/title>/gi) || [];
+  const titleTags = html.match(/<title\b[^>]*>[\s\S]*?<\/title>/gi) || [];
   if (titleTags.length !== 1 || !titleTags[0].replace(/<[^>]+>/g, "").trim()) {
     fail(file, "title contract failed");
   }
@@ -64,20 +64,20 @@ for (const file of htmlFiles) {
   const metaDescription = tags(html, "meta").filter(tag => attr(tag, "name").toLowerCase() === "description");
   if (!is404 && metaDescription.length !== 1) fail(file, "exactly one meta description required");
 
-  const canonical = tags(html, "link").filter(tag => attr(tag, "rel").toLowerCase().split(/\\s+/).includes("canonical"));
+  const canonical = tags(html, "link").filter(tag => attr(tag, "rel").toLowerCase().split(/\s+/).includes("canonical"));
   if (!is404 && canonical.length !== 1) fail(file, "exactly one canonical required");
 
-  const htmlOpen = html.match(/<html\\b[^>]*>/i)?.[0] || "";
+  const htmlOpen = html.match(/<html\b[^>]*>/i)?.[0] || "";
   if (!attr(htmlOpen, "lang")) fail(file, "html lang missing");
-  if (!/\\bdir\\s*=\\s*[\"'](?:rtl|ltr)[\"']/i.test(htmlOpen)) fail(file, "html dir missing/invalid");
+  if (!/\bdir\s*=\s*[\"'](?:rtl|ltr)[\"']/i.test(htmlOpen)) fail(file, "html dir missing/invalid");
 
-  if (!/<main\\b/i.test(html)) fail(file, "main landmark missing");
-  if (!is404 && (html.match(/<h1\\b/gi) || []).length !== 1) fail(file, "exactly one h1 required");
+  if (!/<main\b/i.test(html)) fail(file, "main landmark missing");
+  if (!is404 && (html.match(/<h1\b/gi) || []).length !== 1) fail(file, "exactly one h1 required");
   if (is404 && !/name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) fail(file, "404 must be noindex");
 
   if (!is404) {
     const canonicalUrl = attr(canonical[0], "href");
-    const expected = BASE + (file === "index.html" ? "" : file.replace(/\\/index\\.html$/, "/"));
+    const expected = BASE + (file === "index.html" ? "" : file.replace(/\/index\.html$/, "/"));
     if (canonicalUrl !== expected) fail(file, "canonical mismatch");
 
     const requiredMeta = [
@@ -104,7 +104,7 @@ for (const file of htmlFiles) {
   }
 
   for (const tag of tags(html, "meta")) {
-    if (/\\b(?:content|href|rel|name|property)[A-Za-z0-9]+\\s*=/i.test(tag)) {
+    if (/\b(?:content|href|rel|name|property)[A-Za-z0-9]+\s*=/i.test(tag)) {
       fail(file, "malformed metadata attribute");
     }
   }
@@ -114,21 +114,21 @@ for (const file of htmlFiles) {
   }
 
   if (/<h[1-6][A-Za-z]/i.test(html)) fail(file, "malformed heading tag name");
-  if (/<[^>]+\\s+on[a-z]+\\s*=/i.test(html)) fail(file, "inline event handler detected");
+  if (/<[^>]+\s+on[a-z]+\s*=/i.test(html)) fail(file, "inline event handler detected");
 
-  const headingLevels = [...html.matchAll(/<h([1-6])\\b[^>]*>/gi)].map(match => Number(match[1]));
+  const headingLevels = [...html.matchAll(/<h([1-6])\b[^>]*>/gi)].map(match => Number(match[1]));
   for (let i = 1; i < headingLevels.length; i++) {
     if (headingLevels[i] > headingLevels[i - 1] + 1) fail(file, "heading hierarchy skips a level");
   }
 
   const ids = new Set();
-  for (const match of html.matchAll(/\\bid=["']([^"']+)["']/gi)) {
+  for (const match of html.matchAll(/\bid=["']([^"']+)["']/gi)) {
     if (ids.has(match[1])) fail(file, "duplicate id=" + match[1]);
     ids.add(match[1]);
   }
 
-  const staticSkip = /<a\\b[^>]*href=["']#main["'][^>]*class=["'][^"']*skip/i.test(html);
-  const sharedSkipFallback = /<script\\b[^>]*src=["'][^"']*assets\\/js\\/numuw\\.js["'][^>]*>/i.test(html);
+  const staticSkip = /<a\b[^>]*href=["']#main["'][^>]*class=["'][^"']*skip/i.test(html);
+  const sharedSkipFallback = /<script\b[^>]*src=["'][^"']*assets\/js\/numuw\.js["'][^>]*>/i.test(html);
   if (!is404 && !staticSkip && !sharedSkipFallback) fail(file, "skip navigation contract missing");
   if (!is404 && !staticSkip && sharedSkipFallback) warnings.push(file + ": skip link depends on shared runtime");
 
@@ -144,12 +144,12 @@ for (const file of htmlFiles) {
 
   for (const tag of tags(html, "a")) {
     const a = attr(tag, "target");
-    if (a === "_blank" && !attr(tag, "rel").toLowerCase().split(/\\s+/).includes("noopener")) {
+    if (a === "_blank" && !attr(tag, "rel").toLowerCase().split(/\s+/).includes("noopener")) {
       fail(file, "target=_blank missing noopener");
     }
   }
 
-  for (const block of html.matchAll(/<script\\b[^>]*type=["']application\\/ld\\+json["'][^>]*>([\\s\\S]*?)<\\/script>/gi)) {
+  for (const block of html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
     try {
       JSON.parse(block[1]);
     } catch {
@@ -195,20 +195,20 @@ for (const [value, items] of descriptions) {
 }
 
 const sitemap = fs.existsSync(path.join(ROOT, "sitemap.xml")) ? fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8") : "";
-const locs = [...sitemap.matchAll(/<loc>\\s*([^<]+)\\s*<\\/loc>/gi)].map(match => match[1].trim());
+const locs = [...sitemap.matchAll(/<loc>\s*([^<]+)\s*<\/loc>/gi)].map(match => match[1].trim());
 if (!locs.length) fail("sitemap.xml", "no loc entries");
 if (locs.some(url => !url.startsWith(BASE))) fail("sitemap.xml", "non-canonical origin found");
 for (const file of pages) {
-  const expected = BASE + (file === "index.html" ? "" : file.replace(/\\/index\\.html$/, "/"));
+  const expected = BASE + (file === "index.html" ? "" : file.replace(/\/index\.html$/, "/"));
   if (!locs.includes(expected)) fail("sitemap.xml", "missing " + expected);
 }
-if (locs.some(url => /\\/404\\.html$/i.test(url))) fail("sitemap.xml", "404 must not be listed");
+if (locs.some(url => /\/404\.html$/i.test(url))) fail("sitemap.xml", "404 must not be listed");
 
 if (!fs.existsSync(path.join(ROOT, "SECURITY.md"))) fail("SECURITY.md", "missing");
 if (!fs.existsSync(path.join(ROOT, ".well-known/security.txt"))) fail(".well-known/security.txt", "missing");
 
 const css = fs.existsSync(path.join(ROOT, "assets/css/numuw.css")) ? fs.readFileSync(path.join(ROOT, "assets/css/numuw.css"), "utf8") : "";
-if (!/:focus-visible\\{[^}]*outline:2px solid var\\(--navy\\)/.test(css)) fail("assets/css/numuw.css", "visible focus contract missing");
+if (!/:focus-visible\{[^}]*outline:2px solid var\(--navy\)/.test(css)) fail("assets/css/numuw.css", "visible focus contract missing");
 
 console.log("NUMUW SYSTEM AUDIT");
 console.log("Pages: " + pages.length);
