@@ -47,6 +47,30 @@ const htmlFiles = walk(root)
   .map(rel)
   .sort();
 
+const indexable = htmlFiles.filter(f => f !== "404.html");
+const manifestPath = path.join(root, "docs", "SITE-MANIFEST.json");
+if (!fs.existsSync(manifestPath)) {
+  failures.push("docs/SITE-MANIFEST.json: missing route manifest");
+} else {
+  try {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    const routes = Array.isArray(manifest.routes) ? manifest.routes : [];
+    const paths = routes.map(route => route.path);
+    const expectedRoutes = indexable.map(file => "/" + file.replace(/index\.html$/, "").replace(/\\/g, "/"));
+    const duplicates = paths.filter((route, i) => paths.indexOf(route) !== i);
+    for (const duplicate of duplicates) failures.push(`SITE-MANIFEST: duplicate route ${duplicate}`);
+    for (const route of expectedRoutes) if (!paths.includes(route)) failures.push(`SITE-MANIFEST: missing route ${route}`);
+    for (const route of paths) if (!expectedRoutes.includes(route)) failures.push(`SITE-MANIFEST: orphan route ${route}`);
+    for (const entry of routes) {
+      if (!entry.family || !entry.purpose || !Array.isArray(entry.audience) || !entry.audience.length || !entry.primary_action || !entry.next_step) {
+        failures.push(`SITE-MANIFEST: incomplete contract for ${entry.path || "(unknown)"}`);
+      }
+    }
+  } catch {
+    failures.push("docs/SITE-MANIFEST.json: invalid JSON");
+  }
+}
+
 const sitemap = fs.existsSync(path.join(root, "sitemap.xml"))
   ? fs.readFileSync(path.join(root, "sitemap.xml"), "utf8")
   : "";
