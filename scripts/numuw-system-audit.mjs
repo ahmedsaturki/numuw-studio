@@ -16,6 +16,7 @@ function walk(dir){
 }
 function attrs(tag){
   const out={};
+  if(typeof tag!=="string"||!tag) return out;
   let i=1;
   const isNameChar=function(ch){return !!ch&&/[A-Za-z0-9_:.-]/.test(ch)};
   const isSpace=function(ch){return !!ch&&/\s/.test(ch)};
