@@ -45,21 +45,39 @@
 
   function initEstimator(){
     var list=byId("estList"),total=byId("estTotal"),wa=byId("estWa");if(!list||!total||!wa)return;
-    var items=[["لاندنج بيدج",8000],["موقع شركة",15000],["هوية بصرية",6000],["أتمتة عملية",8000],["AI Workflow",8000],["SEO / Local",6000],["CRM",6000],["KPI Dashboard",12000],["Growth Partner شهري",6500]];
+    var items=[
+      {name:"لاندنج بيدج",price:8000,billing:"one-time"},
+      {name:"موقع شركة",price:15000,billing:"one-time"},
+      {name:"هوية بصرية",price:6000,billing:"one-time"},
+      {name:"أتمتة عملية",price:8000,billing:"one-time"},
+      {name:"AI Workflow",price:8000,billing:"one-time"},
+      {name:"SEO / Local",price:6000,billing:"one-time"},
+      {name:"CRM",price:6000,billing:"one-time"},
+      {name:"KPI Dashboard",price:12000,billing:"one-time"},
+      {name:"Growth Partner شهري",price:6500,billing:"monthly"}
+    ];
     var selected=[];
+    function renderEstimate(){
+      var oneTime=selected.filter(function(x){return x.billing==="one-time"}).reduce(function(s,x){return s+x.price},0);
+      var monthly=selected.filter(function(x){return x.billing==="monthly"}).reduce(function(s,x){return s+x.price},0);
+      total.replaceChildren();
+      if(!selected.length){total.textContent="0 ج.م";return}
+      total.appendChild(node("strong","",money(oneTime)));
+      if(oneTime)total.appendChild(document.createElement("br"));
+      if(monthly)total.appendChild(node("span","estimate-monthly",(oneTime?" + ":"")+money(monthly)+" / شهر"));
+      wa.href=waUrl("مرحبًا NUMUW - اخترت "+selected.map(function(x){return x.name}).join("، ")+"؛ التقدير المبدئي: مرة واحدة "+money(oneTime)+ (monthly?"، و"+money(monthly)+" شهريًا":"")+". أريد تحديد النطاق.");
+    }
     items.forEach(function(item){
       var button=node("button","card tool-choice");
       button.type="button";button.setAttribute("aria-pressed","false");
       button.appendChild(node("div","icon","＋"));
-      button.appendChild(node("h3","",item[0]));
-      button.appendChild(node("p","", "من "+money(item[1])));
+      button.appendChild(node("h3","",item.name));
+      button.appendChild(node("p","", "من "+money(item.price)+(item.billing==="monthly"?" / شهر":"")));
       button.addEventListener("click",function(){
         var i=selected.indexOf(item);
         if(i>-1){selected.splice(i,1);button.classList.remove("selected");button.setAttribute("aria-pressed","false")}
         else{selected.push(item);button.classList.add("selected");button.setAttribute("aria-pressed","true")}
-        var sum=selected.reduce(function(s,x){return s+x[1]},0);
-        total.textContent=money(sum);
-        wa.href=waUrl("مرحبًا NUMUW - اخترت "+selected.map(function(x){return x[0]}).join("، ")+"؛ التقدير الأدنى "+money(sum)+". أريد تحديد النطاق.")
+        renderEstimate();
       });
       list.appendChild(button)
     })
@@ -69,24 +87,32 @@
     var f=byId("roadForm");if(!f)return;
     var road=byId("road");
     var maps={
-      "تقليل العمل اليدوي":["رسم العملية الحالية","بناء Automation Sprint","اختبار الحالات","توثيق وتسليم"],
-      "بناء حضور رقمي":["تحديد العرض","بناء الصفحة/الموقع","Google + SEO foundation","قياس وتحسين"],
-      "تنظيم المبيعات والمتابعة":["رسم رحلة الـlead","Lead capture + CRM","Follow-up workflow","Pipeline review"],
-      "تحسين التجارة الإلكترونية":["تدقيق العرض والـUX","تحسين صفحات المنتجات","قياس التحويل","Retention experiments"]
+      "زيادة العملاء المحتملين":["Baseline + ICP + offer","Landing / CTA + lead capture","Follow-up + measurement + next experiment"],
+      "تقليل العمل اليدوي":["Process map + baseline","Workflow build + test","Handover + measurement + refinement"],
+      "بناء حضور رقمي":["Offer + asset audit","Site / landing + search foundation","Conversion testing + measurement"],
+      "تنظيم المبيعات والمتابعة":["Pipeline + baseline","CRM + qualification + follow-up","Pipeline review + optimization"],
+      "تحسين التجارة الإلكترونية":["Offer + UX audit","Product / checkout improvements","Conversion + retention experiments"]
+    };
+    var maturityLabels={
+      "مبتدئ":["تثبيت الأساس","تنفيذ تدريجي","قياس أولي"],
+      "متوسط":["ترتيب وتحسين","تنفيذ واختبار","قياس وتحسين"],
+      "متقدم":["تدقيق أعمق","تكامل وتحسين","تجارب وتحسين مركب"]
     };
     f.addEventListener("submit",function(e){
       e.preventDefault();
-      var steps=maps[f.goal.value]||["تحديد ICP والعرض","Landing + Lead capture","Follow-up + qualification","Measurement + optimization"];
+      var steps=maps[f.goal.value]||["Baseline + priorities","Build the biggest improvement","Measure + define the next cycle"];
+      var labels=maturityLabels[f.maturity.value]||maturityLabels["مبتدئ"];
+      var cycles=steps.map(function(step,i){return labels[i]+": "+step});
       road.replaceChildren();
       var list=node("ol");
-      steps.forEach(function(step,i){
+      cycles.forEach(function(step,i){
         var li=node("li","tool-roadmap-item");
         li.appendChild(node("strong","","Days "+(i*30+1)+"-"+((i+1)*30)));
         li.appendChild(document.createTextNode(" - "+step));
         list.appendChild(li)
       });
       road.appendChild(list);
-      road.appendChild(node("div","notice mt-18","خطة أولية تحتاج baseline حقيقي قبل الالتزام بالتنفيذ."))
+      road.appendChild(node("div","notice mt-18","خطة أولية من ثلاث دورات. تحتاج baseline حقيقي واعتماديات واضحة قبل الالتزام بالتنفيذ."));
     })
   }
 
