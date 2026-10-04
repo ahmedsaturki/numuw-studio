@@ -7,7 +7,7 @@
 `landing/` contains focused service and industry acquisition pages. Every landing should have one audience, one core promise, one primary CTA and one clear next step.
 
 ## Tools
-`tools/` contains browser-only tools with no external API dependency. Any numeric result is a self-reported scenario unless a page explicitly says otherwise. The current decision stack includes diagnostic, automation, ROI, estimation, roadmap, website readiness, solution finding and brief generation.
+`tools/` contains browser-only tools with no external API dependency. Any numeric result is a self-reported scenario unless a page explicitly says otherwise. The current decision stack includes diagnostic, automation, ROI, estimation, roadmap, website readiness, solution finding and brief generation. Solution Finder routes intent to the right next step; Brief Builder turns qualified intent into a structured human-reviewed contact message.
 
 ## Products
 `products/` contains productized offers. Product pages describe scope, audience, deliverables and commercial next step.
