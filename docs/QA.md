@@ -1,12 +1,14 @@
 # NUMUW QA Protocol
 
-## Static release gate
+## Canonical source release gate
 
 The repository is intentionally build-free and GitHub Pages-compatible. Every public HTML route must pass the dependency-free audit:
 
-`node scripts/numuw-static-audit.mjs`
+`node scripts/release-gate.mjs`
 
-The audit checks:
+The canonical gate runs the production static audit, the R1–R17 research benchmark and its regression suite as one blocking decision. The individual scanners remain available for diagnosis.
+
+The static audit checks:
 
 - HTML5 doctype, viewport, title, description and one primary H1.
 - A canonical URL on every indexable HTML page; `404.html` remains `noindex`.
