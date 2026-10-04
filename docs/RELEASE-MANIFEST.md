@@ -11,6 +11,7 @@ Included:
 - Business Library and public PDF exports
 - Legal / Trust Center (privacy notice and disclaimer)
 - Solution Finder + Brief Builder conversion layer
+- Sales Discovery + Delivery QA playbooks
 - Brand / Media / Insights / Resources
 - Shared CSS / JavaScript
 - Canonical, Open Graph, Twitter and JSON-LD metadata across public HTML pages
