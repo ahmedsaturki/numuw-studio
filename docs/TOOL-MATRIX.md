@@ -1,14 +1,18 @@
 # NUMUW Tool Matrix
 
-| Tool | Primary question | Output | Next step |
+| Tool | Primary question | Output | Next route |
 |---|---|---|---|
-| Growth Diagnostic | أين أكبر فجوة؟ | Self-assessment score + priorities | Diagnostic conversation |
-| Automation Finder | هل العملية تستحق الأتمتة؟ | Time/cost scenario | Automation scope |
-| ROI Scenario Calculator | ماذا يحدث تحت افتراضات مالية مختلفة؟ | Scenario model | Validate assumptions |
-| Growth Project Estimator | ما حجم مكونات المشروع؟ | Scope estimate | Written scope |
-| 90-Day Roadmap | ماذا نفعل أولًا؟ | Priority sequence | Scope the first cycle |
-| Website Readiness | هل أساسيات الموقع جاهزة؟ | Readiness checklist | Website / conversion review |
-| Solution Finder | من أين أبدأ؟ | Best-fit starting path | Relevant product / landing |
-| Brief Builder | ماذا أرسل في أول رسالة؟ | Structured client brief | WhatsApp conversation |
+| Solution Finder | Where should I start? | Recommended path | Landing / Product |
+| Growth Diagnostic | Where is my biggest gap? | Self-assessment + priorities | Diagnostic / Product |
+| Automation Finder | Is a repetitive process worth testing? | Time/cost scenario | Automation Sprint |
+| ROI Scenario | What does this assumption imply? | Theoretical ROI / payback | Scope validation |
+| Project Estimator | What is the rough starting scope? | One-time + recurring ranges | Product / Proposal |
+| 90-Day Roadmap | What should happen first? | Three-phase planning model | Diagnostic / Product |
+| Website Readiness | Is the foundation ready? | Self-audit + missing basics | Website / Diagnostic |
+| Brief Builder | How do I explain the situation? | Reviewable WhatsApp brief | Human conversation |
 
-All tools are browser-side decision aids. They do not claim to crawl external systems or guarantee business results.
+## Tool contract
+
+Inputs → Assumptions → Logic → Result → Limitations → Next Action
+
+All current tools are browser-local. They do not crawl external systems or store user inputs on a NUMUW server. Numeric results are scenarios or self-assessments unless explicitly stated otherwise.
