@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT=path.resolve(path.dirname(fileURLToPath(import.meta.url)),"..");
 const BASE="https://ahmedsaturki.github.io/numuw-studio/";
+const NAV=["","solutions/","industries/","tools/","products/","pages/proof/","pages/"];
 const FAIL=[],WARN=[];
 const files=[];
 function walk(dir){
@@ -82,12 +83,14 @@ for(const file of html){
   const nav=h.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/i)?.[0]||"";
   if(!notFound && !/data-nav|class=["'][^"']*navlinks/i.test(nav)) FAIL.push(file+": canonical nav missing");
   if(!notFound){
-    const expected=["","solutions/","industries/","tools/","products/","pages/proof/","pages/","start/"];
+    const expected=NAV;
     const nt=[];
     for(const a of nav.matchAll(/<a\b[^>]*href=["']([^"']+)/gi)){
       const t=target(file,a[1],set); if(t) nt.push(t.replace(/\/index\.html$/,"/").replace(/^index\.html$/,""));
     }
     for(const e of expected) if(!nt.includes(e)) FAIL.push(file+": nav missing "+e);
+    const startPath=(file==="index.html"?"start/":"../".repeat(file.split("/").length-1)+"start/");
+    if(!h.includes('href="'+startPath+'"')) FAIL.push(file+": Start CTA missing from header");
   }
 
   for(const a of links){
