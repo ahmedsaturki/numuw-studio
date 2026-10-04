@@ -145,6 +145,9 @@ function resolveLocalHref(sourcePath, href) {
 function existsPublic(p) {
   return fs.existsSync(path.join(root, p));
 }
+function isNoIndex(html) {
+  return /<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
+}
 
 function expectedCanonical(file) {
   return file === "index.html" ? PUBLIC_ORIGIN : PUBLIC_ORIGIN + file.replace(/\\/g, "/").replace(/index\.html$/, "");
