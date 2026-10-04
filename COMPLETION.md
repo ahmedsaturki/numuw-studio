@@ -60,7 +60,7 @@ A deterministic static site-quality scanner (R1–R16) and autoresearch runner v
 | Metric | Value | Notes |
 |--------|-------|-------|
 | `issues` | 0 | Floor; R2, R7, R8 fully resolved |
-| `total_bytes` | 632,372 | Includes untracked PDFs (volatile) |
+| `total_bytes` | ~642,900 | Counts every walked file, Markdown docs included; editing this file changes it. Not part of the objective |
 | `html_bytes` | 330,961 | Reliable content-weight metric |
 | `combined` | 330,961 | `issues × 1e6 + html_bytes` |
 
@@ -77,8 +77,8 @@ A deterministic static site-quality scanner (R1–R16) and autoresearch runner v
 - R10 internal links: 0 broken ✓
 - R11 internal scripts: 0 broken ✓
 - R12 same-page anchors: 0 broken ✓
-- R13 sitemap coverage: 52/52 pages listed ✓
-- R14 sitemap integrity: 54 `<loc>`, 0 bad entries ✓
+- R13 sitemap coverage: 51/51 indexable pages listed ✓ (`404.html` exempt by design)
+- R14 sitemap integrity: 54 `<loc>` = 51 pages + 3 PDF exports, 0 bad entries ✓
 - R15 duplicate titles: 0 ✓
 - R16 duplicate descriptions: 0 ✓
 
@@ -142,9 +142,11 @@ py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experime
 ```
 
 ### Output format
+
+Illustrative — `total_bytes` varies with documentation edits; the other three are stable.
 ```
 METRIC issues=0
-METRIC total_bytes=632372
+METRIC total_bytes=642919
 METRIC html_bytes=330961
 METRIC issues * 1e6 + html_bytes=330961
 issues: 0
