@@ -33,10 +33,24 @@
   var nav=document.querySelector('[data-nav]');
   var menu=document.querySelector('[data-menu]');
   if(nav && !nav.id)nav.id='primary-nav';
+  if(nav) nav.setAttribute('aria-label',lang==='ar'?'التنقل الرئيسي':'Primary navigation');
   if(menu && nav){
     menu.setAttribute('aria-controls',nav.id);
     menu.setAttribute('aria-expanded',nav.classList.contains('open')?'true':'false');
     menu.setAttribute('aria-label',lang==='ar'?'فتح القائمة':'Open menu');
+  }
+
+  if(nav){
+    var currentPath=location.pathname.replace(/\/+$/,'')||'/';
+    nav.querySelectorAll('a[href]').forEach(function(a){
+      var href=a.getAttribute('href')||'';
+      if(!href || href.charAt(0)==='#' || /^[a-z][a-z0-9+.-]*:/i.test(href)) return;
+      var anchor=new URL(href,location.href);
+      var anchorPath=anchor.pathname.replace(/\/+$/,'')||'/';
+      if(anchor.origin===location.origin && anchorPath===currentPath){
+        a.setAttribute('aria-current','page');
+      }
+    });
   }
 
   /* Do not advertise a bilingual switch on pages that are not actually localized. */
@@ -57,9 +71,21 @@
       var open=nav.classList.toggle('open');
       m.setAttribute('aria-expanded',open?'true':'false');
       m.setAttribute('aria-label',open?(lang==='ar'?'غلق القائمة':'Close menu'):(lang==='ar'?'فتح القائمة':'Open menu'));
+      if(open){
+        var first=nav.querySelector('a[href]');
+        if(first)first.focus();
+      }else{
+        m.focus();
+      }
       return;
     }
     if(e.target.closest('[data-nav] a') && nav && menu){
+      nav.classList.remove('open');
+      menu.setAttribute('aria-expanded','false');
+      menu.setAttribute('aria-label',lang==='ar'?'فتح القائمة':'Open menu');
+      return;
+    }
+    if(nav && menu && nav.classList.contains('open') && !e.target.closest('[data-nav]') && !e.target.closest('[data-menu]')){
       nav.classList.remove('open');
       menu.setAttribute('aria-expanded','false');
       menu.setAttribute('aria-label',lang==='ar'?'فتح القائمة':'Open menu');
