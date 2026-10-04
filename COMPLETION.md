@@ -8,6 +8,8 @@
 
 ## Executive Summary
 
+**Release hardening addendum (2026-10-04):** repository governance and delivery controls were strengthened after the harness work. The public project README was corrected, the 404 path handling was hardened, security reporting files were added, the source audit was expanded, and commercial/handover templates were upgraded. The separate live-release gates remain intentionally open until directly verified.
+
 A deterministic static site-quality scanner (R1–R16) and autoresearch runner v2 have been built for the NUMUW marketing site. The scanner measures SEO and structural issues across all 52 pages; the autoresearch loop iteratively applies fixes while respecting byte-weight guards.
 
 **Current State:**
@@ -90,6 +92,12 @@ the reported totals were wrong.
 ---
 
 ## Known Limitations
+
+### Release-level boundaries
+- The R1–R16 harness proves repository invariants, not live browser behavior, real-user Core Web Vitals, external CTA behavior, indexing state or legal approval.
+- The repository does not grant an open-source reuse license by default.
+- Main-branch protection and GitHub private vulnerability reporting are repository-settings concerns and are not proven by source files alone.
+
 
 1. **Objective at floor:** `issues = 0` cannot be improved further.
 2. **Byte optimization exhausted:** 0 bytes safe whitespace headroom; collapsing whitespace in `<script>`/`<style>` would break i18n statements (newline-separated strings).

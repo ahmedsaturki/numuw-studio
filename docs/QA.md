@@ -16,6 +16,9 @@ The audit checks:
 - Internal relative links and asset references resolve to existing repository files.
 - No `javascript:` URLs.
 - External `_blank` links include `rel="noopener"`.
+- Images include an explicit `alt` attribute.
+- `security.txt` exposes a security-reporting contact and expiry.
+- No inline print/event handler is required for the business-document templates.
 - `sitemap.xml` and the shared `og-image.png` exist.
 
 ## Conversion gate
