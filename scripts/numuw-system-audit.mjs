@@ -130,33 +130,41 @@ for(const file of html){
   if(!notFound&&schemas.length===0) FAIL.push(file+": JSON-LD missing");
   for(const s of schemas){try{JSON.parse(s[1]);}catch{FAIL.push(file+": invalid JSON-LD");}}
   
-  const headings=[...h.matchAll(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
-    .map(m=>m[1].replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().toLowerCase());
+  const headings=[...h.matchAll(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi)]
+    .map(m=>({level:Number(m[1]),text:m[2].replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().toLowerCase()}));
+  for(let i=1;i<headings.length;i++){
+    if(headings[i].level-headings[i-1].level>1) FAIL.push(file+": heading level jump h"+headings[i-1].level+" -> h"+headings[i].level);
+  }
+
+  const plain=h.toLowerCase();
+  const headingText=headings.map(x=>x.text);
+  const hasAny=terms=>terms.some(term=>headingText.some(x=>x.includes(term))||plain.includes(term));
+
   if(file.startsWith("products/")&&file!=="products/index.html"){
-    const has=r=>headings.some(x=>r.test(x))||r.test(h);
     const req=[
-      [/مناسب|fit/i,"fit"],
-      [/لا نبدأ|non[-\\s]?fit|غير مناسب/i,"non-fit"],
-      [/داخل النطاق|خارج النطاق|boundar|scope|مخرجات|deliverables/i,"scope"],
-      [/قبول|acceptance/i,"acceptance"],
-      [/ملكية|ownership/i,"ownership"],
-      [/دعم|support/i,"support"],
-      [/next|التالي|ابدأ|ناقش|اطلب|تواصل/i,"next action"]
+      [["مناسب عندما","fit"],"fit"],
+      [["لا نبدأ به عندما","غير مناسب","non-fit","non fit"],"non-fit"],
+      [["داخل النطاق","خارج النطاق","boundaries","scope","مخرجات","deliverables"],"scope"],
+      [["قبول","acceptance"],"acceptance"],
+      [["ملكية","ownership"],"ownership"],
+      [["دعم","support"],"support"],
+      [["next step","next action","الخطوة التالية","التالي","ابدأ","ناقش","اطلب","تواصل"],"next action"]
     ];
-    const missing=req.filter(x=>!has(x[0])).map(x=>x[1]);
+    const missing=req.filter(([terms])=>!hasAny(terms)).map(([,label])=>label);
     if(missing.length) FAIL.push(file+": incomplete product contract ("+missing.join(", ")+")");
   }
+
   if(file.startsWith("tools/")&&file!=="tools/index.html"){
-    const has=r=>headings.some(x=>r.test(x))||r.test(h);
     const req=[
-      [/purpose|الغرض/i,"purpose"],
-      [/inputs?\\s*(?:&|and)\\s*assumptions|الافتراضات|inputs/i,"inputs/assumptions"],
-      [/limits?\\s*(?:&|and)\\s*privacy|الحدود والخصوصية|الحدود/i,"limits/privacy"],
-      [/next action|الخطوة التالية/i,"next action"]
+      [["purpose","الغرض"],"purpose"],
+      [["inputs & assumptions","inputs and assumptions","الافتراضات","المدخلات"],"inputs/assumptions"],
+      [["limits & privacy","limits and privacy","الحدود والخصوصية","الحدود"],"limits/privacy"],
+      [["next action","الخطوة التالية"],"next action"]
     ];
-    const missing=req.filter(x=>!has(x[0])).map(x=>x[1]);
+    const missing=req.filter(([terms])=>!hasAny(terms)).map(([,label])=>label);
     if(missing.length) FAIL.push(file+": incomplete tool contract ("+missing.join(", ")+")");
   }
+
 }
 for(const [k,v] of titleSeen) if(v.length>1) FAIL.push(v[0]+": duplicate title");
 for(const [k,v] of descSeen) if(k&&v.length>1) FAIL.push(v[0]+": duplicate description");
