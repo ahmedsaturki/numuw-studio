@@ -28,6 +28,10 @@ if (!benchmark.ok || !Number.isFinite(researchIssues) || researchIssues !== 0) {
   results.push(["R1-R17 research benchmark", true]);
 }
 
+const integrity = run("Holistic content integrity", process.execPath, ["scripts/content-integrity-audit.mjs"]);
+results.push(["Holistic content integrity", integrity.ok]);
+if (!integrity.ok) process.exitCode = 1;
+
 const regression = run("R1-R17 regression suite", process.execPath, ["bench/test-site-quality.mjs"]);
 results.push(["R1-R17 regression suite", regression.ok]);
 if (!regression.ok) process.exitCode = 1;
