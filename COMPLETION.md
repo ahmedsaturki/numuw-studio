@@ -28,7 +28,9 @@ the autoresearch loop iteratively applies fixes while respecting byte-weight gua
 **Current state (R1–R17):**
 - `issues = 0` — all 52 pages pass R1–R17 (commit `6b2344a`)
 - `html_bytes = 335,458`
-- `total_bytes = 657,041`
+- `total_bytes = 656,676` as of `6b2344a`. This figure counts every walked file,
+  Markdown docs included, so it rises whenever this document is edited — it is a
+  secondary guard, never an objective.
 - R1–R17 all at **zero**; the objective is at floor. Earlier revisions of this
   document reported `issues = 31` (all R17) — that intermediate state is
   documented under "R17 resolution" below.
@@ -79,7 +81,7 @@ the autoresearch loop iteratively applies fixes while respecting byte-weight gua
 | Metric | Value | Notes |
 |--------|-------|-------|
 | `issues` | 0 | **At floor.** The only tracked objective. All 52 pages pass R1–R17 |
-| `total_bytes` | 657,041 | Counts every walked file, Markdown docs included; editing this file changes it. Not part of the objective |
+| `total_bytes` | 656,676 *(at `6b2344a`)* | Counts every walked file, Markdown docs included; editing this file changes it. Not part of the objective |
 | `html_bytes` | 335,458 | Reliable content-weight metric |
 | `combined` | 335,458 | `issues × 1e6 + html_bytes` |
 

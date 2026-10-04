@@ -53,7 +53,7 @@ The separate `bench/site-quality.mjs` harness contains the deterministic R1–R1
 
 - `issues = 0` — all 52 pages pass R1–R17; this is the tracked objective, and it is at floor
 - `html_bytes = 335,458` — secondary byte-guard metric, not a tracked objective
-- `total_bytes = 657,041` — secondary byte-guard metric, not a tracked objective
+- `total_bytes = 656,676` *(as of `6b2344a`)* — counts every walked file, Markdown docs included, so it rises when this README is edited; secondary byte-guard metric, not a tracked objective
 - `combined = 335,458` (`issues × 1e6 + html_bytes`)
 
 Reaching the floor required both rule scoping and markup fixes for R17 (heading
