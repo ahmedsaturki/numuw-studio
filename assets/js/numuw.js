@@ -2,6 +2,7 @@
   var lang=document.documentElement.lang==='en'?'en':'ar';
   var localized=document.querySelectorAll('[data-ar][data-en]');
   var pageIsLocalized=document.documentElement.getAttribute('data-localized-page')==='true';
+  var pageIsLocalized=document.documentElement.getAttribute('data-localized-page')==='true';
   var langButtons=document.querySelectorAll('[data-lang-btn]');
 
   function applyLang(next){
@@ -9,7 +10,9 @@
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
     document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
-      el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+      var value=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+      if(/<\/?(?:span|em|strong|br)\b/i.test(value))el.innerHTML=value;
+      else el.textContent=value;
     });
     langButtons.forEach(function(b){
       b.textContent=lang==='ar'?'EN':'عربي';
