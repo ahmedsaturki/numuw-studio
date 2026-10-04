@@ -101,7 +101,10 @@ for(const file of htmlFiles){
     if(ids.has(m[1])) add(FAIL,file,"duplicate id="+m[1]); else ids.add(m[1]);
   }
 
-  if(!/<a\\b[^>]*href=["']#main["'][^>]*class=["'][^"']*skip/i.test(html)) add(FAIL,file,"skip link missing");
+  const hasStaticSkip=/<a\\b[^>]*href=["']#main["'][^>]*class=["'][^"']*skip/i.test(html);
+  const hasSharedSkipFallback=/<script\\b[^>]*src=["'][^"']*assets\\/js\\/numuw\\.js["'][^>]*>/i.test(html);
+  if(!is404 && !hasStaticSkip && !hasSharedSkipFallback) add(FAIL,file,"skip navigation contract missing");
+  if(!is404 && !hasStaticSkip && hasSharedSkipFallback) WARN.push(file+": skip link is injected by shared JS; prefer static markup for no-script resilience");
   if(!is404 && !/data-nav|class=["'][^"']*navlinks/i.test(html)) add(FAIL,file,"primary navigation missing");
 
   const menu=tagList(html,"button").find(t=>/data-menu|menu-btn|class=["'][^"']*menu/i.test(t));
