@@ -121,8 +121,8 @@ for(const file of html){
   if(!notFound&&schemas.length===0) FAIL.push(file+": JSON-LD missing");
   for(const s of schemas){try{JSON.parse(s[1]);}catch{FAIL.push(file+": invalid JSON-LD");}}
   
-  const headings=[...h.matchAll(/<h[1-6][^>]*>([\\s\\S]*?)<\\/h[1-6]>/gi)]
-    .map(m=>m[1].replace(/<[^>]+>/g," ").replace(/\\s+/g," ").trim().toLowerCase());
+  const headings=[...h.matchAll(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/gi)]
+    .map(m=>m[1].replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().toLowerCase());
   if(file.startsWith("products/")&&file!=="products/index.html"){
     const has=r=>headings.some(x=>r.test(x))||r.test(h);
     const req=[
