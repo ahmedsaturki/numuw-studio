@@ -56,21 +56,21 @@ const titleSeen=new Map(),descSeen=new Map();
 
 for(const file of html){
   const h=bodies.get(file), markup=cleanMarkup(bodies.get(file)), notFound=file==="404.html";
-  const titleTags=h.match(/<title\b[^>]*>[\s\S]*?<\/title>/gi)||[];
+  const titleTags=markup.match(/<title\b[^>]*>[\s\S]*?<\/title>/gi)||[];
   const title=(titleTags[0]||"").replace(/<[^>]+>/g,"").trim();
   const metas=tagList(markup,"meta");
   const desc=metas.filter(t=>(attrs(t).name||"").toLowerCase()==="description");
   const links=tagList(markup,"a");
   const canonical=tagList(markup,"link").filter(t=>String(attrs(t).rel||"").toLowerCase().split(/\s+/).includes("canonical"));
-  const htmlTag=h.match(/<html\b[^>]*>/i)?.[0]||"";
+  const htmlTag=markup.match(/<html\b[^>]*>/i)?.[0]||"";
   if(!/^<!doctype html>/i.test(h)) FAIL.push(file+": missing doctype");
   if(titleTags.length!==1||!title) FAIL.push(file+": invalid title");
   if(!notFound&&desc.length!==1) FAIL.push(file+": description count");
   if(!notFound&&canonical.length!==1) FAIL.push(file+": canonical count");
   if(!attrs(htmlTag).lang) FAIL.push(file+": lang missing");
   if(!/\bdir\s*=\s*["'](rtl|ltr)["']/i.test(htmlTag)) FAIL.push(file+": dir missing");
-  if(!/<main\b/i.test(h)) FAIL.push(file+": main missing");
-  if(!notFound&&(h.match(/<h1\b/gi)||[]).length!==1) FAIL.push(file+": H1 count");
+  if(!/<main\b/i.test(markup)) FAIL.push(file+": main missing");
+  if(!notFound&&(markup.match(/<h1\b/gi)||[]).length!==1) FAIL.push(file+": H1 count");
   if(notFound&&!/name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(h)) FAIL.push(file+": 404 must be noindex");
 
   if(!notFound){
@@ -86,13 +86,13 @@ for(const file of html){
   }
 
   const ids=new Set();
-  for(const m of h.matchAll(/\bid=["']([^"']+)["']/gi)){if(ids.has(m[1])) FAIL.push(file+": duplicate id="+m[1]);ids.add(m[1]);}
+  for(const m of markup.matchAll(/\bid=["']([^"']+)["']/gi)){if(ids.has(m[1])) FAIL.push(file+": duplicate id="+m[1]);ids.add(m[1]);}
   for(const img of tagList(markup,"img")) if(!/\balt\s*=\s*["'][^"']*["']/i.test(img)) FAIL.push(file+": img alt missing");
-  if(/<[^>]+\s+on[a-z]+\s*=/i.test(h)) FAIL.push(file+": inline event handler");
+  if(/<[^>]+\s+on[a-z]+\s*=/i.test(markup)) FAIL.push(file+": inline event handler");
   if(/<script\b[^>]*src=["']https?:\/\//i.test(h)) FAIL.push(file+": external script");
   if(/<link\b[^>]*rel=["'][^"']*stylesheet[^"']*["'][^>]*href=["']https?:\/\//i.test(h)) FAIL.push(file+": external stylesheet");
 
-  const nav=h.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/i)?.[0]||"";
+  const nav=markup.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/i)?.[0]||"";
   if(!notFound && !/data-nav|class=["'][^"']*navlinks/i.test(nav)) FAIL.push(file+": canonical nav missing");
   if(!notFound){
     const currentUrl=new URL(route(file));
@@ -123,7 +123,7 @@ for(const file of html){
   }
   for(const b of tagList(markup,"button")){
     const a=attrs(b);
-    if(!a.type && /<form\\b/i.test(h)) WARN.push(file+": button in form without explicit type");
+    if(!a.type && /<form\b/i.test(markup)) FAIL.push(file+": button in form without explicit type");
     if(a["aria-controls"]){
       for(const targetId of String(a["aria-controls"]).split(/\\s+/).filter(Boolean)){
         if(!ids.has(targetId)) FAIL.push(file+": aria-controls target missing #"+targetId);
@@ -135,7 +135,7 @@ for(const file of html){
   if(!notFound&&schemas.length===0) FAIL.push(file+": JSON-LD missing");
   for(const s of schemas){try{JSON.parse(s[1]);}catch{FAIL.push(file+": invalid JSON-LD");}}
   
-  const headings=[...h.matchAll(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi)]
+  const headings=[...markup.matchAll(/<h([1-6])[^>]*>([\s\S]*?)<\/h\1>/gi)]
     .map(m=>({level:Number(m[1]),text:m[2].replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim().toLowerCase()}));
   for(let i=1;i<headings.length;i++){
     if(headings[i].level-headings[i-1].level>1) FAIL.push(file+": heading level jump h"+headings[i-1].level+" -> h"+headings[i].level);
