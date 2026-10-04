@@ -148,6 +148,7 @@ for (const file of htmlFiles) {
   }
 
   const staticMarkup = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ");
+  const staticMarkup = html.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ");
   for (const name of ["input", "select", "textarea"]) {
     for (const tag of tags(staticMarkup, name)) {
       const type = attr(tag, "type").toLowerCase();
@@ -177,6 +178,7 @@ for (const file of htmlFiles) {
     }
 
     if (target.endsWith("/")) target += "index.html";
+    if (target === "." || target === "") target = "index.html";
     if (target === "." || target === "") target = "index.html";
     if (!path.posix.extname(target) && fileSet.has(target + "/index.html")) target += "/index.html";
     if (!fileSet.has(target)) add(file, "broken local reference -> " + ref);
