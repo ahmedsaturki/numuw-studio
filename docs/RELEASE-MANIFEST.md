@@ -10,17 +10,19 @@ Included:
 - Company / Method / Proof / Case Studies / Contact
 - Business Library and public PDF exports
 - Legal / Trust Center (privacy notice and disclaimer)
+- Repository Security Policy + `/.well-known/security.txt`
 - Solution Finder + Brief Builder conversion layer
 - Sales Discovery + Delivery QA playbooks
 - Brand / Media / Insights / Resources
 - Shared CSS / JavaScript
 - Canonical, Open Graph, Twitter and JSON-LD metadata across public HTML pages
-- Accessibility hardening for navigation and dynamic tool results
+- Accessibility hardening for navigation, dynamic tool results and document controls
 - Sitemap / robots / resilient 404
 - Dependency-free static audit + GitHub Actions gate
 - Explicit performance budget for third-party runtime dependencies
 - Cacheable homepage CSS/JS assets
 - Privacy-aware measurement specification with inert client-side hooks
+- Commercial templates hardened for scope/change control, acceptance, ownership and secure handover
 - Conversion, QA, architecture and content policy
 
 Quality boundaries:
