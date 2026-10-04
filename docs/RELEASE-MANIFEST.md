@@ -10,12 +10,14 @@ Included:
 - Company / Method / Proof / Case Studies / Contact
 - Business Library and public PDF exports
 - Legal / Trust Center (privacy notice and disclaimer)
+- Solution Finder + Brief Builder conversion layer
 - Brand / Media / Insights / Resources
 - Shared CSS / JavaScript
 - Canonical, Open Graph, Twitter and JSON-LD metadata across public HTML pages
 - Accessibility hardening for navigation and dynamic tool results
 - Sitemap / robots / resilient 404
 - Dependency-free static audit + GitHub Actions gate
+- Explicit performance budget for third-party runtime dependencies
 - Conversion, QA, architecture and content policy
 
 Quality boundaries:
