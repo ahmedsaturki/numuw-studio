@@ -215,39 +215,71 @@
   if(tool==='solution-finder'){
     var finder=qs(main,'#finder'),result=qs(main,'#result');
     if(!finder||!result)return;
-    var map={
-      clarity:{title:'ابدأ بـ NUMUW Diagnostic',desc:'المشكلة أو الأولويات تحتاج تحققًا قبل شراء التنفيذ.',href:'../diagnostic/',label:'ابدأ التشخيص',why:['ترتيب الأولويات أولًا','تقليل خطر بناء الشيء الخطأ','تعريف baseline قبل القياس']},
-      website:{title:'ابدأ بـ Conversion Website',desc:'الواجهة ومسار التحويل هما نقطة البداية الأقرب.',href:'../../landing/website/',label:'استعرض حلول المواقع',why:['الرسالة تحتاج وضوحًا في الواجهة','نقطة التحويل أولوية','يمكن تحديد النطاق قبل التنفيذ']},
-      automation:{title:'ابدأ بـ Automation Sprint',desc:'لديك عملية متكررة تستحق الرسم والاختبار والأتمتة.',href:'../../landing/automation/',label:'استعرض الأتمتة',why:['مشكلة عملية محددة','أثر التكرار واضح','الأفضل اختبار workflow واحد أولًا']},
-      system:{title:'ابدأ بـ Growth System',desc:'تحتاج عدة طبقات تعمل تحت منطق واحد.',href:'../../products/growth-system/',label:'استعرض Growth System',why:['عدة طبقات مترابطة','الاحتياج يتجاوز مشروعًا منفردًا','النطاق يحتاج تصميمًا موحدًا']}
+    var catalog={
+      diagnostic:{title:'ابدأ بـ NUMUW Diagnostic',desc:'المشكلة أو الأولويات تحتاج تحققًا قبل شراء التنفيذ.',href:'../diagnostic/',label:'ابدأ التشخيص',type:'Diagnostic',why:['ترتيب الأولويات أولًا','تعريف baseline قبل الحكم على النتيجة','تقليل خطر بناء الشيء الخطأ']},
+      kickoff:{title:'ابدأ بـ Digital Kickoff',desc:'تحتاج أساسًا رقميًا واضحًا ومحدودًا قبل التوسع.',href:'../../products/digital-kickoff/',label:'استعرض Digital Kickoff',type:'Digital Kickoff',why:['حاجة تأسيسية واضحة','نطاق أصغر من منظومة كاملة','أصل يمكن البناء عليه لاحقًا']},
+      automation:{title:'ابدأ بـ Automation Sprint',desc:'لديك عملية متكررة تستحق الرسم والاختبار والأتمتة.',href:'../../products/automation-sprint/',label:'استعرض Automation Sprint',type:'Automation Sprint',why:['مشكلة تشغيلية محددة','أثر التكرار قابل للقياس','الأفضل اختبار workflow واحد أولًا']},
+      system:{title:'ابدأ بـ Growth System',desc:'تحتاج عدة طبقات تعمل تحت منطق واحد.',href:'../../products/growth-system/',label:'استعرض Growth System',type:'Growth System',why:['عدة طبقات مترابطة','الاحتياج يتجاوز تدخلًا منفردًا','النطاق يحتاج تصميمًا موحدًا']},
+      partner:{title:'ابدأ بـ Growth Partner',desc:'أنت تبحث عن إيقاع تحسين مستمر أكثر من مشروع منفرد.',href:'../../products/growth-partner/',label:'استعرض Growth Partner',type:'Growth Partner',why:['تحسين مستمر','قرار شهري مبني على البيانات','السعة والأولوية تُدار بوضوح']}
     };
     var sectors={
       b2b:{label:'B2B',href:'../../landing/b2b/'},
       manufacturing:{label:'المصانع والصناعة',href:'../../landing/manufacturing/'},
       realestate:{label:'العقارات',href:'../../landing/real-estate/'},
+      ecommerce:{label:'التجارة الإلكترونية',href:'../../landing/ecommerce/'},
       other:null
     };
+    function rank(goal,clarity,speed,business){
+      var score={diagnostic:0,kickoff:0,automation:0,system:0,partner:0};
+      var reasons={diagnostic:[],kickoff:[],automation:[],system:[],partner:[]};
+      function add(key,n,reason){score[key]+=n;if(reason)reasons[key].push(reason);}
+      if(clarity==='low'){add('diagnostic',6,'وضوح المشكلة منخفض')}
+      if(goal==='clarity')add('diagnostic',5,'الهدف نفسه هو ترتيب الأولويات');
+      if(goal==='website'){add('kickoff',5,'الواجهة ومسار التحويل هما الهدف');add('system',1,'قد تحتاج طبقات مرتبطة لاحقًا');}
+      if(goal==='automation')add('automation',6,'الهدف هو تقليل العمل المتكرر');
+      if(goal==='system')add('system',6,'الهدف يحتاج طبقات مترابطة');
+      if(speed==='ongoing')add('partner',7,'الاختيار المستمر أهم من مشروع منفرد');
+      if(speed==='starter')add('kickoff',3,'تفضيل بداية محددة وصغيرة');
+      if(speed==='sprint')add('automation',2,'تفضيل مشروع مركز وسريع');
+      if(speed==='system')add('system',3,'تفضيل عدة طبقات مترابطة');
+      if(clarity==='high'&&goal==='website')add('kickoff',1,'المشكلة محددة بما يكفي لتحديد نطاق أولي');
+      if(clarity==='high'&&goal==='automation')add('automation',1,'العملية محددة بما يكفي لـSprint');
+      if(business==='b2b')add('system',1,'سياق B2B قد يستفيد من ربط الطلب والمتابعة والقرار');
+      if(business==='manufacturing'){add('automation',1,'السياق الصناعي يرفع قيمة تحسين العمليات');add('system',1,'السياق الصناعي قد يحتاج أكثر من طبقة');}
+      if(business==='realestate'){add('kickoff',1,'الحضور ومسار الـLead مهمان في العقارات');add('system',1,'المتابعة والتشغيل قد تصبح جزءًا من الاختناق');}
+      if(business==='ecommerce'){add('kickoff',2,'مسار الشراء يبدأ من أصل رقمي قابل للتحويل');add('system',1,'التحويل والاحتفاظ والقياس قد تحتاج طبقات مترابطة');}
+      var ranked=Object.keys(score).sort(function(a,b){return score[b]-score[a]});
+      if(ranked[0]==='diagnostic' && clarity==='high' && goal!=='clarity') ranked.push('kickoff');
+      return {ranked:ranked,score:score,reasons:reasons};
+    }
     finder.addEventListener('submit',function(e){
       e.preventDefault();
       var d=new FormData(finder);
       var goal=d.get('goal'),clarity=d.get('clarity'),speed=d.get('speed'),business=d.get('business');
-      var pick=map[goal]||map.clarity;
-      if(clarity==='low'&&goal!=='clarity')pick=map.clarity;
-      if(speed==='ongoing')pick={title:'ابدأ بـ Growth Partner',desc:'أنت تبحث عن إيقاع تحسين مستمر أكثر من مشروع منفرد.',href:'../../products/growth-partner/',label:'استعرض Growth Partner',why:['تحسين مستمر','القرار يتكرر مع البيانات','النطاق والسعة يحددان الأولويات']};
-      var sector=sectors[business];
+      var ranking=rank(goal,clarity,speed,business),primary=ranking.ranked[0],pick=catalog[primary];
+      var second=ranking.ranked[1],confidence=Math.min(96,Math.max(52,62+(ranking.score[primary]-ranking.score[second])*5));
       result.replaceChildren();
       result.appendChild(make('h2',{class:'result-title'},pick.title));
       result.appendChild(make('p',{class:'lead'},pick.desc));
-      var why=make('div',{class:'why'});pick.why.forEach(function(x){why.appendChild(make('div',{},x))});result.appendChild(why);
-      if(sector){result.appendChild(make('p',{class:'notice u-mt-18'},'السياق المقترح: '+sector.label));}
+      var confidenceBox=make('div',{class:'notice u-mt-18'},'درجة الملاءمة المبدئية: '+confidence+'% — هذه توصية توجيهية وليست تشخيصًا نهائيًا.');
+      result.appendChild(confidenceBox);
+      var why=make('div',{class:'why'});
+      pick.why.forEach(function(x){why.appendChild(make('div',{},x))});
+      result.appendChild(why);
+      var directReason=ranking.reasons[primary].slice(0,2);
+      if(directReason.length){var reasonBox=make('div',{class:'notice u-mt-18'},'لماذا هذا المسار؟ '+directReason.join(' · '));result.appendChild(reasonBox);}
+      var sector=sectors[business];
+      if(sector)result.appendChild(make('p',{class:'notice u-mt-18'},'السياق المقترح: '+sector.label));
       var actions=make('div',{class:'actions'});
       actions.appendChild(make('a',{class:'btn btn-dark',href:pick.href},pick.label));
       if(sector)actions.appendChild(make('a',{class:'btn btn-outline',href:sector.href},'افتح مسار القطاع'));
       actions.appendChild(make('a',{class:'btn btn-outline',href:'../brief-builder/'},'ابنِ Brief'));
       result.appendChild(actions);
+      var alt=make('p',{class:'note u-mt-18'},'بديل قريب: '+catalog[second].type+' — '+catalog[second].desc);
+      result.appendChild(alt);
+      try{window.dispatchEvent(new CustomEvent('numuw:tool_complete',{detail:{tool:'solution-finder',state:'complete'}}))}catch(err){}
     });
   }
-
   if(tool==='brief-builder'){
     var form=qs(main,'#brief'),output=qs(main,'#output');
     if(!form||!output)return;
