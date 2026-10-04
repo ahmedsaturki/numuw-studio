@@ -86,7 +86,7 @@ for(const file of html){
     const expected=NAV;
     const nt=[];
     for(const a of nav.matchAll(/<a\b[^>]*href=["']([^"']+)/gi)){
-      const t=target(file,a[1],set); if(t) nt.push(t.replace(/\/index\.html$/,"/").replace(/^index\.html$/,""));
+      const t=target(file,a[1],set); if(t) nt.push(navKey(t));
     }
     for(const e of expected) if(!nt.includes(e)) FAIL.push(file+": nav missing "+e);
     const startPath=(file==="index.html"?"start/":"../".repeat(file.split("/").length-1)+"start/");
