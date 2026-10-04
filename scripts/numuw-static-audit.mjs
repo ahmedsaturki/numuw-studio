@@ -1,9 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC_ORIGIN = "https://ahmedsaturki.github.io/numuw-studio/";
+const OPERATING_ROUTES = new Set([
+  "documents/proposal-template/index.html",
+  "documents/onboarding/index.html",
+  "documents/handover/index.html",
+  "documents/terms/index.html",
+  "documents/playbooks/index.html",
+  "documents/playbooks/sales-discovery/index.html",
+  "documents/playbooks/delivery-qa/index.html"
+]);
 const failures = [];
 const warnings = [];
 
@@ -131,6 +141,27 @@ function resolveLocalHref(sourcePath, href) {
 function existsPublic(p) {
   return fs.existsSync(path.join(root, p));
 }
+function expectedCanonical(file) {
+  return file==="index.html" ? PUBLIC_ORIGIN : PUBLIC_ORIGIN + file.replace(/\\/g,"/").replace(/index\\.html$/,"");
+}
+function checkGlobalNav(file, html) {
+  const nav = html.match(/<nav\\b[^>]*data-nav[^>]*>([\\s\\S]*?)<\\/nav>/i)?.[1] || "";
+  if(!nav){ failures.push(file + ": canonical data-nav missing"); return; }
+  const required=["index.html","landing/index.html","tools/index.html","products/index.html","pages/index.html","resources/index.html","pages/contact/index.html"];
+  const targets=new Set();
+  for(const match of nav.matchAll(/<a\\b[^>]*href=["']([^"']+)["'][^>]*>/gi)){
+    const target=resolveLocalHref(file,match[1]);
+    if(target)targets.add(target);
+  }
+  for(const target of required) if(!targets.has(target)) failures.push(file + ": global navigation missing route " + target);
+  if(targets.size!==required.length) failures.push(file + ": global navigation contains unexpected or duplicate route targets");
+}
+function checkSamePageAnchors(file, html) {
+  const ids=new Set([...html.matchAll(/\\bid=["']([^"']+)["']/gi)].map(m=>m[1]));
+  for(const match of html.matchAll(/<a\\b[^>]*href=["']#([^"']+)["'][^>]*>/gi)){
+    if(!ids.has(match[1])) failures.push(file + ": same-page anchor target missing #" + match[1]);
+  }
+}
 
 const htmlFiles = walk(root).filter((f) => f.endsWith(".html")).map(rel).sort();
 const titleValues = new Map();
@@ -152,6 +183,8 @@ for (const file of htmlFiles) {
   const footerCount = (html.match(/<footer\b/gi) || []).length;
   const navCount = (html.match(/<nav\b/gi) || []).length;
   const jsonLd = [...html.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)].map((m) => m[1]);
+  const noindex = /<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
+  const fullI18n = /<html\b[^>]*data-i18n=["']full["']/i.test(html);
   const localLinks = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)].map((m) => m[1]);
   const images = [...html.matchAll(/<img\b([^>]*)>/gi)].map((m) => m[1]);
 
@@ -176,6 +209,10 @@ for (const file of htmlFiles) {
   if (!is404 && !/property=["']og:url["']/i.test(html)) failures.push(file + ": missing og:url");
   if (!is404 && !/name=["']twitter:card["']/i.test(html)) failures.push(file + ": missing twitter:card");
   if (!is404 && !/name=["']twitter:image["']/i.test(html)) failures.push(file + ": missing twitter:image");
+  if (!is404 && !/property=["']og:site_name["']\s+content=["']NUMUW \| نُمو["']/i.test(html)) failures.push(file + ": missing or inconsistent og:site_name");
+  if (!is404 && file!=="index.html" && !/class=["'][^"']*breadcrumbs[^"']*["']/i.test(html)) failures.push(file + ": source breadcrumb missing");
+  if (!is404) checkGlobalNav(file,html);
+  if (!is404) checkSamePageAnchors(file,html);
   if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex");
 
   checkDuplicateAttributes(file, html);
@@ -183,6 +220,11 @@ for (const file of htmlFiles) {
   checkDuplicateIds(file, html);
   checkMetaAttributes(file, html);
   checkFormSemantics(file, html);
+  if (/(?:<a|<area|<button|<body|<div|<form|<img|<input|<select|<textarea)[^>]+\s+on[a-z]+\s*=/i.test(html)) failures.push(file + ": inline event handler detected");
+  if (!is404 && !fullI18n && /data-lang-btn/i.test(html)) failures.push(file + ": language switch present without data-i18n=full");
+  if (!is404 && fullI18n && !/data-lang-btn/i.test(html)) failures.push(file + ": full-localized page missing language switch");
+  if (!is404 && fullI18n && !/<title[^>]+data-ar=["'][^"']+["'][^>]+data-en=["'][^"']+["']/i.test(html)) failures.push(file + ": localized title contract missing");
+  if (!is404 && fullI18n && !/<meta\s+name=["']description["'][^>]+data-ar=["'][^"']+["'][^>]+data-en=["'][^"']+["']/i.test(html)) failures.push(file + ": localized description contract missing");
 
   for (const image of images) {
     if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(file + ": img without alt attribute");
@@ -215,8 +257,11 @@ for (const file of htmlFiles) {
     const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
     const ogUrl = html.match(/<meta\s+property=["']og:url["']\s+content=["']([^"']+)["']/i)?.[1];
     if (canonical && ogUrl && canonical !== ogUrl) failures.push(file + ": og:url does not match canonical");
+    if (canonical && canonical !== expectedCanonical(file)) failures.push(file + ": canonical is not the expected route URL");
     if (!canonical || !canonical.startsWith(PUBLIC_ORIGIN)) failures.push(file + ": canonical outside configured Pages origin");
-    else if (!sitemap.includes("<loc>" + canonical + "</loc>")) failures.push(file + ": canonical missing from sitemap");
+    else if (!noindex && !sitemap.includes("<loc>" + canonical + "</loc>")) failures.push(file + ": indexable canonical missing from sitemap");
+    if (noindex && sitemap.includes("<loc>" + canonical + "</loc>")) failures.push(file + ": noindex URL must not appear in sitemap");
+    if (OPERATING_ROUTES.has(file) && !noindex) failures.push(file + ": operating document must be noindex");
   }
 
   const toolName = html.match(/<main\b[^>]*\bdata-tool=["']([^"']+)["']/i)?.[1];
@@ -250,6 +295,7 @@ if (!sitemap) failures.push("sitemap.xml: missing or empty");
 if (!sitemap.includes(PUBLIC_ORIGIN)) failures.push("sitemap.xml: configured origin missing");
 if (!/Sitemap:\s*https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/sitemap\.xml/i.test(robots)) failures.push("robots.txt: sitemap declaration missing");
 if (!existsPublic("og-image.png")) failures.push("og-image.png: missing");
+if (existsPublic("assets/js/home.js")) failures.push("system contract: obsolete assets/js/home.js still exists");
 if (!existsPublic(".well-known/security.txt")) failures.push("security.txt: missing");
 
 if (existsPublic(".well-known/security.txt")) {
@@ -291,7 +337,6 @@ const requiredFiles = [
   "assets/css/numuw.css",
   "assets/js/numuw.js",
   "assets/css/home.css",
-  "assets/js/home.js",
   "docs/SYSTEM-CONTRACT.md"
 ];
 for (const file of requiredFiles) {
@@ -345,6 +390,10 @@ if (homeCss.includes("--teal2:#19c4b4") || homeCss.includes("--gold:#d8a33b") ||
   failures.push("assets/css/home.css: competing legacy design-token value detected");
 }
 
+for(const file of ["assets/js/numuw.js","assets/js/tools.js"]){
+  const check=spawnSync(process.execPath,["--check",path.join(root,file)],{encoding:"utf8"});
+  if(check.status!==0) failures.push(file + ": JavaScript syntax check failed" + (check.stderr?": "+check.stderr.trim():""));
+}
 console.log("NUMUW master static audit: " + htmlFiles.length + " HTML files checked");
 console.log("Failures: " + failures.length + " | Warnings: " + warnings.length);
 for (const item of warnings) console.warn("WARN:", item);
