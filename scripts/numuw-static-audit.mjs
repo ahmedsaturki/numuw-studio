@@ -106,6 +106,21 @@ for (const file of htmlFiles) {
   if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex robots meta");
   if (/href=["']javascript:/i.test(html)) failures.push(`${file}: javascript: URL detected`);
   if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(html)) failures.push(`${file}: inline event handler detected`);
+  if (/\sstyle\s*=\s*["']/i.test(html)) failures.push(`${file}: inline style attribute detected`);
+  for (const tag of html.match(/<[a-z][^>]*>/gi) || []) {
+    const attrs = [...tag.matchAll(/\s+([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*=\s*["']/g)].map(m => m[1].toLowerCase());
+    const seen = new Set();
+    for (const name of attrs) {
+      if (seen.has(name)) failures.push(`${file}: duplicate attribute ${name}`);
+      seen.add(name);
+    }
+  }
+  if (!is404) {
+    if (!html.includes('assets/css/numuw.css')) failures.push(`${file}: shared CSS layer missing`);
+    if (!html.includes('assets/js/numuw.js')) failures.push(`${file}: shared JS layer missing`);
+  }
+  if (file === 'index.html' && /assets\/js\/home\.js/i.test(html)) failures.push('index.html: legacy home.js must not be referenced');
+
 
   for (const image of images) {
     if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(`${file}: <img> without alt attribute`);
