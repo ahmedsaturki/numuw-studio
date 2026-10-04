@@ -1,9 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { EXPECTED_HTML_COUNT, EXPECTED_INDEXABLE_HTML_COUNT, PDF_EXPORTS, PUBLIC_BASE } from "./site-manifest.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const PUBLIC_ORIGIN = "https://ahmedsaturki.github.io/numuw-studio/";
+const PUBLIC_ORIGIN = PUBLIC_BASE;
 const failures = [];
 const warnings = [];
 
@@ -46,6 +47,8 @@ const htmlFiles = walk(root)
   .filter(f => f.endsWith(".html"))
   .map(rel)
   .sort();
+if (htmlFiles.length !== EXPECTED_HTML_COUNT) failures.push(`expected ${EXPECTED_HTML_COUNT} tracked HTML files, found ${htmlFiles.length}`);
+if (htmlFiles.filter(f => f !== "404.html").length !== EXPECTED_INDEXABLE_HTML_COUNT) failures.push(`expected ${EXPECTED_INDEXABLE_HTML_COUNT} indexable HTML files, found ${htmlFiles.filter(f => f !== "404.html").length}`);
 
 const sitemap = fs.existsSync(path.join(root, "sitemap.xml"))
   ? fs.readFileSync(path.join(root, "sitemap.xml"), "utf8")
