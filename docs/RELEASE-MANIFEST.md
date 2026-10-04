@@ -18,12 +18,13 @@ Included:
 - Canonical, Open Graph, Twitter and JSON-LD metadata across public HTML pages
 - Accessibility hardening for navigation, dynamic tool results and document controls
 - Sitemap / robots / resilient 404
-- Dependency-free static audit + GitHub Actions gate
+- Canonical release gate + GitHub Actions gate (static audit + R1–R17 benchmark + regression suite)
 - Explicit performance budget for third-party runtime dependencies
 - Cacheable homepage CSS/JS assets
+- Unified commercial/technical release decision via `scripts/release-gate.mjs`
 - Privacy-aware measurement specification with inert client-side hooks
 - Commercial templates hardened for scope/change control, acceptance, ownership and secure handover
-- Conversion, QA, architecture and content policy
+- Conversion, QA, architecture, master-system and site-inventory documentation
 
 Quality boundaries:
 - Git/source/tree validation can be completed in the repository.
