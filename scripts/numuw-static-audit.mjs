@@ -285,6 +285,66 @@ if (!/:focus-visible\{[^}]*outline:2px solid var\(--navy\)[^}]*box-shadow:0 0 0 
   warnings.push("assets/css/numuw.css: two-tone focus ring exact pattern not detected");
 }
 
+
+// Canonical NUMUW system contract checks
+const requiredFiles = [
+  "assets/css/numuw.css",
+  "assets/js/numuw.js",
+  "assets/css/home.css",
+  "assets/js/home.js",
+  "docs/SYSTEM-CONTRACT.md"
+];
+for (const file of requiredFiles) {
+  if (!existsPublic(file)) failures.push("system contract: missing " + file);
+}
+
+const homepage = fs.readFileSync(path.join(root, "index.html"), "utf8");
+if (!/data-nav/.test(homepage)) failures.push("system contract: homepage missing data-nav");
+if (!/href="products\/diagnostic\//.test(homepage) || !/href="products\/digital-kickoff\//.test(homepage) || !/href="products\/automation-sprint\//.test(homepage) || !/href="products\/growth-system\//.test(homepage) || !/href="products\/growth-partner\//.test(homepage)) {
+  failures.push("system contract: homepage missing one or more canonical products");
+}
+if (/\bPresence\b/.test(homepage)) failures.push("system contract: obsolete Presence offer remains on homepage");
+if (/7,900/.test(homepage)) failures.push("system contract: obsolete 7,900 EGP price remains on homepage");
+
+for (const file of htmlFiles.filter(f => f !== "404.html")) {
+  const html = fs.readFileSync(path.join(root, file), "utf8");
+  if (!/data-nav/.test(html)) failures.push(file + ": canonical data-nav missing");
+  if (!/data-menu/.test(html)) failures.push(file + ": canonical data-menu missing");
+  if (!/data-lang-btn/.test(html)) failures.push(file + ": canonical data-lang-btn missing");
+  if (file === "index.html") {
+    if (!html.includes("assets/css/home.css")) failures.push(file + ": home.css missing");
+    if (!html.includes("assets/js/home.js")) failures.push(file + ": home.js missing");
+  } else {
+    if (!html.includes("assets/css/numuw.css")) failures.push(file + ": shared numuw.css missing");
+    if (!html.includes("assets/js/numuw.js")) failures.push(file + ": shared numuw.js missing");
+  }
+}
+
+const productContracts = {
+  "products/digital-kickoff/index.html": "8,000",
+  "products/automation-sprint/index.html": "8,000",
+  "products/growth-system/index.html": "24,900",
+  "products/growth-partner/index.html": "6,500"
+};
+for (const [file, price] of Object.entries(productContracts)) {
+  const html = fs.readFileSync(path.join(root, file), "utf8");
+  if (!html.includes("COMMERCIAL FIT")) failures.push(file + ": commercial-fit section missing");
+  if (!html.includes(price)) failures.push(file + ": canonical reference price " + price + " missing");
+}
+const diagnosticProduct = fs.readFileSync(path.join(root, "products/diagnostic/index.html"), "utf8");
+if (!diagnosticProduct.includes("COMMERCIAL FIT")) failures.push("products/diagnostic/index.html: commercial-fit section missing");
+
+const finder = fs.readFileSync(path.join(root, "tools/solution-finder/index.html"), "utf8");
+if (!/value="ecommerce"/i.test(finder)) failures.push("tools/solution-finder/index.html: ecommerce sector route missing");
+
+const homeCss = fs.readFileSync(path.join(root, "assets/css/home.css"), "utf8");
+for (const token of ["--navy:#081321","--navy2:#10243d","--teal:#08766e","--teal2:#21c6b6","--gold:#d9a441","--bg:#f5f7fa","--paper:#fff","--ink:#122033","--muted:#5f7084","--line:#dfe6ee","--soft:#e8f7f5","--max:1160px"]) {
+  if (!homeCss.includes(token)) failures.push("assets/css/home.css: canonical token missing -> " + token);
+}
+if (homeCss.includes("--teal2:#19c4b4") || homeCss.includes("--gold:#d8a33b") || homeCss.includes("--max:1120px")) {
+  failures.push("assets/css/home.css: competing legacy design-token value detected");
+}
+
 console.log("NUMUW master static audit: " + htmlFiles.length + " HTML files checked");
 console.log("Failures: " + failures.length + " | Warnings: " + warnings.length);
 for (const item of warnings) console.warn("WARN:", item);
