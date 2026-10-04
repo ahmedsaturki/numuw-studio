@@ -8,7 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const BASE = "https://ahmedsaturki.github.io/numuw-studio/";
+import { PUBLIC_BASE as BASE } from "../scripts/site-manifest.mjs";
 const SKIP_DIRS = new Set([".git", "node_modules", "bench", ".autoresearch"]);
 const SKIP_FILES = new Set(["autoresearch.sh", "site-quality.mjs"]);
 const SITEMAP = "sitemap.xml";
