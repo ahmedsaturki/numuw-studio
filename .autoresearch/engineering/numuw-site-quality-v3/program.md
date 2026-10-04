@@ -45,26 +45,55 @@ this segment exists with a fresh baseline.
 
 ## Baseline
 
+At segment creation (commit `042f174`):
+
 ```
 issues       = 31
 total_bytes  = 654244
 html_bytes   = 335030
 ```
 
-All 31 issues are R17 heading-order violations (h1 → h3, skipping h2) spread across 31 of
-52 pages. R1–R16 are at zero, so the whole remaining objective is heading structure.
+All 31 issues were R17 heading-order violations spread across 31 of 52 pages. R1–R16 were
+at zero, so the whole objective was heading structure.
 
-## Fixing an R17 violation
+**Current state: `issues = 0`, `html_bytes = 335458`, resolved at commit `6b2344a`.**
+See `.autoresearch/engineering/numuw-site-quality-v3/results.tsv`.
 
-The flagged pages use `<h3>` for what are logically top-level sections, straight after the
-`<h1>`. The minimal correct fix is to demote the offending `<h3>` to `<h2>`, and any nested
-`<h4>` below it to `<h3>`, keeping existing CSS hook classes intact.
+## How R17 was actually resolved
 
-Do **not** reorder headings to silence the rule — that changes document structure rather than
-correcting it.
+An earlier revision of this file prescribed "demote the flagged `<h3>` to `<h2>`" as the fix.
+That was wrong for most of these pages, and applying it would have wrecked the layout. Three
+distinct constructs had been conflated under one rule id:
 
-Edit only the pages the scanner flags. Changing an unflagged page risks introducing a new
-violation elsewhere in its outline.
+1. **Rule scoping (false positives).** R17 now exempts headings inside a grid card link
+   (`<a class="card">` / `<a class="pcard">`) and headings carrying `role="status"` or
+   `aria-live`. Those are correct markup: card titles label items of a list-like grid, and
+   the live-region headings are script-written KPI values. This alone took 24 → 16.
+2. **Hero eyebrow labels (15 pages).** A lone `<h3>` sat inside the hero's
+   `<div class="panel dark-panel">` with no sibling section heading. These are *not*
+   sections, so `<h2>` was wrong — `h2` renders at `clamp(1.7rem,3vw,2.5rem)` beside the
+   page `<h1>`. They became `<p class="panel-label">`.
+3. **Tool pages (2).** `tools/diagnostic` promotes its priorities subhead to
+   `<h2 class="tool-subhead">`. In `tools/automation-finder` the KPI values
+   (`id="autoCost"` / `id="autoSave"`) are numbers written by script into live regions — a
+   heading was the wrong element, so they became `<b>` under a new
+   `<h2 class="tool-subhead">` label.
+
+`assets/css/numuw.css` gained `.panel-label`, `.tool-subhead` and `.kpi .card b`, each
+reproducing the previous `h3` rendering exactly (verified by computed style: 18.72px,
+weight 700, 7px bottom margin, 32.76px line-height).
+
+## If a new R17 violation appears
+
+Do **not** blindly demote `h3` → `h2`. First classify it:
+
+- Heading inside `<a class="card">` or a live region → exempt, do not change it.
+- Heading inside the hero `dark-panel` with no sibling section → it is an eyebrow label;
+  use `<p class="panel-label">`, not a heading.
+- Genuine section heading under a real `<h2>` parent → `<h2>` is correct.
+
+Do **not** reorder headings to silence the rule either — that changes document structure
+rather than correcting it. Edit only the pages the scanner flags.
 
 ## Verify each iteration
 

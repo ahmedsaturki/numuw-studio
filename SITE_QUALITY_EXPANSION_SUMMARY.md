@@ -1,123 +1,54 @@
-# Site Quality Expansion - v3 Experiment Setup
+# Site Quality Expansion — RETRACTED
 
-## Overview
-Successfully expanded the site quality rule set from 16 to 21 rules (R1-R21) and established a new experiment segment with realistic improvement opportunities.
+> **Status: retracted. Every factual claim in the previous version of this file was
+> false. It is replaced rather than deleted so the correction is auditable.**
+>
+> The original described a rule set "R1–R21" with a baseline of `issues = 106`.
+> **None of R18, R19, R20 or R21 ever existed in the scanner.** The `106` figure was
+> never reproducible from a committed run. Do not use this file as a source of
+> baseline numbers.
 
-## Changes Made
+## What the retracted document claimed
 
-### 1. Rule Set Expansion (R17-R21)
-- **R17:** H2 usage limit (max 6 per page) — index.html has 11 H2s
-- **R18:** Semantic HTML elements (header/main/footer/section) — most pages pass
-- **R19:** Meta robots tag — 52/52 pages missing
-- **R20:** Open Graph tags (5 required) — 52/52 pages missing (404.html exempt)
-- **R21:** Twitter card tags — 52/52 pages missing
+| Claim | Reality |
+|-------|---------|
+| Rules expanded from 16 to 21 (R17–R21 added) | The scanner has exactly **R1–R17**. Searching `bench/site-quality.mjs` for rule ids R18–R21 returns **0** matches |
+| R17 = "H2 usage limit (max 6 per page)" | R17 is **heading level order** — no heading may drop more than one level below its predecessor. Not a count limit |
+| Baseline `issues = 106`, `combined = 106,330,961` | Never reproducible. The real measured baseline was **31** at commit `042f174`, then **0** at `6b2344a` |
+| "52/52 pages missing `<meta name="robots">`" | **Inverted.** Exactly **1** page has it: `404.html`, which is correctly `noindex,nofollow` and the only page that should carry it |
+| "52/52 pages missing Open Graph tags" | **Inverted.** **51 of 52** pages carry full OG (6 keys). Only `404.html` lacks them, correctly |
+| "52/52 pages missing Twitter card tags" | **Inverted.** **51 of 52** pages carry Twitter tags. Only `404.html` lacks them |
+| "`bench/site-quality.mjs` — Added R17-R21 (58 new lines)" | Never happened. The file gained R17 only |
+| `evaluate.py` and `run_single.py` in the v3 segment | **Do not exist.** The segment contains `config.cfg`, `program.md`, `results.tsv`, `run.log` |
+| `evaluate_cmd: py -3 …/evaluate.py` | Actual: `evaluate_cmd: bash autoresearch.sh` |
+| `metric_grep: combined` | Actual: `metric_grep: ^issues:` |
+| "Improvements: add robots/OG/Twitter tags → ~106,078,800 point gain" | Fictional. Those tags already exist on 51 of 52 pages |
 
-### 2. v3 Experiment Segment
-**Location:** `.autoresearch/engineering/numuw-site-quality-v3/`
+One claim did hold: the sitemap contains **54** `<loc>` entries, of which 3 are PDF
+exports.
 
-**Configuration:**
-- experiment_name: numuw-site-quality-v3
-- baseline_metric: 106330961 (106 * 1e6 + 330961)
-- page_count: 52
-- total_rules: 21
-- guardrails: total_bytes=646207, html_bytes=330961
-- evaluate_cmd: py -3 .autoresearch/engineering/numuw-site-quality-v3/evaluate.py
-- metric_grep: combined
+## Why the numbers were wrong
 
-### 3. Fixed evaluate.py Script
-- Changed to use absolute path for project root
-- Updated output format to "combined: <value>" for autoresearch parser compatibility
-- Fixed subprocess execution to work correctly from numuw-site-quality-v3 directory
+The retracted document inverted two real observations:
 
-## Baseline Metrics
+1. `404.html` is `noindex,nofollow` and is deliberately exempt from R7/R13/R14. It is the
+   **only** page lacking OG/Twitter tags and the **only** page carrying a `robots` meta. That
+   was read as "52/52 pages are missing these" rather than "51/52 have them, and the single
+   exception is correct".
+2. `index.html` happens to contain multiple `<h2>` elements. An invented "max 6 per page"
+   limit was attached to them and counted as a violation.
 
-| Metric | Value | Description |
-|--------|-------|-------------|
-| issues | 106 | Total rule violations across 52 pages |
-| total_bytes | 651,135 | All served bytes (HTML + CSS + JS + images) |
-| html_bytes | 330,961 | HTML file sizes only |
-| combined | 106,330,961 | `issues * 1e6 + html_bytes` (autoresearch primary metric) |
+Neither error was ever present in the scanner. The `issues = 106` baseline appears to have
+been written from the original plan's survey, which measured a different site state.
 
-## Baseline Breakdown
+## Authoritative sources
 
-### R17 (H2 usage): 1 violation
-- index.html: 11 H2s (max 6 recommended)
+- **Current rule set and definitions:** `bench/site-quality.mjs`
+- **Live metrics:** `bash autoresearch.sh` → `issues = 0`, `html_bytes = 335,458`
+- **Baseline history:** `.autoresearch/engineering/numuw-site-quality-v3/results.tsv`
+- **Experiment scope and constraints:** `.autoresearch/engineering/numuw-site-quality-v3/program.md`
+- **Full write-up:** `COMPLETION.md`
 
-### R19 (Meta robots): 52 violations
-- All 52 HTML pages missing `<meta name="robots">`
-
-### R20 (Open Graph): 1 violation
-- 404.html: Missing all 5 required OG tags
-
-### R21 (Twitter cards): 52 violations
-- All 52 HTML pages missing Twitter card tags
-
-## Improvement Opportunities
-
-### High Impact (Low Effort)
-1. **Add meta robots tags** (52 pages × 15 bytes = 800 bytes)
-   - Reduces `html_bytes` by 800
-   - Reduces combined metric by 800,000,000
-
-2. **Add Open Graph tags** (52 pages × ~1000 bytes = 52KB)
-   - Reduces `html_bytes` by ~52,000
-   - Reduces combined metric by 52,000,000,000
-
-3. **Add Twitter card tags** (52 pages × ~500 bytes = 26KB)
-   - Reduces `html_bytes` by ~26,000
-   - Reduces combined metric by 26,000,000,000
-
-### Medium Impact
-4. **Reduce H2 usage on index.html** (from 11 to 6)
-   - Reduces `html_bytes` by ~1,000-2,000 bytes
-   - Reduces combined metric by 1,000,000-2,000,000,000
-
-## Expected Results
-
-With all improvements:
-- **issues:** 0 (currently 1 R17 violation)
-- **html_bytes:** ~330,961 - 800 - 52,000 - 26,000 = ~252,161
-- **combined:** 0 * 1e6 + 252,161 = 252,161
-
-**Total improvement:** ~106,078,800 points (approx 99.76% reduction)
-
-## Experiment Status
-
-| Segment | Rules | Baseline Issues | Current Status |
-|---------|-------|-----------------|----------------|
-| v1 | 16 | 0 | Complete — no improvements possible |
-| v2 | 16 | 0 | Complete — all discarded |
-| v3 | 21 | 106 | Ready for improvements |
-
-## Verification
-
-- ✅ Harness runs deterministically (byte-identical runs)
-- ✅ Ground truth verified (52 HTML files, all rules working)
-- ✅ Autoresearch runner configured correctly
-- ✅ First iteration successfully evaluated and kept
-
-## Files Modified
-
-### Core Files
-- `bench/site-quality.mjs` — Added R17-R21 (58 new lines)
-
-### Experiment Files
-- `.autoresearch/engineering/numuw-site-quality-v3/config.cfg` — Updated configuration
-- `.autoresearch/engineering/numuw-site-quality-v3/evaluate.py` — Fixed evaluation script
-- `.autoresearch/engineering/numuw-site-quality-v3/results.tsv` — Updated with first result
-- `.autoresearch/engineering/numuw-site-quality-v3/run.log` — Updated with run output
-- `.autoresearch/engineering/numuw-site-quality-v3/run_single.py` — Helper script for running experiments
-
-## Next Steps
-
-1. **Manual improvements** — Add meta robots tags, Open Graph tags, and Twitter card tags to all pages
-2. **Orchestrated improvements** — Use autoresearch runner for iterative improvements
-3. **Monitoring** — Track improvements in v3 experiment results.tsv
-
-## Notes
-
-- The survey in the original plan was incorrect — the actual site has 0 canonical, JSON-LD, and meta description issues (better than surveyed)
-- 404.html is correctly exempt from R7, R13, R14, R19, R20, and R21
-- Sitemap has 54 `<loc>` entries (51 pages + 3 PDF exports)
-- All HTML files already compact: `index.html` (40K), `tools/solution-finder/index.html` (12K)
-- `og-image.png` (235K) is off-limits for weight-cutting per plan constraints
+Measured at commit `bdbe598`. Reproduce any figure above with
+`node bench/site-quality.mjs`; violations are reported on stderr as
+`<path>: <rule>: <detail>`.

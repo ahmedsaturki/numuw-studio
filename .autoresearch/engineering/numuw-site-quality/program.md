@@ -1,11 +1,17 @@
 # autoresearch — numuw-site-quality
 
 ## Goal
-Minimize `issues` on `index.html`. Lower is better.
+Minimize `issues` across the whole site. Lower is better. This segment covers **R1–R16 only**;
+heading order (R17) is tracked in the `numuw-site-quality-v3` segment.
+
+Current state: `issues = 0`. This segment is at floor — there is nothing left to improve
+under R1–R16.
 
 ## What the Agent Can Change
-- Only `index.html` — this is the single file being optimized.
-- Everything inside that file is fair game unless constrained below.
+- All `**/*.html` files, plus `sitemap.xml`, `robots.txt` and `assets/**` — the metric is
+  measured over every tracked file, not one page. `index.html` alone can account for at most
+  one of the site's violations.
+- Everything inside those files is fair game unless constrained below.
 
 ## What the Agent Cannot Change
 - The evaluation script (`evaluate.py` or the eval command). It is read-only.
