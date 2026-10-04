@@ -110,7 +110,7 @@ Internal pages use:
 
 The homepage additionally uses:
 - `assets/css/home.css`
-- `assets/js/home.js`
+- the same `assets/js/numuw.js` runtime as internal pages
 
 The homepage is allowed a specialized visual composition, but it must use the canonical design tokens and IA.
 
@@ -127,7 +127,7 @@ Canonical navigation labels:
 
 Breadcrumbs are a user-oriented hierarchy, not a blind copy of the URL. Google Search Central recommends representing a typical user path and allows the current page to be included or omitted. Source: Google Search Central, Breadcrumb structured data.
 
-Runtime JavaScript may enhance navigation and breadcrumbs, but it must not become the only representation of the site's information architecture without an explicit accessibility review.
+Primary navigation, footer and breadcrumbs are represented in HTML source. Runtime JavaScript may enhance current-page state, responsive menu behavior and breadcrumb schema, but must not replace the source navigation or become the only representation of the site architecture.
 
 ## 9. Design contract
 
@@ -223,7 +223,7 @@ External production proof:
 - Search Console indexing
 - formal legal review
 
-Never mark an external gate complete from source inspection alone.
+Never mark an external gate complete from source inspection alone. Before major irreversible brand spend, also clear the master brand/search/trademark collision risk.
 
 ## 15. Change protocol
 
