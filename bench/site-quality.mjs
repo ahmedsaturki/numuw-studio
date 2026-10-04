@@ -374,6 +374,10 @@ process.stdout.write(`METRIC issues=${issues}\n`);
 process.stdout.write(`METRIC total_bytes=${totalBytes}\n`);
 process.stdout.write(`METRIC html_bytes=${htmlBytes}\n`);
 
+// Combined metric for autoresearch runner
+process.stdout.write(`METRIC issues * 1e6 + html_bytes=${issues * 1e6 + htmlBytes}\n`);
+
+
 // Legacy single-metric form ("<metric>: <value>") for consumers that parse
 // one primary metric per line via prefix match.
 process.stdout.write(`issues: ${issues}\n`);
