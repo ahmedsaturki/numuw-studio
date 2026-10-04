@@ -49,7 +49,7 @@ for(const file of html){
   const metas=tagList(h,"meta");
   const desc=metas.filter(t=>(attrs(t).name||"").toLowerCase()==="description");
   const links=tagList(h,"a");
-  const canonical=tagList(h,"link").filter(t=String(attrs(t).rel||"").toLowerCase().split(/\s+/).includes("canonical"));
+  const canonical=tagList(h,"link").filter(t=>String(attrs(t).rel||"").toLowerCase().split(/\s+/).includes("canonical"));
   const htmlTag=h.match(/<html\b[^>]*>/i)?.[0]||"";
   if(!/^<!doctype html>/i.test(h)) FAIL.push(file+": missing doctype");
   if(titleTags.length!==1||!title) FAIL.push(file+": invalid title");
