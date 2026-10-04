@@ -66,7 +66,18 @@ All 31 issues were R17 heading-order violations spread across 31 of 52 pages. R1
 at zero, so the whole objective was heading structure.
 
 **Current state: `issues = 0`, `html_bytes = 335458`, resolved at commit `6b2344a`.**
-See `.autoresearch/engineering/numuw-site-quality-v3/results.tsv`.
+
+The **authoritative combined-metric baseline is `335458.0`** (= `0 * 1e6 + 335458`).
+
+`results.tsv` is gitignored (see `.autoresearch/.gitignore`), so it is absent on a fresh
+clone. If it is missing or has no `keep` row, `get_best_metric` returns `None` and the
+*next* run is recorded as `KEEP — improvement` from nothing — and `get_anchor_commit`
+returns `None` too, which disables the revert safety net in `revert_attempt`. Re-seed it
+with the line below before iterating in a fresh checkout:
+
+```
+6b2344a	335458.000000	keep	baseline combined metric
+```
 
 ## How R17 was actually resolved
 
