@@ -49,11 +49,11 @@ node scripts/numuw-static-audit.mjs
 
 The current audit covers HTML structure, metadata, canonical URLs, JSON-LD parsing, links, social metadata, accessibility-related invariants, no-third-party runtime dependencies, sitemap integrity, the 404 contract and security.txt.
 
-The separate `bench/site-quality.mjs` harness contains the deterministic R1–R16 autoresearch experiment. Its current baseline is:
+The separate `bench/site-quality.mjs` harness contains the deterministic R1–R17 autoresearch experiment. Its current baseline is:
 
-- `issues = 0`
-- `html_bytes = 330,961`
-- `combined = 330,961`
+- `issues = 31` (all R17 heading-order violations)
+- `html_bytes = 335,030`
+- `combined = 31,335,030`
 
 Those metrics evaluate the harness objective, not live user experience.
 

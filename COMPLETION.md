@@ -1,8 +1,16 @@
-# NUMUW Site Quality Harness v2 — Completion Summary
+# NUMUW Site Quality Harness — Completion Summary
 
 **Date:** 2026-10-04  
-**Baseline:** commit `2e46dec` — `docs: correct v2 metric values and document anchor-based discard`  
-**Combined Metric:** 330,961 (issues × 1e6 + html_bytes)
+**Rule set:** R1–R17  
+**Current baseline:** commit `042f174`
+
+---
+
+> **Superseded in parts.** Sections below that describe the R1–R16 floor (`issues = 0`,
+> 330,961 combined, the `numuw-site-quality-v3` segment) describe an earlier state. R17
+> (heading order) was added afterwards and the objective is **no longer at floor**: 31 real
+> violations exist. The authoritative baseline and segment are
+> `.autoresearch/engineering/numuw-site-quality-v3/`.
 
 ---
 
@@ -10,12 +18,14 @@
 
 **Release hardening addendum (2026-10-04):** repository governance and delivery controls were strengthened after the harness work. The public project README was corrected, the 404 path handling was hardened, security reporting files were added, the source audit was expanded, and commercial/handover templates were upgraded. The separate live-release gates remain intentionally open until directly verified.
 
-A deterministic static site-quality scanner (R1–R16) and autoresearch runner v2 have been built for the NUMUW marketing site. The scanner measures SEO and structural issues across all 52 pages; the autoresearch loop iteratively applies fixes while respecting byte-weight guards.
+A deterministic static site-quality scanner and autoresearch runner have been built for the
+NUMUW marketing site. The scanner measures SEO and structural issues across all 52 pages;
+the autoresearch loop iteratively applies fixes while respecting byte-weight guards.
 
-**Current State:**
-- `issues = 0` (floor; all R1–R16 rules passing)
-- `html_bytes = 330,961` (relies on `html_bytes` for content weight)
-- Loop is **production-ready** and **safe for continuous iteration**
+**Current state (R1–R17):**
+- `issues = 31` — all R17 heading-order violations (h1 → h3, skipping h2), across 31 of 52 pages
+- `html_bytes = 335,030`
+- R1–R16 remain at **zero**; the floor claim in earlier revisions no longer holds
 
 ---
 
@@ -23,13 +33,14 @@ A deterministic static site-quality scanner (R1–R16) and autoresearch runner v
 
 ### 1. Deterministic Harness (`bench/site-quality.mjs`)
 - **Zero dependencies** — pure Node.js ESM
-- **R1–R16 rules** covering:
+- **R1–R17 rules** covering:
   - Basic HTML5 requirements (R1–R6): title, description, lang, charset, viewport, single `<h1>`
   - SEO metadata (R7, R8): canonical, JSON-LD structured data
   - Accessibility (R9): alt text on images
   - Link validation (R10–R12): internal links, scripts, same-page anchors
   - Sitemap coverage (R13, R14): site structure validation
   - Duplicate detection (R15–R16): duplicate titles, duplicate descriptions
+  - Document outline (R17): heading levels may not skip a level downward
 - **Deterministic output** — ASCII-sorted file walk, no random/Date calls
 - **4-line stdout** — 3 METRIC lines + legacy `issues:` line for runner compatibility
 - **Exit 0** regardless of issue count; 1 only on harness errors
@@ -43,7 +54,7 @@ A deterministic static site-quality scanner (R1–R16) and autoresearch runner v
 - **Verified stability** — 10+ runs with HEAD unchanged, byte-identical output
 - **Works on Windows** — LF-only scripts, no CRLF issues
 
-### 3. Experiment Definition (`.autoresearch/engineering/numuw-site-quality-v2/`)
+### 3. Experiment Definition (`.autoresearch/engineering/numuw-site-quality-v3/`)
 - **Primary metric:** `issues` (lower is better)
 - **Combined metric:** `issues * 1e6 + html_bytes` (lower is better)
 - **Secondary metrics:** `total_bytes`, `html_bytes` (byte guards)
@@ -61,12 +72,12 @@ A deterministic static site-quality scanner (R1–R16) and autoresearch runner v
 
 | Metric | Value | Notes |
 |--------|-------|-------|
-| `issues` | 0 | Floor; R2, R7, R8 fully resolved |
-| `total_bytes` | ~642,900 | Counts every walked file, Markdown docs included; editing this file changes it. Not part of the objective |
-| `html_bytes` | 330,961 | Reliable content-weight metric |
-| `combined` | 330,961 | `issues × 1e6 + html_bytes` |
+| `issues` | 31 | All R17 heading-order violations |
+| `total_bytes` | ~654,244 | Counts every walked file, Markdown docs included; editing this file changes it. Not part of the objective |
+| `html_bytes` | 335,030 | Reliable content-weight metric |
+| `combined` | 31,335,030 | `issues × 1e6 + html_bytes` |
 
-**Rules Coverage (all 52 pages, 0 violations):**
+**Rules Coverage (all 52 pages):**
 - R1 `<title>`: 52/52 ✓
 - R2 `<meta description>`: 52/52 ✓
 - R3 `<html lang>`: 52/52 ✓
@@ -83,6 +94,7 @@ A deterministic static site-quality scanner (R1–R16) and autoresearch runner v
 - R14 sitemap integrity: 54 `<loc>` = 51 pages + 3 PDF exports, 0 bad entries ✓
 - R15 duplicate titles: 0 ✓
 - R16 duplicate descriptions: 0 ✓
+- R17 heading order: 21/52 ✓ — **31 violations, h1 → h3 skipping h2**
 
 **Page count correction.** Early documentation of this project stated 44 pages.
 The tree contains **52** tracked HTML files; the 44 figure was never re-derived
@@ -94,12 +106,14 @@ the reported totals were wrong.
 ## Known Limitations
 
 ### Release-level boundaries
-- The R1–R16 harness proves repository invariants, not live browser behavior, real-user Core Web Vitals, external CTA behavior, indexing state or legal approval.
+- The R1–R17 harness proves repository invariants, not live browser behavior, real-user Core Web Vitals, external CTA behavior, indexing state or legal approval.
 - The repository does not grant an open-source reuse license by default.
 - Main-branch protection and GitHub private vulnerability reporting are repository-settings concerns and are not proven by source files alone.
 
 
-1. **Objective at floor:** `issues = 0` cannot be improved further.
+1. **Objective not at floor:** `issues = 31` (R17). Earlier revisions of this document
+   claimed `issues = 0` was the floor; R17 was added afterwards and found 31 real
+   violations. Demoting the offending `h3` headings to `h2` clears all 31.
 2. **Byte optimization exhausted:** 0 bytes safe whitespace headroom; collapsing whitespace in `<script>`/`<style>` would break i18n statements (newline-separated strings).
 3. **R10 limited coverage:** Runtime JavaScript expressions (e.g., `href="${url}"`) cannot be statically verified; only literal string targets are checked.
 
@@ -114,6 +128,9 @@ All original plan verification steps passed:
 3. ✅ Ground truth → R7≈33, R8≈33, R2≈1, R10/R11=0 (survey confirmed)
 4. ✅ Probe test → created `bench-probe.html`, issues increased by violations, restored cleanly
 5. ✅ Baseline recorded → commit `2e46dec`, 330,961 combined metric
+
+Re-verified after R17 was added (commit `042f174`): exit 0, byte-identical across runs,
+R1–R16 still 0, and a probe run raising `issues` 0 → 31 when h3 headings are skipped.
 
 **Autoresearch loop stability verified:**
 - 5 iterations, all DISCARD (no improvement possible)
@@ -133,18 +150,18 @@ node bench/site-quality.mjs
 ```bash
 # Default (no changes, HEAD unchanged)
 py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experiment.py" \
-  --experiment engineering/numuw-site-quality-v2 \
+  --experiment engineering/numuw-site-quality-v3 \
   --single --path "C:/Users/powertech/numuw-studio"
 
 # Explicit attempt commit (rewinds to parent on discard)
 py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experiment.py" \
-  --experiment engineering/numuw-site-quality-v2 \
+  --experiment engineering/numuw-site-quality-v3 \
   --single --path "C:/Users/powertech/numuw-studio" \
   --attempt-commit <hash>
 
 # Drop uncommitted edits (no HEAD move)
 py -3 "C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experiment.py" \
-  --experiment engineering/numuw-site-quality-v2 \
+  --experiment engineering/numuw-site-quality-v3 \
   --single --path "C:/Users/powertech/numuw-studio" \
   --attempt-dirty
 ```
@@ -192,21 +209,33 @@ Rule R10 reported `href="'+url+'"` as broken. Fixed by adding `isRuntimeExpressi
 ### 7. R14 PDF sitemap false positives
 R14 only checked HTML routes. Fixed by accepting non-HTML assets that exist in the walked tree (e.g., `documents/exports/*.pdf`).
 
+### 8. R10 root-absolute Pages paths
+`resolveTarget()` joined root-absolute references without stripping the Pages base path, so
+`404.html`'s five `/numuw-studio/...` links were reported as broken. The resolver now strips
+the base path and maps the site root to `index.html`. Verified in both directions: a broken
+path *inside* the base path is still caught, and a root-absolute path under a *different*
+prefix is not silently resolved.
+
+### 9. `autoresearch.sh` node resolution
+The script assumed `node` was on PATH. Git Bash here exposes a semicolon-separated Windows
+PATH that defeats directory lookup, so `bash autoresearch.sh` failed outright. It now tries
+`node`, `nodejs`, `node.exe` in turn and exits with a clear message if none resolve.
+
 ---
 
 ## Files
 
 ### Core Harness
-- `bench/site-quality.mjs` — scanner (13 KB)
-- `autoresearch.sh` — LF-only runner (86 bytes)
+- `bench/site-quality.mjs` — scanner (R1–R17)
+- `autoresearch.sh` — LF-only runner; resolves `node` via a candidate list
 
 ### Autoresearch Agent
 - `C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/run_experiment.py` — runner with explicit attempt semantics
 - `C:/Users/powertech/.agents/skills/autoresearch-agent/scripts/setup_experiment.py` — setup helper
 
 ### Experiment Definition
-- `.autoresearch/engineering/numuw-site-quality-v2/config.cfg` — config (6 keys)
-- `.autoresearch/engineering/numuw-site-quality-v2/program.md` — rule definitions, constraints, baseline
+- `.autoresearch/engineering/numuw-site-quality-v3/program.md` — rule definitions, constraints, baseline
+- `.autoresearch/engineering/numuw-site-quality/config.cfg` — R1–R16 segment (kept for reference; at floor)
 
 ### Documentation
 - `README.md` — usage, contract, notes
@@ -214,8 +243,7 @@ R14 only checked HTML routes. Fixed by accepting non-HTML assets that exist in t
 - `.gitattributes` — LF pinning
 
 ### Tracking
-- `.autoresearch/engineering/numuw-site-quality-v2/results.tsv` — iteration history
-- `.autoresearch/engineering/numuw-site-quality-v2/run.log` — debug logs
+- `.autoresearch/engineering/numuw-site-quality/results.tsv` — iteration history (R1–R16 segment)
 
 ---
 
@@ -229,7 +257,7 @@ R14 only checked HTML routes. Fixed by accepting non-HTML assets that exist in t
 
 ---
 
-## Appendix: R1–R16 Rule Reference
+## Appendix: R1–R17 Rule Reference
 
 | Rule | Check | Violation Threshold |
 |------|-------|---------------------|
@@ -249,6 +277,7 @@ R14 only checked HTML routes. Fixed by accepting non-HTML assets that exist in t
 | R14 | every `<loc>` in sitemap maps to existing page; 404.html not listed | per bad loc |
 | R15 | duplicate `<title>` text across pages | per extra occurrence |
 | R16 | duplicate meta description text across pages | per extra occurrence (ignore R2-failing pages) |
+| R17 | heading may not drop more than one level below its predecessor | per skip (upward jumps and the first heading are always fine) |
 
 ---
 
