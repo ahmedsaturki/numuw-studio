@@ -79,7 +79,7 @@ Hubs should compare and route. They should not repeat the same sales copy from e
 
 ## Breadcrumbs
 
-Every non-home indexable page should expose a visible breadcrumb:
+Every non-home indexable page should expose a visible breadcrumb in the HTML source:
 **الرئيسية → القسم → الصفحة**
 
 The breadcrumb is navigation support, not a substitute for the main navigation.
@@ -95,3 +95,7 @@ Use deliberate links:
 - Document → related commercial next step
 
 Avoid indiscriminate “related links” blocks.
+
+## Indexability
+
+Public acquisition, company, knowledge and sales-collateral pages are indexable when they satisfy the page contract. Operating templates and playbooks are reachable but `noindex,follow` and excluded from the sitemap so search intent stays clean.

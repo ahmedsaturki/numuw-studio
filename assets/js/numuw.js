@@ -1,11 +1,15 @@
 (function(){
-  var ROOT=(function(){var marker='/numuw-studio/';var i=location.pathname.indexOf(marker);return i>=0?location.pathname.slice(0,i)+marker:'/';})();
+  var ROOT=(function(){
+    var marker='/numuw-studio/';
+    var i=location.pathname.indexOf(marker);
+    return i>=0?location.pathname.slice(0,i)+marker:'/';
+  })();
   var lang=document.documentElement.lang==='en'?'en':'ar';
+  var i18nMode=document.documentElement.getAttribute('data-i18n')||'none';
   var main=document.querySelector('main');
   var nav=document.querySelector('[data-nav]');
   var menu=document.querySelector('[data-menu]');
   var langButtons=document.querySelectorAll('[data-lang-btn]');
-  var localized=document.querySelectorAll('[data-ar][data-en]');
 
   function normalize(path){
     path=(path||'').replace(/\/+$/,'');
@@ -30,31 +34,23 @@
     document.body.insertBefore(skip,document.body.firstChild);
   }
 
-  function renderGlobalNav(){
+  function enhanceGlobalNav(){
     if(!nav)return;
-    var items=[
-      ['الرئيسية','Home',ROOT],
-      ['الحلول','Solutions',ROOT+'landing/'],
-      ['الأدوات','Tools',ROOT+'tools/'],
-      ['المنتجات','Products',ROOT+'products/'],
-      ['الشركة','Company',ROOT+'pages/'],
-      ['المصادر','Resources',ROOT+'resources/'],
-      ['التواصل','Contact',ROOT+'pages/contact/']
-    ];
     nav.id=nav.id||'primary-nav';
-    nav.setAttribute('aria-label','التنقل الرئيسي');
-    nav.innerHTML=items.map(function(item){
-      return '<a href="'+item[2]+'" data-ar="'+item[0]+'" data-en="'+item[1]+'">'+item[0]+'</a>';
-    }).join('');
+    nav.setAttribute('aria-label',lang==='ar'?'التنقل الرئيسي':'Primary navigation');
     var current=normalize(location.pathname);
     nav.querySelectorAll('a[href]').forEach(function(a){
-      var target=normalize(new URL(a.href,location.href).pathname);
-      if(target===current)a.setAttribute('aria-current','page');
+      var href=a.getAttribute('href')||'';
+      if(!href||href.charAt(0)==='#'||/^[a-z][a-z0-9+.-]*:/i.test(href))return;
+      try{
+        var target=normalize(new URL(href,location.href).pathname);
+        if(target===current)a.setAttribute('aria-current','page');
+      }catch(e){}
     });
   }
 
-  function renderBreadcrumbs(){
-    if(!main || normalize(location.pathname)===normalize(ROOT) || /\/404\.html$/i.test(location.pathname))return;
+  function ensureBreadcrumbs(){
+    if(!main||normalize(location.pathname)===normalize(ROOT)||/\/404\.html$/i.test(location.pathname))return;
     if(main.querySelector('.breadcrumbs'))return;
 
     var clean=location.pathname.replace(/^\/numuw-studio\/?/,'').replace(/\/+$/,'');
@@ -62,17 +58,19 @@
     if(!parts.length)return;
 
     var labels={
-      landing:'الحلول',
-      tools:'الأدوات',
-      products:'المنتجات',
-      pages:'الشركة',
-      documents:'المصادر',
-      legal:'الثقة والقانون',
-      resources:'المصادر',
-      insights:'المصادر',
-      'media-kit':'المصادر',
-      brand:'الهوية'
+      landing:['الحلول','Solutions'],
+      tools:['الأدوات','Tools'],
+      products:['المنتجات','Products'],
+      pages:['الشركة','Company'],
+      documents:['المصادر','Resources'],
+      legal:['الثقة والقانون','Trust & Legal'],
+      resources:['المصادر','Resources'],
+      insights:['المصادر','Resources'],
+      'media-kit':['المصادر','Resources'],
+      brand:['الهوية','Brand']
     };
+    var section=parts[0];
+    var pair=labels[section]||[section,section];
     var currentLabel=(main.querySelector('h1')||{}).textContent;
     currentLabel=(currentLabel||parts[parts.length-1]).trim();
 
@@ -80,63 +78,37 @@
     crumb.className='breadcrumbs';
     crumb.setAttribute('aria-label','مسار الصفحة');
     var list=document.createElement('ol');
+
     var home=document.createElement('li');
     home.innerHTML='<a href="'+ROOT+'" data-ar="الرئيسية" data-en="Home">الرئيسية</a>';
     list.appendChild(home);
 
-    var section=parts[0];
-    var sectionLabel=labels[section]||section;
-    var sectionUrl=ROOT+section+'/';
-    var li=document.createElement('li');
-    li.innerHTML='<a href="'+sectionUrl+'" data-ar="'+sectionLabel+'" data-en="'+(sectionLabel==='الحلول'?'Solutions':sectionLabel==='الأدوات'?'Tools':sectionLabel==='المنتجات'?'Products':sectionLabel==='الشركة'?'Company':sectionLabel==='المصادر'?'Resources':sectionLabel==='الثقة والقانون'?'Trust & Legal':sectionLabel==='الهوية'?'Brand':sectionLabel)+'">'+sectionLabel+'</a>';
-    list.appendChild(li);
+    var sectionLi=document.createElement('li');
+    sectionLi.innerHTML='<a href="'+ROOT+section+'/" data-ar="'+pair[0]+'" data-en="'+pair[1]+'">'+pair[0]+'</a>';
+    if(parts.length===1){
+      sectionLi.setAttribute('aria-current','page');
+      sectionLi.querySelector('a').removeAttribute('href');
+    }
+    list.appendChild(sectionLi);
 
     if(parts.length>1){
-      var last=document.createElement('li');
-      last.setAttribute('aria-current','page');
-      last.textContent=currentLabel;
-      list.appendChild(last);
-    }else{
-      li.setAttribute('aria-current','page');
-      li.querySelector('a').removeAttribute('href');
-      li.querySelector('a').textContent=currentLabel;
+      var current=document.createElement('li');
+      current.setAttribute('aria-current','page');
+      current.textContent=currentLabel;
+      list.appendChild(current);
     }
 
     crumb.appendChild(list);
     main.insertBefore(crumb,main.firstChild);
   }
 
-  function renderGlobalFooter(){
-    var footer=document.querySelector('footer.footer');
-    if(!footer)return;
-    footer.innerHTML='<div class="container footer-grid"><div><strong>NUMUW | نُمو</strong><span data-ar=" · استوديو أنظمة النمو · مصر" data-en=" · Growth Systems Studio · Egypt"> · استوديو أنظمة النمو · مصر</span></div><nav aria-label="روابط الموقع"><a href="'+ROOT+'landing/" data-ar="الحلول" data-en="Solutions">الحلول</a><a href="'+ROOT+'tools/" data-ar="الأدوات" data-en="Tools">الأدوات</a><a href="'+ROOT+'products/" data-ar="المنتجات" data-en="Products">المنتجات</a><a href="'+ROOT+'pages/" data-ar="الشركة" data-en="Company">الشركة</a><a href="'+ROOT+'resources/" data-ar="المصادر" data-en="Resources">المصادر</a><a href="'+ROOT+'legal/" data-ar="الثقة والقانون" data-en="Trust & Legal">الثقة والقانون</a><a href="'+ROOT+'pages/contact/" data-ar="التواصل" data-en="Contact">التواصل</a></nav><span>© <span data-year></span></span></div>';
-  }
-
-  function applyLanguage(next){
-    lang=next==='en'?'en':'ar';
-    document.documentElement.lang=lang;
-    document.documentElement.dir=lang==='ar'?'rtl':'ltr';
-    document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
-      el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
-    });
-    langButtons.forEach(function(b){
-      b.textContent=lang==='ar'?'EN':'عربي';
-      b.setAttribute('aria-label',lang==='ar'?'Switch to English':'التحويل للعربية');
-      b.setAttribute('aria-pressed',lang==='en'?'true':'false');
-    });
-  }
-
-  ensureSkipLink();
-  renderGlobalNav();
-  renderBreadcrumbs();
-  renderGlobalFooter();
-  applyLanguage(lang);
-
-  (function ensureBreadcrumbSchema(){
-    if(!main || normalize(location.pathname)===normalize(ROOT) || /\/404\.html$/i.test(location.pathname))return;
+  function ensureBreadcrumbSchema(){
+    if(!main||normalize(location.pathname)===normalize(ROOT)||/\/404\.html$/i.test(location.pathname))return;
+    if(document.querySelector('script[data-numuw-breadcrumb-schema]'))return;
     var canonical=document.querySelector('link[rel="canonical"]');
     var crumb=main.querySelector('.breadcrumbs');
-    if(!canonical || !crumb || document.querySelector('script[data-numuw-breadcrumb-schema]'))return;
+    if(!canonical||!crumb)return;
+
     var items=[].slice.call(crumb.querySelectorAll('ol > li')).map(function(li,i){
       var a=li.querySelector('a');
       return {'@type':'ListItem',position:i+1,name:li.textContent.trim(),item:a?a.href:canonical.href};
@@ -146,26 +118,63 @@
     script.setAttribute('data-numuw-breadcrumb-schema','true');
     script.textContent=JSON.stringify({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':items});
     document.head.appendChild(script);
-  })();
+  }
 
-  if(nav && menu){
+  function applyLanguage(next){
+    lang=next==='en'?'en':'ar';
+    document.documentElement.lang=lang;
+    document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+
+    document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
+      el.innerHTML=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+    });
+    document.querySelectorAll('title[data-ar][data-en]').forEach(function(el){
+      el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
+    });
+    document.querySelectorAll('meta[data-ar][data-en]').forEach(function(el){
+      el.setAttribute('content',lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en'));
+    });
+    langButtons.forEach(function(b){
+      b.textContent=lang==='ar'?'EN':'عربي';
+      b.setAttribute('aria-label',lang==='ar'?'Switch to English':'التحويل للعربية');
+      b.setAttribute('aria-pressed',lang==='en'?'true':'false');
+    });
+    try{localStorage.setItem('numuw-lang',lang)}catch(e){}
+  }
+
+  ensureSkipLink();
+  enhanceGlobalNav();
+  ensureBreadcrumbs();
+  enhanceGlobalNav();
+  ensureBreadcrumbSchema();
+
+  langButtons.forEach(function(b){
+    b.hidden=i18nMode!=='full';
+  });
+  if(i18nMode==='full'){
+    var saved;
+    try{saved=localStorage.getItem('numuw-lang')}catch(e){}
+    applyLanguage(saved==='en'||saved==='ar'?saved:lang);
+  }else{
+    applyLanguage('ar');
+  }
+
+  if(nav&&menu){
     menu.setAttribute('type','button');
     menu.setAttribute('aria-controls',nav.id||'primary-nav');
     menu.setAttribute('aria-expanded',nav.classList.contains('open')?'true':'false');
     menu.setAttribute('aria-label','فتح القائمة');
   }
 
-  /* Internal pages are Arabic-first. Never expose a fake bilingual switch. */
-  langButtons.forEach(function(b){
-    if(localized.length<4)b.hidden=true;
-  });
-
   document.addEventListener('click',function(e){
     var b=e.target.closest('[data-lang-btn]');
-    if(b && !b.hidden){applyLanguage(lang==='ar'?'en':'ar');return}
+    if(b&&!b.hidden){
+      applyLanguage(lang==='ar'?'en':'ar');
+      return;
+    }
 
     var m=e.target.closest('[data-menu]');
-    if(m && nav){
+    if(m&&nav){
       var open=nav.classList.toggle('open');
       m.setAttribute('aria-expanded',open?'true':'false');
       m.setAttribute('aria-label',open?'غلق القائمة':'فتح القائمة');
@@ -178,14 +187,14 @@
       return;
     }
 
-    if(e.target.closest('[data-nav] a') && nav && menu){
+    if(e.target.closest('[data-nav] a')&&nav&&menu){
       nav.classList.remove('open');
       menu.setAttribute('aria-expanded','false');
       menu.setAttribute('aria-label','فتح القائمة');
       return;
     }
 
-    if(nav && menu && nav.classList.contains('open') && !e.target.closest('[data-nav]') && !e.target.closest('[data-menu]')){
+    if(nav&&menu&&nav.classList.contains('open')&&!e.target.closest('[data-nav]')&&!e.target.closest('[data-menu]')){
       nav.classList.remove('open');
       menu.setAttribute('aria-expanded','false');
       menu.setAttribute('aria-label','فتح القائمة');
@@ -201,7 +210,7 @@
   });
 
   document.addEventListener('keydown',function(e){
-    if(e.key==='Escape' && nav && menu){
+    if(e.key==='Escape'&&nav&&menu){
       nav.classList.remove('open');
       menu.setAttribute('aria-expanded','false');
       menu.setAttribute('aria-label','فتح القائمة');

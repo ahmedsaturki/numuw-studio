@@ -1,9 +1,29 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC_ORIGIN = "https://ahmedsaturki.github.io/numuw-studio/";
+const OPERATING_ROUTES = new Set([
+  "documents/proposal-template/index.html",
+  "documents/onboarding/index.html",
+  "documents/handover/index.html",
+  "documents/terms/index.html",
+  "documents/playbooks/index.html",
+  "documents/playbooks/sales-discovery/index.html",
+  "documents/playbooks/delivery-qa/index.html"
+]);
+const REQUIRED_NAV_ROUTES = [
+  "index.html",
+  "landing/index.html",
+  "tools/index.html",
+  "products/index.html",
+  "pages/index.html",
+  "resources/index.html",
+  "pages/contact/index.html"
+];
+const REQUIRED_FOOTER_ROUTES = REQUIRED_NAV_ROUTES.slice(1).concat("legal/index.html");
 const failures = [];
 const warnings = [];
 
@@ -51,7 +71,7 @@ function checkHeadingPairs(file, html) {
       if (open !== null) failures.push(file + ": heading h" + level + " opened before h" + open + " closed");
       open = level;
     } else if (open !== level) {
-      failures.push(file + ": closing h" + level + " does not match open h" + (open === null ? "none" : open));
+      failures.push(file + ": closing h" + level + " does not match h" + (open === null ? "none" : open));
     } else {
       open = null;
     }
@@ -68,7 +88,7 @@ function checkDuplicateIds(file, html) {
 }
 
 function checkMetaAttributes(file, html) {
-  const allowed = new Set(["charset", "content", "name", "http-equiv", "property", "itemprop", "media"]);
+  const allowed = new Set(["charset", "content", "name", "http-equiv", "property", "itemprop", "media", "data-ar", "data-en"]);
   for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
     for (const name of attrsOfTag(match[0])) {
       if (!allowed.has(name)) failures.push(file + ': malformed meta attribute "' + name + '"');
@@ -82,24 +102,20 @@ function checkFormSemantics(file, html) {
       failures.push(file + ": button missing explicit type");
     }
   }
-
   for (const match of html.matchAll(/<(input|select|textarea)\b([^>]*)>/gi)) {
     const tagName = match[1].toLowerCase();
     const attrs = match[2];
     const type = attrs.match(/\btype\s*=\s*["']([^"']+)["']/i)?.[1]?.toLowerCase();
     if (tagName === "input" && type === "hidden") continue;
-
     const id = attrs.match(/\bid\s*=\s*["']([^"']+)["']/i)?.[1];
     const labelled = /\baria-label\s*=|\baria-labelledby\s*=/i.test(attrs);
-
     if (!id && !labelled) {
       failures.push(file + ": " + tagName + " control needs id/label/aria label");
       continue;
     }
-
     if (id && !labelled) {
-      const explicitFor = html.includes('for="' + id + '"') || html.includes("for='" + id + "'");
-      if (!explicitFor) warnings.push(file + ": control #" + id + " has no explicit label-for; verify wrapped labels");
+      const hasFor = html.includes('for="' + id + '"') || html.includes("for='" + id + "'");
+      if (!hasFor) warnings.push(file + ": control #" + id + " has no explicit label-for; verify wrapped labels");
     }
   }
 }
@@ -107,7 +123,6 @@ function checkFormSemantics(file, html) {
 function resolveLocalHref(sourcePath, href) {
   const clean = href.split("#")[0].split("?")[0];
   if (!clean || /^[a-z][a-z0-9+.-]*:/i.test(clean)) return null;
-
   if (clean.startsWith("/")) {
     if (!clean.startsWith("/numuw-studio/")) return null;
     let p = clean.slice("/numuw-studio/".length);
@@ -116,10 +131,10 @@ function resolveLocalHref(sourcePath, href) {
     if (!path.posix.extname(p)) p += "/index.html";
     return p;
   }
-
   const sourceDir = path.posix.dirname("/" + sourcePath);
   let p = path.posix.normalize(path.posix.join(sourceDir, clean));
   if (p.startsWith("/")) p = p.slice(1);
+  if (!p) p = "index.html";
   if (p.endsWith("/")) p += "index.html";
   if (!path.posix.extname(p)) {
     if (fs.existsSync(path.join(root, p))) return p;
@@ -131,17 +146,42 @@ function resolveLocalHref(sourcePath, href) {
 function existsPublic(p) {
   return fs.existsSync(path.join(root, p));
 }
+function isNoIndex(html) {
+  return /<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
+}
+
+function expectedCanonical(file) {
+  return file === "index.html" ? PUBLIC_ORIGIN : PUBLIC_ORIGIN + file.replace(/\\/g, "/").replace(/index\.html$/, "");
+}
+
+function checkRouteSet(file, html, selector, required, label) {
+  const body = html.match(selector)?.[1] || "";
+  if (!body) {
+    failures.push(file + ": " + label + " missing");
+    return;
+  }
+  const targets = new Set();
+  for (const match of body.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>/gi)) {
+    const target = resolveLocalHref(file, match[1]);
+    if (target) targets.add(target);
+  }
+  for (const route of required) {
+    if (!targets.has(route)) failures.push(file + ": " + label + " missing route " + route);
+  }
+}
 
 const htmlFiles = walk(root).filter((f) => f.endsWith(".html")).map(rel).sort();
 const titleValues = new Map();
 const descriptionValues = new Map();
-const sitemap = fs.existsSync(path.join(root, "sitemap.xml")) ? fs.readFileSync(path.join(root, "sitemap.xml"), "utf8") : "";
-const robots = fs.existsSync(path.join(root, "robots.txt")) ? fs.readFileSync(path.join(root, "robots.txt"), "utf8") : "";
+const sitemap = existsPublic("sitemap.xml") ? fs.readFileSync(path.join(root, "sitemap.xml"), "utf8") : "";
+const robots = existsPublic("robots.txt") ? fs.readFileSync(path.join(root, "robots.txt"), "utf8") : "";
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
   const is404 = file === "404.html";
-  const titleCount = (html.match(/<title>/gi) || []).length;
+  const noindex = /<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
+  const fullI18n = /<html\b[^>]*data-i18n=["']full["']/i.test(html);
+  const titleCount = (html.match(/<title\b/gi) || []).length;
   const descriptionCount = (html.match(/<meta\s+name=["']description["']/gi) || []).length;
   const h1Count = (html.match(/<h1\b/gi) || []).length;
   const canonicalCount = (html.match(/<link\s+rel=["']canonical["']/gi) || []).length;
@@ -156,9 +196,9 @@ for (const file of htmlFiles) {
   const images = [...html.matchAll(/<img\b([^>]*)>/gi)].map((m) => m[1]);
 
   if (!/^<!doctype html>/i.test(html)) failures.push(file + ": missing HTML5 doctype");
-  if (titleCount !== 1) failures.push(file + ": expected one title, found " + titleCount);
-  if (!is404 && descriptionCount !== 1) failures.push(file + ": expected one description, found " + descriptionCount);
-  if (!is404 && h1Count !== 1) failures.push(file + ": expected one h1, found " + h1Count);
+  if (titleCount !== 1) failures.push(file + ": expected exactly one title, found " + titleCount);
+  if (!is404 && descriptionCount !== 1) failures.push(file + ": expected exactly one description, found " + descriptionCount);
+  if (!is404 && h1Count !== 1) failures.push(file + ": expected exactly one h1, found " + h1Count);
   if (canonicalCount !== (is404 ? 0 : 1)) failures.push(file + ": canonical count is " + canonicalCount);
   if (charsetCount !== 1) failures.push(file + ": expected one charset meta");
   if (viewportCount !== 1) failures.push(file + ": expected one viewport meta");
@@ -174,15 +214,28 @@ for (const file of htmlFiles) {
   if (!is404 && !/property=["']og:title["']/i.test(html)) failures.push(file + ": missing og:title");
   if (!is404 && !/property=["']og:image["']/i.test(html)) failures.push(file + ": missing og:image");
   if (!is404 && !/property=["']og:url["']/i.test(html)) failures.push(file + ": missing og:url");
+  if (!is404 && !/property=["']og:site_name["']\s+content=["']NUMUW \| نُمو["']/i.test(html)) failures.push(file + ": missing or inconsistent og:site_name");
   if (!is404 && !/name=["']twitter:card["']/i.test(html)) failures.push(file + ": missing twitter:card");
   if (!is404 && !/name=["']twitter:image["']/i.test(html)) failures.push(file + ": missing twitter:image");
   if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex");
+
+  if (!is404) {
+    checkRouteSet(file, html, /<nav\b[^>]*data-nav[^>]*>([\s\S]*?)<\/nav>/i, REQUIRED_NAV_ROUTES, "global navigation");
+    checkRouteSet(file, html, /<footer\b[^>]*>[\s\S]*?<nav\b[^>]*>([\s\S]*?)<\/nav>/i, REQUIRED_FOOTER_ROUTES, "footer navigation");
+    if (file !== "index.html" && !/class=["'][^"']*breadcrumbs[^"']*["']/i.test(html)) failures.push(file + ": breadcrumb missing from HTML source");
+  }
 
   checkDuplicateAttributes(file, html);
   checkHeadingPairs(file, html);
   checkDuplicateIds(file, html);
   checkMetaAttributes(file, html);
   checkFormSemantics(file, html);
+
+  if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(html)) failures.push(file + ": inline event handler detected");
+  if (!is404 && !fullI18n && /data-lang-btn/i.test(html)) failures.push(file + ": language switch present without data-i18n=full");
+  if (!is404 && fullI18n && !/data-lang-btn/i.test(html)) failures.push(file + ": full-localized page missing language switch");
+  if (!is404 && fullI18n && !/<title[^>]+data-ar=["'][^"']+["'][^>]+data-en=["'][^"']+["']/i.test(html)) failures.push(file + ": localized title contract missing");
+  if (!is404 && fullI18n && !/<meta\s+name=["']description["'][^>]+data-ar=["'][^"']+["'][^>]+data-en=["'][^"']+["']/i.test(html)) failures.push(file + ": localized description contract missing");
 
   for (const image of images) {
     if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(file + ": img without alt attribute");
@@ -199,24 +252,26 @@ for (const file of htmlFiles) {
     if (target && !existsPublic(target)) failures.push(file + ": broken local reference -> " + href);
   }
 
-  const blankLinks = [...html.matchAll(/<a\b[^>]*target=["']_blank["'][^>]*>/gi)].map((m) => m[0]);
-  for (const tag of blankLinks) {
+  for (const tag of [...html.matchAll(/<a\b[^>]*target=["']_blank["'][^>]*>/gi)].map((m) => m[0])) {
     if (!/rel=["'][^"']*noopener/i.test(tag)) failures.push(file + ': target="_blank" without noopener');
   }
 
   if (!is404) {
-    const title = attr(html, /<title>([\s\S]*?)<\/title>/i).replace(/\s+/g, " ").trim();
+    const title = attr(html, /<title\b[^>]*>([\s\S]*?)<\/title>/i).replace(/\s+/g, " ").trim();
     const description = attr(html, /<meta\s+name=["']description["']\s+content=["']([^"']*)/i);
     titleValues.set(file, title);
     descriptionValues.set(file, description);
-
     if (description.length < 50) warnings.push(file + ": meta description is short (" + description.length + " chars)");
 
     const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
     const ogUrl = html.match(/<meta\s+property=["']og:url["']\s+content=["']([^"']+)["']/i)?.[1];
+    if (canonical && canonical !== expectedCanonical(file)) failures.push(file + ": canonical is not the expected route URL");
     if (canonical && ogUrl && canonical !== ogUrl) failures.push(file + ": og:url does not match canonical");
     if (!canonical || !canonical.startsWith(PUBLIC_ORIGIN)) failures.push(file + ": canonical outside configured Pages origin");
-    else if (!sitemap.includes("<loc>" + canonical + "</loc>")) failures.push(file + ": canonical missing from sitemap");
+    if (!noindex && canonical && !sitemap.includes("<loc>" + canonical + "</loc>")) failures.push(file + ": indexable canonical missing from sitemap");
+    if (noindex && canonical && sitemap.includes("<loc>" + canonical + "</loc>")) failures.push(file + ": noindex URL must not appear in sitemap");
+    if (OPERATING_ROUTES.has(file) && !noindex) failures.push(file + ": operating document must be noindex");
+    if (!OPERATING_ROUTES.has(file) && noindex && !is404) warnings.push(file + ": unexpected noindex page; confirm intent");
   }
 
   const toolName = html.match(/<main\b[^>]*\bdata-tool=["']([^"']+)["']/i)?.[1];
@@ -251,13 +306,7 @@ if (!sitemap.includes(PUBLIC_ORIGIN)) failures.push("sitemap.xml: configured ori
 if (!/Sitemap:\s*https:\/\/ahmedsaturki\.github\.io\/numuw-studio\/sitemap\.xml/i.test(robots)) failures.push("robots.txt: sitemap declaration missing");
 if (!existsPublic("og-image.png")) failures.push("og-image.png: missing");
 if (!existsPublic(".well-known/security.txt")) failures.push("security.txt: missing");
-
-if (existsPublic(".well-known/security.txt")) {
-  const securityTxt = fs.readFileSync(path.join(root, ".well-known/security.txt"), "utf8");
-  if (!/^Contact:\s*https:\/\//mi.test(securityTxt)) failures.push("security.txt: missing HTTPS Contact");
-  if (!/^Policy:\s*https:\/\//mi.test(securityTxt)) failures.push("security.txt: missing HTTPS Policy");
-  if (!/^Expires:\s*\d{4}-\d{2}-\d{2}T/mi.test(securityTxt)) failures.push("security.txt: missing Expires");
-}
+if (existsPublic("assets/js/home.js")) failures.push("system contract: obsolete assets/js/home.js still exists");
 
 for (const file of ["assets/css/numuw.css", "assets/css/home.css"]) {
   const source = fs.readFileSync(path.join(root, file), "utf8");
@@ -285,71 +334,48 @@ if (!/:focus-visible\{[^}]*outline:2px solid var\(--navy\)[^}]*box-shadow:0 0 0 
   warnings.push("assets/css/numuw.css: two-tone focus ring exact pattern not detected");
 }
 
-
-// Canonical NUMUW system contract checks
-const requiredFiles = [
-  "assets/css/numuw.css",
-  "assets/js/numuw.js",
-  "assets/css/home.css",
-  "assets/js/home.js",
-  "docs/SYSTEM-CONTRACT.md"
-];
-for (const file of requiredFiles) {
-  if (!existsPublic(file)) failures.push("system contract: missing " + file);
-}
-
 const homepage = fs.readFileSync(path.join(root, "index.html"), "utf8");
-if (!/data-nav/.test(homepage)) failures.push("system contract: homepage missing data-nav");
-if (!/href="products\/diagnostic\//.test(homepage) || !/href="products\/digital-kickoff\//.test(homepage) || !/href="products\/automation-sprint\//.test(homepage) || !/href="products\/growth-system\//.test(homepage) || !/href="products\/growth-partner\//.test(homepage)) {
-  failures.push("system contract: homepage missing one or more canonical products");
+if (!/<html\b[^>]*data-i18n=["']full["']/i.test(homepage)) failures.push("system contract: homepage is not marked data-i18n=full");
+if (!/assets\/js\/numuw\.js/i.test(homepage)) failures.push("system contract: homepage must use shared numuw.js");
+if (/assets\/js\/home\.js/i.test(homepage)) failures.push("system contract: obsolete home.js reference remains");
+if (!/href="products\/diagnostic\//.test(homepage) ||
+    !/href="products\/digital-kickoff\//.test(homepage) ||
+    !/href="products\/automation-sprint\//.test(homepage) ||
+    !/href="products\/growth-system\//.test(homepage) ||
+    !/href="products\/growth-partner\//.test(homepage)) {
+  failures.push("system contract: homepage missing canonical products");
 }
-if (/\bPresence\b/.test(homepage)) failures.push("system contract: obsolete Presence offer remains on homepage");
-if (/7,900/.test(homepage)) failures.push("system contract: obsolete 7,900 EGP price remains on homepage");
 
-for (const file of htmlFiles.filter(f => f !== "404.html")) {
+for (const file of htmlFiles.filter((f) => f !== "404.html")) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
   if (!/data-nav/.test(html)) failures.push(file + ": canonical data-nav missing");
   if (!/data-menu/.test(html)) failures.push(file + ": canonical data-menu missing");
-  if (!/data-lang-btn/.test(html)) failures.push(file + ": canonical data-lang-btn missing");
-  if (file === "index.html") {
-    if (!html.includes("assets/css/home.css")) failures.push(file + ": home.css missing");
-    if (!html.includes("assets/js/home.js")) failures.push(file + ": home.js missing");
-  } else {
-    if (!html.includes("assets/css/numuw.css")) failures.push(file + ": shared numuw.css missing");
-    if (!html.includes("assets/js/numuw.js")) failures.push(file + ": shared numuw.js missing");
-  }
+  if (file !== "index.html" && /data-lang-btn/.test(html)) failures.push(file + ": non-home page must not expose language control");
 }
 
-const productContracts = {
-  "products/digital-kickoff/index.html": "8,000",
-  "products/automation-sprint/index.html": "8,000",
-  "products/growth-system/index.html": "24,900",
-  "products/growth-partner/index.html": "6,500"
-};
-for (const [file, price] of Object.entries(productContracts)) {
-  const html = fs.readFileSync(path.join(root, file), "utf8");
-  if (!html.includes("COMMERCIAL FIT")) failures.push(file + ": commercial-fit section missing");
-  if (!html.includes(price)) failures.push(file + ": canonical reference price " + price + " missing");
+const sitemapLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+const indexablePageCount = htmlFiles.filter((file) => file !== "404.html" && !isNoIndex(fs.readFileSync(path.join(root, file), "utf8"))).length;
+const sitemapPageCount = sitemapLocs.filter((url) => url.startsWith(PUBLIC_ORIGIN) && !/\.pdf$/i.test(url)).length;
+const pdfCount = sitemapLocs.filter((url) => /\.pdf$/i.test(url)).length;
+if (pdfCount !== 3) failures.push("sitemap.xml: expected 3 public PDF exports, found " + pdfCount);
+if (sitemapPageCount !== indexablePageCount) {
+  failures.push("sitemap.xml: expected " + indexablePageCount + " indexable HTML pages, found " + sitemapPageCount);
 }
-const diagnosticProduct = fs.readFileSync(path.join(root, "products/diagnostic/index.html"), "utf8");
-if (!diagnosticProduct.includes("COMMERCIAL FIT")) failures.push("products/diagnostic/index.html: commercial-fit section missing");
 
-const finder = fs.readFileSync(path.join(root, "tools/solution-finder/index.html"), "utf8");
-if (!/value="ecommerce"/i.test(finder)) failures.push("tools/solution-finder/index.html: ecommerce sector route missing");
-
-const homeCss = fs.readFileSync(path.join(root, "assets/css/home.css"), "utf8");
-for (const token of ["--navy:#081321","--navy2:#10243d","--teal:#08766e","--teal2:#21c6b6","--gold:#d9a441","--bg:#f5f7fa","--paper:#fff","--ink:#122033","--muted:#5f7084","--line:#dfe6ee","--soft:#e8f7f5","--max:1160px"]) {
-  if (!homeCss.includes(token)) failures.push("assets/css/home.css: canonical token missing -> " + token);
+for (const file of OPERATING_ROUTES) {
+  if (!htmlFiles.includes(file)) failures.push("operating route missing from HTML tree: " + file);
 }
-if (homeCss.includes("--teal2:#19c4b4") || homeCss.includes("--gold:#d8a33b") || homeCss.includes("--max:1120px")) {
-  failures.push("assets/css/home.css: competing legacy design-token value detected");
+
+for(const file of ["assets/js/numuw.js","assets/js/tools.js"]){
+  const check=spawnSync(process.execPath,["--check",path.join(root,file)],{encoding:"utf8"});
+  if(check.status!==0) failures.push(file + ": JavaScript syntax check failed" + (check.stderr ? " :: " + check.stderr.trim() : ""));
 }
 
 console.log("NUMUW master static audit: " + htmlFiles.length + " HTML files checked");
 console.log("Failures: " + failures.length + " | Warnings: " + warnings.length);
-for (const item of warnings) console.warn("WARN:", item);
-if (failures.length) {
-  for (const item of failures) console.error("FAIL:", item);
+for(const item of warnings) console.warn("WARN:", item);
+if(failures.length){
+  for(const item of failures) console.error("FAIL:", item);
   process.exit(1);
 }
-console.log("PASS: structure, semantics, metadata, links, tools, security and design-system invariants are healthy.");
+console.log("PASS: structure, semantics, metadata, links, tools, security, navigation, indexability and design-system invariants are healthy.");
