@@ -383,10 +383,24 @@ reportDuplicates(descriptions, "R16", "meta description");
 // fine, and the first heading on a page may be any level.
 for (const rel of htmlFiles) {
   const html = fs.readFileSync(path.join(ROOT, rel), "utf8");
-  const headings = [...html.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)].map((m) => ({
-    level: Number(m[1]),
-    text: truncate(m[2].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()),
-  }));
+  // Two constructs are excluded, because they are not section headings and a
+  // level skip there is not an outline defect:
+  //   1. Headings inside a card link (<a class="card">) - these label the
+  //      items of a list-like grid, and sit under whatever h2 names the grid.
+  //   2. Headings inside a live region (role="status" / aria-live) - these are
+  //      script-written KPI values, not prose, and their level is not a
+  //      document-structure decision.
+  const headings = [...html.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi)]
+    .filter((m) => {
+      const before = html.slice(0, m.index);
+      if (/\brole="status"|\baria-live=/.test(m[0])) return false;
+      const lastOpen = before.lastIndexOf("<a ");
+      return lastOpen <= before.lastIndexOf("</a>");
+    })
+    .map((m) => ({
+      level: Number(m[1]),
+      text: truncate(m[2].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()),
+    }));
   for (let i = 1; i < headings.length; i++) {
     if (headings[i].level > headings[i - 1].level + 1) {
       report(
