@@ -121,6 +121,21 @@
     }
   }
 
+  var toolStarted=false;
+  document.addEventListener('focusin',function(e){
+    if(toolStarted)return;
+    var form=e.target.closest('form');
+    if(form){
+      toolStarted=true;
+      emit('tool_start',{tool:location.pathname,path:location.pathname});
+    }
+  });
+  document.addEventListener('submit',function(e){
+    if(e.target && e.target.tagName==='FORM'){
+      emit('tool_complete',{tool:location.pathname,path:location.pathname});
+    }
+  });
+
   document.addEventListener('click',function(e){
     var a=e.target.closest('a[href]');
     if(!a)return;
