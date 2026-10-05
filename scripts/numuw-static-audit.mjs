@@ -80,6 +80,19 @@ for (const file of htmlFiles) {
   if (!is404 && !/name=["']twitter:card["']/i.test(html)) failures.push(`${file}: missing twitter:card`);
   if (!is404 && !/name=["']twitter:image["']/i.test(html)) failures.push(`${file}: missing twitter:image`);
   if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex robots meta");
+  if (!is404) {
+    if (!/<header\b[^>]*class=["'][^"']*\bsite-header\b/i.test(html)) failures.push(`${file}: shared site-header missing`);
+    if ((html.match(/<nav\b[^>]*data-nav/gi) || []).length !== 1) failures.push(`${file}: expected exactly one shared data-nav`);
+    if (!/<footer\b[^>]*class=["'][^"']*\bfooter\b/i.test(html)) failures.push(`${file}: shared footer missing`);
+    if (!/(?:href|src)=["'][^"']*assets\/css\/numuw\.css["']/i.test(html)) failures.push(`${file}: shared stylesheet missing`);
+    if (!/(?:src)=["'][^"']*assets\/js\/numuw\.js["']/i.test(html)) failures.push(`${file}: shared script missing`);
+  }
+  if (file === "index.html") {
+    if (!/(?:href|src)=["'][^"']*assets\/css\/home\.css["']/i.test(html)) failures.push("index.html: homepage stylesheet missing");
+    if (/(?:src)=["'][^"']*assets\/js\/home\.js["']/i.test(html)) failures.push("index.html: legacy homepage script must not be loaded");
+  } else if (/(?:href|src)=["'][^"']*assets\/css\/home\.css["']/i.test(html)) {
+    failures.push(`${file}: homepage stylesheet loaded outside index.html`);
+  }
   if (/href=["']javascript:/i.test(html)) failures.push(`${file}: javascript: URL detected`);
   if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(html)) failures.push(`${file}: inline event handler detected`);
 
@@ -105,7 +118,11 @@ for (const file of htmlFiles) {
 
   if (!is404) {
     const description = attr(html, /<meta\s+name=["']description["']\s+content=["']([^"']*)/i);
-    if (description.length < 50) warnings.push(`${file}: meta description is short (${description.length} chars)`);
+    if (description.length < 70) warnings.push(`${file}: meta description is short (${description.length} chars)`);
+    if (description.length > 170) warnings.push(`${file}: meta description is long (${description.length} chars)`);
+    const title = (html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] || "").trim();
+    if (title.length < 25) warnings.push(`${file}: title is short (${title.length} chars)`);
+    if (title.length > 65) warnings.push(`${file}: title is long (${title.length} chars)`);
 
     const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1];
     const ogUrl = html.match(/<meta\s+property=["']og:url["']\s+content=["']([^"']+)["']/i)?.[1];
