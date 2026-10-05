@@ -16,6 +16,18 @@ function walk(dir) {
 }
 function rel(file) { return path.relative(root, file).split(path.sep).join("/"); }
 function attr(html, re) { return (html.match(re)?.[1] ?? "").trim(); }
+function findTags(html, tagName) {
+  const re = new RegExp(`<${tagName}\\b[^>]*>`, "gi");
+  return [...html.matchAll(re)].map(match => match[0]);
+}
+function attrsOf(tag) {
+  const attrs = {};
+  const re = /([A-Za-z_:][A-Za-z0-9_.:-]*)\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))/g;
+  for (const match of tag.matchAll(re)) {
+    attrs[match[1].toLowerCase()] = match[2] ?? match[3] ?? match[4] ?? "";
+  }
+  return attrs;
+}
 
 function resolveLocalHref(sourcePath, href) {
   const clean = href.split("#")[0].split("?")[0];
