@@ -17,7 +17,7 @@ let failed = 0;
 
 function fixture(overrides = {}) {
   const {
-    heading = "<h1>NUMUW</h1>",
+    heading = "<h1>NUMUW",
     metaExtra = "",
     malformedHead = "",
     body = "<p>Body</p>",
