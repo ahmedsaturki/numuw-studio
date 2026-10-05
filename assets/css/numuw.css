@@ -28,3 +28,25 @@ h1{font-size:clamp(2.3rem,5vw,4.6rem);line-height:1.08;margin:15px 0 18px;letter
 .footer-contact{justify-content:flex-end}
 .footer-contact a{color:#d8e3ee}
 @media(max-width:760px){.footer-grid{grid-template-columns:1fr 1fr}.footer-links,.footer-trust,.footer-contact{justify-content:flex-start}.breadcrumbs{padding-top:10px;font-size:.76rem}}
+
+.range-value{display:inline-flex;align-self:start;color:var(--teal);font-size:.82rem;font-weight:900;margin-top:-2px}
+.field input[type="range"]{padding:0;accent-color:var(--teal);min-height:24px}
+.check-row{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.check-row:last-child{border-bottom:0}
+.check-row input{width:20px;height:20px;min-height:20px;accent-color:var(--teal)}
+.check-row small{color:var(--muted);font-size:.75rem}
+.option-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.option{position:relative}
+.option input{position:absolute;opacity:0;pointer-events:none}
+.option label{display:block;padding:16px;border:1px solid var(--line);border-radius:16px;background:#fff;cursor:pointer;font-weight:800;height:100%}
+.option input:checked+label{border:2px solid var(--teal);background:var(--soft)}
+.option input:focus-visible+label{outline:2px solid var(--navy);outline-offset:2px;box-shadow:0 0 0 4px #fff}
+.result-card{position:sticky;top:94px}
+.result-title{font-size:1.8rem;line-height:1.2}
+.why{display:grid;gap:8px;margin-top:16px}
+.why div{padding:10px 12px;border-radius:12px;background:var(--bg);color:var(--muted)}
+#estList .card{appearance:none;text-align:inherit}
+#estList .card.is-selected{outline:2px solid var(--teal);outline-offset:2px;background:var(--soft)}
+@media(max-width:700px){.option-grid{grid-template-columns:1fr}.result-card{position:static}}
+@media(max-width:760px){.footer-grid{grid-template-columns:1fr 1fr}.footer-links,.footer-trust,.footer-contact{justify-content:flex-start}.breadcrumbs{padding-top:10px;font-size:.76rem}}
+@media(max-width:620px){.check-row{grid-template-columns:auto 1fr;}.check-row small{grid-column:2}.field input[type="range"]{min-height:32px}}
