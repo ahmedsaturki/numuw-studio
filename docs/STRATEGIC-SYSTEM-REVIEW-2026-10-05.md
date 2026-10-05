@@ -42,6 +42,20 @@ Differentiators to preserve:
 - bounded scope and explicit handover
 
 ## 2. Brand risk
+### Additional market-collision finding
+
+The Arabic brand space is also crowded in Egypt. Current public results include a London-registered digital marketing company using “نمو/نموّ”, a separate Egyptian business-consulting brand using “نمو – Nomou”, and other Egyptian agencies that use “growth/نمو” heavily in their positioning.
+
+This makes the collision risk multidimensional:
+- exact Latin-name collision
+- Arabic generic-name collision
+- search-result ambiguity
+- social-handle ambiguity
+- trademark class collision
+- category-language confusion
+
+The risk is not proof that NUMUW cannot use the name. It is proof that brand clearance must happen before treating the name as a durable moat.
+
 
 The current name has material collision risk.
 
@@ -385,3 +399,16 @@ It is done when:
 10. Close live production gates.
 
 This document is the governing system-review baseline for future NUMUW changes.
+
+
+## 19. Brand-clearance research sources
+
+WIPO's current Egypt country profile exposes national-trademark and Madrid-designated searches for Egypt and explicitly recommends checking national/regional offices in addition to the Global Brand Database. The Egyptian Patent Office publishes current trademark gazettes and provides a search service.
+
+Research references:
+- WIPO Egypt IP landscape: https://www.wipo.int/en/web/country-profiles/EG
+- WIPO Global Brand Database: https://www.wipo.int/ar/web/global-brand-database/
+- Egyptian Patent Office: https://www.egypo.gov.eg/
+- Egyptian Patent Office search: https://www.egypo.gov.eg/Search/Default.aspx?lang=en
+
+This review does not constitute legal clearance.
