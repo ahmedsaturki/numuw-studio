@@ -27,6 +27,8 @@ jobs:
           node-version: "22"
       - name: Run static audit
         run: node scripts/numuw-static-audit.mjs
+      - name: Run system consistency audit
+        run: node scripts/numuw-system-consistency-audit.mjs
       - name: Run scanner rule regression suite
         run: node bench/test-site-quality.mjs
       - name: Enforce benchmark quality floor
