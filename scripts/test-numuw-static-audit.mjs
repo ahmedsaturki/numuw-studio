@@ -109,7 +109,7 @@ check("R19 catches mangled metadata attribute names", () => {
 });
 
 check("R20 catches stray head text", () => {
-  const r = run({ malformedHead: "h2meta property="og:site_name"" });
+  const r = run({ malformedHead: 'h2meta property="og:site_name"' });
   if (!/unexpected text in <head>/i.test(r.output)) throw new Error(r.output);
 });
 
