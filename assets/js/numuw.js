@@ -1,6 +1,9 @@
 (function(){
   var lang=document.documentElement.lang==='en'?'en':'ar';
+  var root=document.documentElement;
   var localized=document.querySelectorAll('[data-ar][data-en]');
+  var titleAr=root.getAttribute('data-title-ar');
+  var titleEn=root.getAttribute('data-title-en');
   var langButtons=document.querySelectorAll('[data-lang-btn]');
 
   function applyLang(next){
@@ -10,6 +13,7 @@
     document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
       el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
     });
+    if(titleAr||titleEn) document.title=lang==='ar'?(titleAr||document.title):(titleEn||document.title);
     langButtons.forEach(function(b){
       b.textContent=lang==='ar'?'EN':'عربي';
       b.setAttribute('aria-label',lang==='ar'?'Switch to English':'التحويل للعربية');
