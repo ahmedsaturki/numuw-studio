@@ -12,7 +12,7 @@ Canonical branch: `main`
 
 Latest verified repository gates on that commit:
 - NUMUW Static Audit — success
-- R1–R17 benchmark/regression gate — success
+- R1–R18 benchmark/regression gate — success
 - GitHub Pages build and deployment — success
 
 The remaining release boundary is tracked in GitHub Issue #7 and covers live browser/mobile UX, field performance, external CTA verification, Rich Results/Search Console validation, formal legal review and repository settings that cannot be proven from source files alone.
@@ -50,7 +50,7 @@ The site is intentionally build-free. Pages are plain HTML, with shared assets u
 - `assets/` — shared and homepage CSS / JS
 - `scripts/numuw-static-audit.mjs` — release-time source audit
 - `.github/workflows/numuw-static-audit.yml` — CI quality gate
-- `bench/test-site-quality.mjs` — regression suite asserting every R1–R17 rule still fires
+- `bench/test-site-quality.mjs` — regression suite asserting every R1–R18 rule still fires
 
 ## Quality gate
 
@@ -62,9 +62,9 @@ node bench/test-site-quality.mjs
 node bench/site-quality.mjs
 ```
 
-The static audit covers HTML structure, metadata, canonical URLs, JSON-LD parsing, links, social metadata, accessibility-related invariants, no-third-party runtime dependencies, sitemap integrity, the 404 contract, security.txt and duplicate HTML attributes.
+The static audit covers HTML structure, metadata, canonical URLs, JSON-LD parsing, links, social metadata, accessibility-related invariants, no-third-party runtime dependencies, sitemap integrity, the 404 contract, security.txt and duplicate HTML attributes and other release invariants.
 
-The R1–R17 regression suite must remain capable of failing when each rule is intentionally violated. This protects the meaning of the quality metric itself.
+The R1–R18 regression suite must remain capable of failing when each rule is intentionally violated. This protects the meaning of the quality metric itself.
 
 The autoresearch experiment configuration currently declares the combined metric:
 
