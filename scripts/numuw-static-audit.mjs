@@ -123,7 +123,7 @@ for (const file of htmlFiles) {
     const tagName = tag.match(/^<([A-Za-z0-9:_-]+)/)?.[1]?.toLowerCase();
     if (tagName === "script" || tagName === "style") continue;
     for (const [attribute, count] of Object.entries(attributeCounts(tag))) {
-      if (count > 1) failures.push(`${file}: duplicate HTML attribute ${attribute}`);
+      if (count > 1) failures.push(`${file}: R18: duplicate HTML attribute ${attribute}`);
     }
   }
   const is404 = file === "404.html";
