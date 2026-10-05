@@ -1,10 +1,10 @@
 # NUMUW Measurement Specification
 
-This specification defines what NUMUW may measure later without forcing analytics into the public site today.
+This specification defines the safe measurement contract for the public site.
 
 ## Current state
 
-The repository does not ship an analytics vendor or tracking pixel. The shared JavaScript exposes inert browser events and only forwards them to `window.dataLayer` when a consumer has already created that array.
+The repository does not ship an analytics vendor or tracking pixel. The shared JavaScript emits inert browser events for CTA intent and tool start/completion, and only forwards them to `window.dataLayer` when a consumer has already created that array.
 
 ## Core funnel
 
