@@ -22,7 +22,7 @@ function findTags(html, tagName) {
 }
 function attrsOf(tag) {
   const attrs = {};
-  const re = /([A-Za-z_:][A-Za-z0-9_.:-]*)\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))/g;
+  const re = /([A-Za-z_:][A-Za-z0-9_.:-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/g;
   for (const match of tag.matchAll(re)) {
     attrs[match[1].toLowerCase()] = match[2] ?? match[3] ?? match[4] ?? "";
   }
