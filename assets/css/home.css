@@ -128,3 +128,5 @@
   .home-final .actions .btn{width:100%}
   .wa-float{inset-inline:14px;inset-inline-end:14px;text-align:center}
 }
+
+@media(prefers-reduced-motion:reduce){.service-card{transition:none}.service-card:hover{transform:none}}
