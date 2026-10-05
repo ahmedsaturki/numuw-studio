@@ -10,7 +10,7 @@ The repository does not ship an analytics vendor or tracking pixel. The shared J
 
 `page_view → tool_start → tool_complete → cta_intent → qualified_conversation → scoped_proposal → won_work`
 
-Only the first four are suitable for client-side site instrumentation. The later stages are business records and should not be inferred from a browser event.
+The public site now emits inert `tool_start` / `tool_complete` events from the shared decision-tool runtime. Only the first four stages are suitable for client-side instrumentation. The later stages are business records and should not be inferred from a browser event.
 
 ## Event taxonomy
 
@@ -24,7 +24,7 @@ Safe fields:
 Do not include message text, phone numbers, names, email addresses, form values or free-form user input.
 
 ### tool_start / tool_complete
-When instrumented, record tool name and completion state. Do not record answers or financial assumptions unless the organization has a documented purpose, lawful basis and retention policy for that data.
+The current shared tool runtime records only the tool name. `tool_start` fires on first user input/change and `tool_complete` fires on submission. Do not record answers or financial assumptions. This remains a first-party intent signal, not a lead or revenue signal.
 
 ## Measurement principles
 
