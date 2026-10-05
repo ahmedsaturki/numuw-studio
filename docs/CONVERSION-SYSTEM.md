@@ -20,7 +20,7 @@ Company, method, proof, case-study and document pages explain who is behind the 
 
 ## 5. Conversion
 
-The default action is a direct conversation or a diagnostic. The visitor should not need to understand the internal service catalog before taking the next step.
+The default commercial entry is a free fit conversation with no implied deliverable. A paid NUMUW Diagnostic is a separate product that produces a bounded decision brief. The visitor should not need to understand the internal service catalog before taking the next step.
 
 ## 6. Delivery confidence
 
@@ -36,6 +36,6 @@ Do not publish invented proof. Real proof may include verified screenshots, link
 
 Track the funnel by intent:
 
-`Landing view → Tool start → Tool completion → Diagnostic/contact → Qualified conversation → Scoped proposal → Won work`
+`Landing view → Tool start → Tool completion → CTA intent → Free fit conversation → Qualified conversation → Paid diagnostic or scoped proposal → Won work`
 
 Do not imply that a page, tool or campaign caused revenue without an agreed measurement method and baseline.
