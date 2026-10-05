@@ -57,8 +57,8 @@
       ['/resources/','الموارد','Resources']
     ];
     for(var i=0;i<map.length;i++){
-      var base=SITE_ROOT.replace(/\/$/,'')+map[i][0].replace(/^\//,'').replace(/\/$/,'');
-      var norm=map[i][0].replace(/\/$/,'');
+      var norm=map[i][0].replace(/\/$/,'').replace(/^\//,'');
+      var base=(SITE_ROOT+norm).replace(/\/$/,'');
       if(p===base){
         return [{ar:'الرئيسية',en:'Home',url:pathLink('')},{ar:map[i][1],en:map[i][2],url:pathLink(norm.replace(/^\//,'')+'/')}];
       }
