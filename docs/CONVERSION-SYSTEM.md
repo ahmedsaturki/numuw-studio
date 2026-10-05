@@ -1,41 +1,86 @@
 # NUMUW Conversion System
 
-NUMUW is not designed as a single page with every service mixed together. The public system uses a deliberate ladder:
+NUMUW should behave as one decision system, not a collection of disconnected pages.
 
-## 1. Discovery
+## Entry layer
 
-Landing pages answer the visitor's immediate question by service or industry.
+A visitor can enter through the homepage, an industry/service landing page, search/content, a product page or a free tool.
 
-## 2. Self-assessment
+Every entry point must answer:
+1. Who is this for?
+2. What problem does it address?
+3. What should the visitor do next?
 
-Tools let a prospect estimate readiness, identify friction and understand the shape of the problem without pretending to access external systems they did not authorize.
+The homepage is the broad routing layer. Landing pages add context. Product pages define commercial scope.
 
-## 3. Product fit
+## Decision layer
 
-Product pages translate a broad service into a bounded offer with fit, non-fit, delivery and next-step guidance.
+Free tools help prospects understand readiness, friction and possible starting points without pretending to access systems they did not authorize.
 
-## 4. Trust
+Tools are decision aids, not forms whose only purpose is collecting contact information.
 
-Company, method, proof, case-study and document pages explain who is behind the work, how it is done and what evidence exists.
+## Canonical offer ladder
 
-## 5. Conversion
+Diagnostic → Digital Kickoff → Automation Sprint → Growth System → Growth Partner
 
-The default action is a direct conversation or a diagnostic. The visitor should not need to understand the internal service catalog before taking the next step.
+The ladder represents increasing clarity, connected scope and operating continuity. It is not an upsell sequence.
 
-## 6. Delivery confidence
+- unclear problem → Diagnostic
+- focused digital foundation → Digital Kickoff
+- one clear repetitive workflow → Automation Sprint
+- several dependent layers → Growth System
+- recurring optimization with an owner and usable baseline → Growth Partner
 
-Business Library pages, proposal templates, onboarding, handover and terms make the transition from marketing to execution explicit.
+The exact product names and reference prices must match docs/PRODUCT-MATRIX.md.
 
-## Content rules
+## Trust layer
 
-Copy should help the visitor make a decision, not merely create more indexable pages. Avoid producing large amounts of near-duplicate or search-engine-first content. Any future industry/service page should have a real audience, distinct problem framing and meaningful information beyond keyword variation.
+Trust comes from:
+- clear founder/company identity
+- specific method and decision logic
+- real proof only
+- explicit limitations
+- ownership/handover clarity
+- commercial documents
+- privacy and security disclosures
 
-Do not publish invented proof. Real proof may include verified screenshots, links, measurable outcomes with context, or client-approved case studies.
+No invented testimonials, logos, awards, rankings, revenue or guaranteed outcomes.
 
-## Measurement model
+## Conversion layer
 
-Track the funnel by intent:
+The primary conversion is a qualified next step, not a generic contact click.
 
-`Landing view → Tool start → Tool completion → Diagnostic/contact → Qualified conversation → Scoped proposal → Won work`
+Useful next steps include:
+- use a relevant tool
+- test product fit
+- create a short brief
+- start WhatsApp
+- request a scoped diagnostic
 
-Do not imply that a page, tool or campaign caused revenue without an agreed measurement method and baseline.
+A click is intent, not a lead. A conversation is not automatically qualified work.
+
+## Delivery handoff
+
+The commercial promise must map directly into the delivery chain:
+
+Discovery → Scope → Proposal → Approval → Onboarding → Build → QA → Acceptance → Handover → Improvement
+
+This is the bridge between marketing and operations.
+
+## Content governance
+
+A new landing, product, tool or insight must add distinct decision value. Search-keyword variation alone is not sufficient.
+
+Before publication ask:
+- Is the audience real and specific?
+- Is the problem materially distinct?
+- Is the proof/evidence relevant?
+- Does the page route to a useful next step?
+- Does it use the global design/runtime system?
+- Does it create unnecessary maintenance or content debt?
+
+## Measurement
+
+Landing view → Tool start → Tool complete → CTA intent → Qualified conversation → Scoped proposal → Won work
+
+Browser events may represent intent. Qualification, proposals and revenue require business records and an agreed source of truth.
