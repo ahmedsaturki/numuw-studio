@@ -9,8 +9,6 @@ https://ahmedsaturki.github.io/numuw-studio/
 
 Canonical branch: `main`
 
-Latest verified main commit:
-`92ffa5bc15c1678887d7dcbaaac3e0ac0c9a0337`
 
 Latest verified repository gates on that commit:
 - NUMUW Static Audit — success
