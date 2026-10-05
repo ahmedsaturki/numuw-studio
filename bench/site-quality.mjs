@@ -289,6 +289,22 @@ for (const rel of htmlFiles) {
     }
   }
 
+
+  // R18 duplicate HTML attributes
+  for (const tag of startTags(html)) {
+    const tagName = tag.match(/^<([a-zA-Z][a-zA-Z0-9:_-]*)\b/)?.[1]?.toLowerCase();
+    if (tagName === "script" || tagName === "style") continue;
+    const attrs = startTagAttributes(tag);
+    const seen = new Set();
+    for (const name of attrs) {
+      if (seen.has(name)) {
+        report(rel, "R18", "duplicate HTML attribute: " + name);
+        break;
+      }
+      seen.add(name);
+    }
+  }
+
   // R9 every <img> has an alt attribute
   for (const tag of findTags(html, "img")) {
     if (!("alt" in attrsOf(tag))) report(rel, "R9", `<img> without alt attribute`);
@@ -432,3 +448,14 @@ process.stdout.write(`METRIC issues * 1e6 + html_bytes=${issues * 1e6 + htmlByte
 // Legacy single-metric form ("<metric>: <value>") for consumers that parse
 // one primary metric per line via prefix match.
 process.stdout.write(`issues: ${issues}\n`);
+function startTagAttributes(tag) {
+  const attrs = [];
+  const inner = tag.slice(1, -1);
+  const re = /([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*(?:=\s*("([^"]*)"|'([^']*)'|([^\s"'=<>]+)))?/g;
+  for (const match of inner.matchAll(re)) attrs.push(match[1].toLowerCase());
+  return attrs;
+}
+
+function startTags(html) {
+  return html.match(/<([a-zA-Z][a-zA-Z0-9:_-]*)\b[^>]*>/g) ?? [];
+}
