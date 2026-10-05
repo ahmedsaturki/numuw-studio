@@ -17,7 +17,7 @@ Standard pages use:
 - shared accessibility behavior
 - shared measurement hooks
 
-The homepage still has a home-specific presentation layer in assets/css/home.css and assets/js/home.js. Those files should contain only homepage-specific presentation/behavior, not a second global design system.
+The homepage keeps assets/css/home.css for homepage-specific presentation. Shared navigation, localization, printing, measurement and interaction behavior come from assets/js/numuw.js, so there is no second global behavior runtime.
 
 Trusted bilingual strings may contain inline emphasis. The shared localization runtime must preserve that markup.
 
