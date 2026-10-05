@@ -23,17 +23,10 @@
 <div class="field"><label for="timeline">الوقت المرغوب</label><select id="timeline"><option>هذا الشهر</option><option>خلال 30–60 يوم</option><option>خلال 60–90 يوم</option><option>غير محدد بعد</option></select></div>
 <button class="btn btn-primary" type="submit">كوّن الـBrief</button>
 </form>
-<div class="panel"><span class="eyebrow">OUTPUT</span><div id="output" role="status" aria-live="polite"><h2>الـBrief سيظهر هنا</h2><p class="lead" style="margin-top:10px">اكتب وضعك الحالي أولًا، ثم راجع الرسالة قبل الإرسال.</p></div></div>
+<div class="panel"><span class="eyebrow">OUTPUT</span><div id="output" role="status" aria-live="polite"><h2>الـBrief سيظهر هنا</h2><p class="lead result-copy">اكتب وضعك الحالي أولًا، ثم راجع الرسالة قبل الإرسال.</p></div></div>
 </div></section>
 <section class="section"><div class="container"><div class="center"><span class="eyebrow">BETTER CONVERSATIONS</span><h2>كلما كانت المشكلة أوضح، كان الـscope أسرع</h2><p class="lead">لا تحتاج إلى كتابة وثيقة استشارية. يكفي هدف، مشكلة، معيار نجاح، وتوقيت تقريبي.</p></div></div></section>
 </main><footer class="footer"><div class="container footer-grid"><strong>NUMUW</strong><a href="../">Tools</a><span>© <span data-year></span></span></div></footer>
 <script src="../../assets/js/numuw.js" defer></script>
-<script>
-(function(){
-var f=document.getElementById('brief'),o=document.getElementById('output');
-function v(id){return document.getElementById(id).value.trim()}
-f.addEventListener('submit',function(e){e.preventDefault();var industry=v('industry'),goal=v('goal'),problem=v('problem'),success=v('success')||'لم أحدد معيار النجاح بعد',timeline=v('timeline');var msg='مرحبًا NUMUW 👋\n\nنوع النشاط: '+industry+'\nالهدف: '+goal+'\nالمشكلة الحالية: '+problem+'\nمعيار النجاح: '+success+'\nالتوقيت: '+timeline+'\n\nأريد معرفة أفضل نقطة بداية والنطاق المناسب.';var url='https://wa.me/201127788810?text='+encodeURIComponent(msg);o.innerHTML='<h2>Brief جاهز للمراجعة</h2><div id="briefText" class="notice" style="white-space:pre-wrap;margin-top:16px">'+msg.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</div><div class="actions"><button id="copyBrief" class="btn btn-outline" type="button">نسخ الـBrief</button><a class="btn btn-primary" href="'+url+'" target="_blank" rel="noopener noreferrer">مراجعة ثم إرسال على WhatsApp</a><a class="btn btn-outline" href="../solution-finder/">اكتشف الحل أولًا</a></div>';});
-document.addEventListener('click',function(e){var b=e.target.closest('#copyBrief');if(!b)return;var textValue=document.getElementById('briefText').innerText;if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(textValue).then(function(){b.textContent='تم نسخ الـBrief ✓';setTimeout(function(){b.textContent='نسخ الـBrief'},1800)}).catch(function(){b.textContent='انسخ النص يدويًا'});}else{b.textContent='النسخ غير متاح هنا؛ انسخ النص يدويًا';setTimeout(function(){b.textContent='نسخ الـBrief'},2200)}});
-})();
-</script>
+<script src="../../assets/js/tools/brief-builder.js" defer></script>
 </body></html>
