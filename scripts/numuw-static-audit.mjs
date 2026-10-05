@@ -73,13 +73,17 @@ for (const file of htmlFiles) {
   if (!/<meta\s+name=["']viewport["']/i.test(html)) failures.push(`${file}: missing viewport meta`);
   if (!/<html\b[^>]*lang=["'][a-z-]+["']/i.test(html)) failures.push(`${file}: missing html lang`);
   if (!/<html\b[^>]*dir=["'](rtl|ltr)["']/i.test(html)) failures.push(`${file}: missing html dir`);
-  if (!/<main\b/i.test(html)) failures.push(`${file}: missing <main>`);
+  const mainCount = (html.match(/<main\b/gi) || []).length;
+  if (mainCount !== 1) failures.push(`${file}: expected exactly one <main>, found ${mainCount}`);
   if (!is404 && !/property=["']og:title["']/i.test(html)) failures.push(`${file}: missing og:title`);
   if (!is404 && !/property=["']og:image["']/i.test(html)) failures.push(`${file}: missing og:image`);
   if (!is404 && !/property=["']og:url["']/i.test(html)) failures.push(`${file}: missing og:url`);
   if (!is404 && !/name=["']twitter:card["']/i.test(html)) failures.push(`${file}: missing twitter:card`);
   if (!is404 && !/name=["']twitter:image["']/i.test(html)) failures.push(`${file}: missing twitter:image`);
   if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex robots meta");
+  if (!is404 && file === "index.html" && !/data-localized=["']true["']/i.test(html)) failures.push("index.html: localized homepage contract missing");
+  if (!is404 && file !== "index.html" && /data-localized=["']true["']/i.test(html)) failures.push(`${file}: non-home page must not advertise bilingual localization`);
+  if (/(?:h2meta|properh2y|coh2tent|contenh2|Conh2ersion|h2UMUW)/i.test(html)) failures.push(`${file}: corrupted token detected`);
   if (/href=["']javascript:/i.test(html)) failures.push(`${file}: javascript: URL detected`);
   if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(html)) failures.push(`${file}: inline event handler detected`);
 
@@ -104,6 +108,9 @@ for (const file of htmlFiles) {
   if (badBlankLinks.length) failures.push(`${file}: target="_blank" link without rel="noopener"`);
 
   if (!is404) {
+    const ogTitle = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']*)/i)?.[1];
+    const twitterTitle = html.match(/<meta\s+name=["']twitter:title["']\s+content=["']([^"']*)/i)?.[1];
+    if (ogTitle && twitterTitle && ogTitle !== twitterTitle) failures.push(`${file}: twitter:title does not match og:title`);
     const description = attr(html, /<meta\s+name=["']description["']\s+content=["']([^"']*)/i);
     if (description.length < 50) warnings.push(`${file}: meta description is short (${description.length} chars)`);
 
