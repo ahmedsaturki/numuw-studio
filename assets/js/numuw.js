@@ -2,6 +2,7 @@
   var lang=document.documentElement.lang==='en'?'en':'ar';
   var root=document.documentElement;
   var localized=document.querySelectorAll('[data-ar][data-en]');
+  var pageIsLocalized=root.getAttribute('data-localized')==='true';
   var titleAr=root.getAttribute('data-title-ar');
   var titleEn=root.getAttribute('data-title-en');
   var langButtons=document.querySelectorAll('[data-lang-btn]');
@@ -58,7 +59,7 @@
   }
 
   /* Do not advertise a bilingual switch on pages that are not actually localized. */
-  if(localized.length<4){
+  if(!pageIsLocalized){
     langButtons.forEach(function(b){b.hidden=true});
   }else{
     var saved;
