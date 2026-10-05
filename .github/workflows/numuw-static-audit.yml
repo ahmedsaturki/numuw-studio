@@ -29,3 +29,5 @@ jobs:
         run: node scripts/numuw-static-audit.mjs
       - name: Run scanner rule regression suite
         run: node bench/test-site-quality.mjs
+      - name: Run release-audit regression suite
+        run: node scripts/test-numuw-static-audit.mjs
