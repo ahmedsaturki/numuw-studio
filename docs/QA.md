@@ -5,6 +5,7 @@
 The repository is intentionally build-free and GitHub Pages-compatible. Every public HTML route must pass the dependency-free audit:
 
 `node scripts/numuw-static-audit.mjs`
+`node scripts/numuw-system-consistency-audit.mjs`
 
 The audit checks:
 - HTML5 doctype, viewport, title, description and one primary H1
