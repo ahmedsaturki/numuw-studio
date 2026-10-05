@@ -82,6 +82,75 @@ for (const file of htmlFiles) {
   if (is404 && !/<meta\s+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html)) failures.push("404.html: missing noindex robots meta");
   if (/href=["']javascript:/i.test(html)) failures.push(`${file}: javascript: URL detected`);
   if (/<(?:a|area|button|body|div|form|img|input|select|textarea)[^>]+\s+on[a-z]+\s*=/i.test(html)) failures.push(`${file}: inline event handler detected`);
+  // R18: heading start/end tags must match and every heading must close.
+  const headingStack = [];
+  for (const match of html.matchAll(/<\/?h([1-6])\b[^>]*>/gi)) {
+    const level = Number(match[1]);
+    const token = match[0];
+    if (/^<\//.test(token)) {
+      const open = headingStack.pop();
+      if (open !== level) failures.push(`${file}: mismatched heading closing tag for h${level}`);
+    } else {
+      headingStack.push(level);
+    }
+  }
+  if (headingStack.length) failures.push(`${file}: unclosed heading tag(s)`);
+
+  // R19: social metadata must be semantically populated, not merely present.
+  if (!is404) {
+    const requiredProperties = ["og:title","og:description","og:type","og:url","og:image","og:site_name"];
+    const requiredNames = ["twitter:card","twitter:title","twitter:description","twitter:image"];
+    function metaContentBy(kind, value) {
+      for (const tag of findTags(html, "meta")) {
+        const a = attrsOf(tag);
+        if ((a[kind] ?? "").toLowerCase() === value) return (a.content ?? "").trim();
+      }
+      return "";
+    }
+    for (const key of requiredProperties) {
+      if (!metaContentBy("property", key)) failures.push(`${file}: missing or empty meta property ${key}`);
+    }
+    for (const key of requiredNames) {
+      if (!metaContentBy("name", key)) failures.push(`${file}: missing or empty meta name ${key}`);
+    }
+
+    // Meta tags use a deliberately small public contract; typos such as
+    // "coh2tent" or "propeh2y" must fail instead of silently becoming inert HTML.
+    const allowedMetaAttrs = new Set(["charset","content","http-equiv","name","property","itemprop"]);
+    for (const tag of findTags(html, "meta")) {
+      const unknown = Object.keys(attrsOf(tag)).filter((name) => !allowedMetaAttrs.has(name));
+      if (unknown.length) failures.push(`${file}: unknown meta attribute(s): ${unknown.join(", ")}`);
+    }
+
+    // Corruption sentinel for mangled metadata values such as "Conh2ersion".
+    const headForMetadata = (html.match(/<head\b[^>]*>([\s\S]*?)<\/head>/i)?.[1] ?? "");
+    for (const tag of [...findTags(html, "title"), ...findTags(html, "meta"), ...findTags(html, "link")]) {
+      const a = attrsOf(tag);
+      const titleText = tag.toLowerCase().startsWith("<title") ? tag.replace(/<\/?title\b[^>]*>/gi, "").trim() : "";
+      const values = [titleText, ...Object.values(a)];
+      if (values.some((value) => /h2[A-Za-z0-9]|[A-Za-z0-9]h2/i.test(value))) {
+        failures.push(`${file}: suspicious h2 corruption token in head metadata`);
+        break;
+      }
+    }
+
+    // Head-level tag names and stray text must be valid. This catches malformed
+    // fragments like "<metah2property=...>" and "h2meta property=...".
+    const allowedHeadTags = new Set(["title","meta","link","script","style","base","noscript","template"]);
+    for (const match of headForMetadata.matchAll(/<\/?([A-Za-z][A-Za-z0-9:-]*)\b[^>]*>/g)) {
+      if (/^<\//.test(match[0])) continue;
+      const tagName = match[1].toLowerCase();
+      if (!allowedHeadTags.has(tagName)) failures.push(`${file}: unexpected <head> tag <${tagName}>`);
+    }
+    const headStray = headForMetadata
+      .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
+      .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, "")
+      .replace(/<title\b[^>]*>[\s\S]*?<\/title>/gi, "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&(?:nbsp|#160);/gi, " ")
+      .trim();
+    if (headStray) failures.push(`${file}: unexpected text in <head>: ${headStray.slice(0,120)}`);
+  }
 
   for (const image of images) {
     if (!/\balt\s*=\s*["'][^"']*["']/i.test(image)) failures.push(`${file}: <img> without alt attribute`);
