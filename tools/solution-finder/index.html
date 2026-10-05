@@ -48,15 +48,7 @@
 <section class="section"><div class="container"><div class="center"><span class="eyebrow">DECISION RULE</span><h2>المنتج الأكبر ليس دائمًا المنتج الأفضل</h2><p class="lead">لو كانت المشكلة غير واضحة نبدأ بالتشخيص. لو كانت العملية واضحة نذهب إلى sprint. لو كان الاحتياج متعدد الطبقات نناقش Growth System. ولو كان المطلوب تحسينًا مستمرًا ندخل Growth Partner.</p></div></div></section>
 <section class="cta"><div class="container"><h2>جاهز للخطوة التالية؟</h2><p class="lead">استخدم النتيجة كنقطة بداية، ثم تحقق من النطاق قبل أي التزام.</p><div class="actions" style="justify-content:center"><a class="btn btn-primary" href="../brief-builder/">ابنِ Brief سريع</a><a class="btn btn-outline" style="border-color:#fff;color:#fff" href="https://wa.me/201127788810" target="_blank" rel="noopener">تواصل</a></div></div></section>
 </main><footer class="footer"><div class="container footer-grid"><strong>NUMUW</strong><span>Decision Tools</span><span>© <span data-year></span></span></div></footer>
-<script src="../../assets/js/numuw.js" defer></script>
-<script>
-(function(){
-var f=document.getElementById('finder'),r=document.getElementById('result');
-var map={clarity:{title:'ابدأ بـ NUMUW Diagnostic',desc:'المشكلة أو الأولويات تحتاج تحققًا قبل شراء التنفيذ.',href:'../diagnostic/',label:'ابدأ التشخيص',why:['ترتيب الأولويات أولًا','تقليل خطر بناء الشيء الخطأ','تحديد المنتج بعد فهم baseline']},
-website:{title:'ابدأ بـ Website / Landing',desc:'الاحتياج واضح حول الواجهة ومسار التحويل.',href:'../../landing/website/',label:'استعرض حل المواقع',why:['رسالة واضحة نسبيًا','نقطة التحويل هي الأولوية','يمكن تحديد النطاق قبل التنفيذ']},
-automation:{title:'ابدأ بـ Automation Sprint',desc:'لديك عملية متكررة يمكن رسمها واختبارها وأتمتتها.',href:'../../landing/automation/',label:'استعرض الأتمتة',why:['مشكلة عملية محددة','الأثر مرتبط بتكرار العمل','الأفضل اختبار workflow واحد أولًا']},
-system:{title:'ابدأ بـ Growth System',desc:'تحتاج أكثر من طبقة تعمل معًا تحت استراتيجية واحدة.',href:'../../products/growth-system/',label:'استعرض Growth System',why:['عدة طبقات مترابطة','الحاجة تتجاوز مشروعًا منفردًا','النطاق يحتاج تصميمًا موحدًا']}};
-f.addEventListener('submit',function(e){e.preventDefault();var d=new FormData(f),goal=d.get('goal'),clarity=d.get('clarity'),speed=d.get('speed'),business=d.get('business');var pick=map[goal];if(clarity==='low'&&goal!=='clarity'){pick=map.clarity}if(speed==='ongoing'){pick={title:'ابدأ بـ Growth Partner',desc:'أنت تبحث عن إيقاع تحسين مستمر أكثر من مشروع منفرد.',href:'../../products/growth-partner/',label:'استعرض Growth Partner',why:['تحسين مستمر','عدة مجالات قابلة للتحسين','القرار يتكرر مع البيانات']};}var segment=business==='manufacturing'?' وصفحتك المتخصصة للمصانع':business==='b2b'?' ومسار B2B':business==='realestate'?' ومسار العقارات':'';r.innerHTML='<h2 class="result-title">'+pick.title+'</h2><p class="lead" style="margin-top:10px">'+pick.desc+segment+'</p><div class="why">'+pick.why.map(function(x){return '<div>'+x+'</div>'}).join('')+'</div><div class="actions"><a class="btn btn-dark" href="'+pick.href+'">'+pick.label+'</a><a class="btn btn-outline" href="../brief-builder/">ابنِ Brief</a></div>';});
-})();
-</script>
+
+
+<script src="../../assets/js/tools/solution-finder.js" defer></script>
 </body></html>
