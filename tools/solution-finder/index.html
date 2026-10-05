@@ -23,40 +23,31 @@
 <div class="option"><input id="g2" type="radio" name="goal" value="website"><label for="g2">أحتاج موقعًا / Landing يحوّل</label></div>
 <div class="option"><input id="g3" type="radio" name="goal" value="automation"><label for="g3">أريد تقليل العمل المتكرر</label></div>
 <div class="option"><input id="g4" type="radio" name="goal" value="system"><label for="g4">أحتاج منظومة مترابطة</label></div>
-</div></div>
-<div class="field"><label>ما مستوى وضوح المشكلة الآن؟</label><div class="option-grid">
+</div></fieldset>
+<fieldset class="field choice-fieldset"><legend>ما مستوى وضوح المشكلة الآن؟</legend><div class="option-grid">
 <div class="option"><input id="c1" type="radio" name="clarity" value="low" checked><label for="c1">غير واضحة</label></div>
 <div class="option"><input id="c2" type="radio" name="clarity" value="medium"><label for="c2">واضحة نسبيًا</label></div>
 <div class="option"><input id="c3" type="radio" name="clarity" value="high"><label for="c3">واضحة ومحددة</label></div>
-</div></div>
-<div class="field"><label>كيف تريد الحركة؟</label><div class="option-grid">
+</div></fieldset>
+<fieldset class="field choice-fieldset"><legend>كيف تريد الحركة؟</legend><div class="option-grid">
 <div class="option"><input id="s1" type="radio" name="speed" value="starter" checked><label for="s1">بداية محددة وصغيرة</label></div>
 <div class="option"><input id="s2" type="radio" name="speed" value="sprint"><label for="s2">مشروع مركز وسريع</label></div>
 <div class="option"><input id="s3" type="radio" name="speed" value="system"><label for="s3">عدة طبقات مترابطة</label></div>
 <div class="option"><input id="s4" type="radio" name="speed" value="ongoing"><label for="s4">تحسين مستمر</label></div>
-</div></div>
-<div class="field"><label>أي وصف أقرب لوضعك؟</label><div class="option-grid">
+</div></fieldset>
+<fieldset class="field choice-fieldset"><legend>أي وصف أقرب لوضعك؟</legend><div class="option-grid">
 <div class="option"><input id="b1" type="radio" name="business" value="b2b" checked><label for="b1">شركة B2B</label></div>
 <div class="option"><input id="b2" type="radio" name="business" value="manufacturing"><label for="b2">مصنع / صناعة</label></div>
 <div class="option"><input id="b3" type="radio" name="business" value="realestate"><label for="b3">عقارات</label></div>
 <div class="option"><input id="b4" type="radio" name="business" value="other"><label for="b4">نشاط آخر</label></div>
-</div></div>
+</div></fieldset>
 <button class="btn btn-primary" type="submit">اكتشف المسار</button>
 </form>
-<div class="panel result-card"><span class="eyebrow">RECOMMENDATION</span><div id="result" role="status" aria-live="polite"><h2 class="result-title">ابدأ بالتشخيص</h2><p class="lead" style="margin-top:10px">لما تكون الأولويات غير واضحة، التشخيص هو أفضل بداية.</p><div class="actions"><a class="btn btn-dark" href="../diagnostic/">افتح التشخيص</a></div></div></div>
+<div class="panel result-card"><span class="eyebrow">RECOMMENDATION</span><div id="result" role="status" aria-live="polite"><h2 class="result-title">ابدأ بالتشخيص</h2><p class="lead result-copy">لما تكون الأولويات غير واضحة، التشخيص هو أفضل بداية.</p><div class="actions"><a class="btn btn-dark" href="../diagnostic/">افتح التشخيص</a></div></div></div>
 </div></section>
 <section class="section"><div class="container"><div class="center"><span class="eyebrow">DECISION RULE</span><h2>المنتج الأكبر ليس دائمًا المنتج الأفضل</h2><p class="lead">لو كانت المشكلة غير واضحة نبدأ بالتشخيص. لو كانت العملية واضحة نذهب إلى sprint. لو كان الاحتياج متعدد الطبقات نناقش Growth System. ولو كان المطلوب تحسينًا مستمرًا ندخل Growth Partner.</p></div></div></section>
-<section class="cta"><div class="container"><h2>جاهز للخطوة التالية؟</h2><p class="lead">استخدم النتيجة كنقطة بداية، ثم تحقق من النطاق قبل أي التزام.</p><div class="actions" style="justify-content:center"><a class="btn btn-primary" href="../brief-builder/">ابنِ Brief سريع</a><a class="btn btn-outline" style="border-color:#fff;color:#fff" href="https://wa.me/201127788810" target="_blank" rel="noopener">تواصل</a></div></div></section>
+<section class="cta"><div class="container"><h2>جاهز للخطوة التالية؟</h2><p class="lead">استخدم النتيجة كنقطة بداية، ثم تحقق من النطاق قبل أي التزام.</p><div class="actions centered"><a class="btn btn-primary" href="../brief-builder/">ابنِ Brief سريع</a><a class="btn btn-outline" style="border-color:#fff;color:#fff" href="https://wa.me/201127788810" target="_blank" rel="noopener">تواصل</a></div></div></section>
 </main><footer class="footer"><div class="container footer-grid"><strong>NUMUW</strong><span>Decision Tools</span><span>© <span data-year></span></span></div></footer>
 <script src="../../assets/js/numuw.js" defer></script>
-<script>
-(function(){
-var f=document.getElementById('finder'),r=document.getElementById('result');
-var map={clarity:{title:'ابدأ بـ NUMUW Diagnostic',desc:'المشكلة أو الأولويات تحتاج تحققًا قبل شراء التنفيذ.',href:'../diagnostic/',label:'ابدأ التشخيص',why:['ترتيب الأولويات أولًا','تقليل خطر بناء الشيء الخطأ','تحديد المنتج بعد فهم baseline']},
-website:{title:'ابدأ بـ Website / Landing',desc:'الاحتياج واضح حول الواجهة ومسار التحويل.',href:'../../landing/website/',label:'استعرض حل المواقع',why:['رسالة واضحة نسبيًا','نقطة التحويل هي الأولوية','يمكن تحديد النطاق قبل التنفيذ']},
-automation:{title:'ابدأ بـ Automation Sprint',desc:'لديك عملية متكررة يمكن رسمها واختبارها وأتمتتها.',href:'../../landing/automation/',label:'استعرض الأتمتة',why:['مشكلة عملية محددة','الأثر مرتبط بتكرار العمل','الأفضل اختبار workflow واحد أولًا']},
-system:{title:'ابدأ بـ Growth System',desc:'تحتاج أكثر من طبقة تعمل معًا تحت استراتيجية واحدة.',href:'../../products/growth-system/',label:'استعرض Growth System',why:['عدة طبقات مترابطة','الحاجة تتجاوز مشروعًا منفردًا','النطاق يحتاج تصميمًا موحدًا']}};
-f.addEventListener('submit',function(e){e.preventDefault();var d=new FormData(f),goal=d.get('goal'),clarity=d.get('clarity'),speed=d.get('speed'),business=d.get('business');var pick=map[goal];if(clarity==='low'&&goal!=='clarity'){pick=map.clarity}if(speed==='ongoing'){pick={title:'ابدأ بـ Growth Partner',desc:'أنت تبحث عن إيقاع تحسين مستمر أكثر من مشروع منفرد.',href:'../../products/growth-partner/',label:'استعرض Growth Partner',why:['تحسين مستمر','عدة مجالات قابلة للتحسين','القرار يتكرر مع البيانات']};}var segment=business==='manufacturing'?' وصفحتك المتخصصة للمصانع':business==='b2b'?' ومسار B2B':business==='realestate'?' ومسار العقارات':'';r.innerHTML='<h2 class="result-title">'+pick.title+'</h2><p class="lead" style="margin-top:10px">'+pick.desc+segment+'</p><div class="why">'+pick.why.map(function(x){return '<div>'+x+'</div>'}).join('')+'</div><div class="actions"><a class="btn btn-dark" href="'+pick.href+'">'+pick.label+'</a><a class="btn btn-outline" href="../brief-builder/">ابنِ Brief</a></div>';});
-})();
-</script>
+<script src="../../assets/js/tools/solution-finder.js" defer></script>
 </body></html>
