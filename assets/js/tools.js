@@ -60,12 +60,12 @@
     var selected=[];
     list.innerHTML='';
     items.forEach(function(item){
-      var b=document.createElement('button');b.className='card';b.type='button';b.setAttribute('aria-pressed','false');
+      var b=document.createElement('button');b.className='card';b.type='button';b.setAttribute('aria-pressed','false');b.classList.add('tool-option');
       b.innerHTML='<div class="icon">＋</div><h3>'+item[0]+'</h3><p>'+(item[2]==='monthly'?'من ':'مرة واحدة من ')+item[1].toLocaleString('en-EG')+' ج.م</p>';
       b.addEventListener('click',function(){
         var i=selected.indexOf(item);
-        if(i>-1){selected.splice(i,1);b.setAttribute('aria-pressed','false');b.style.outline='';}
-        else{selected.push(item);b.setAttribute('aria-pressed','true');b.style.outline='2px solid var(--teal)';}
+        if(i>-1){selected.splice(i,1);b.setAttribute('aria-pressed','false');b.classList.remove('is-selected');}
+        else{selected.push(item);b.setAttribute('aria-pressed','true');b.classList.add('is-selected');}
         var one=selected.filter(function(x){return x[2]==='one'}).reduce(function(a,x){return a+x[1]},0);
         var monthly=selected.filter(function(x){return x[2]==='monthly'}).reduce(function(a,x){return a+x[1]},0);
         document.getElementById('estTotal').textContent=money(one);
@@ -163,6 +163,30 @@
       navigator.clipboard&&window.isSecureContext?navigator.clipboard.writeText(el.textContent).then(function(){b.textContent='تم النسخ ✓';setTimeout(function(){b.textContent='نسخ الـBrief'},1800)}).catch(function(){b.textContent='انسخ النص يدويًا'}):b.textContent='النسخ غير متاح هنا؛ انسخ النص يدويًا';
     });
   }
+  var toolStarted={};
+  function emitTool(name,event){
+    var payload={tool:name};
+    try{window.dispatchEvent(new CustomEvent('numuw:'+event,{detail:payload}))}catch(err){}
+    if(Array.isArray(window.dataLayer)){try{window.dataLayer.push({event:'numuw_'+event,tool:name})}catch(err){}}
+  }
+  function watchTool(form,name){
+    if(!form)return;
+    form.addEventListener('input',function(){
+      if(!toolStarted[name]){toolStarted[name]=true;emitTool(name,'tool_start');}
+    });
+    form.addEventListener('change',function(){
+      if(!toolStarted[name]){toolStarted[name]=true;emitTool(name,'tool_start');}
+    });
+    form.addEventListener('submit',function(){emitTool(name,'tool_complete');});
+  }
+  watchTool(document.getElementById('diagForm'),'growth-diagnostic');
+  watchTool(document.getElementById('autoForm'),'automation-finder');
+  watchTool(document.getElementById('roadForm'),'90-day-roadmap');
+  watchTool(document.getElementById('roiForm'),'roi-scenario');
+  watchTool(document.getElementById('siteForm'),'website-readiness');
+  watchTool(document.getElementById('finder'),'solution-finder');
+  watchTool(document.getElementById('brief'),'brief-builder');
+
   setupDiagnostic();
   setupAutomation();
   setupEstimator();
