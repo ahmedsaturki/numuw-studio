@@ -5,6 +5,20 @@ NUMUW is a static, GitHub Pages-compatible growth studio site for Egyptian busin
 Public site:
 https://ahmedsaturki.github.io/numuw-studio/
 
+## Current release state
+
+Canonical branch: `main`
+
+Latest verified main commit:
+`92ffa5bc15c1678887d7dcbaaac3e0ac0c9a0337`
+
+Latest verified repository gates on that commit:
+- NUMUW Static Audit — success
+- R1–R17 benchmark/regression gate — success
+- GitHub Pages build and deployment — success
+
+The remaining release boundary is tracked in GitHub Issue #7 and covers live browser/mobile UX, field performance, external CTA verification, Rich Results/Search Console validation, formal legal review and repository settings that cannot be proven from source files alone.
+
 ## What is included
 
 - Conversion-focused home page
@@ -46,61 +60,89 @@ Run:
 
 ```bash
 node scripts/numuw-static-audit.mjs
-```
-
-The current audit covers HTML structure, metadata, canonical URLs, JSON-LD parsing, links, social metadata, accessibility-related invariants, no-third-party runtime dependencies, sitemap integrity, the 404 contract and security.txt.
-
-The scanner's rule set is covered by its own regression suite, which also runs in CI:
-
-```bash
 node bench/test-site-quality.mjs
+node bench/site-quality.mjs
 ```
 
-It builds throwaway site trees and asserts each of R1–R17 still fires on a violating
-fixture, and that the deliberate exemptions (404 canonical/sitemap, R9 empty `alt`,
-R17 card-grid and live-region headings) still hold. Without it a rule could stop reporting
-and the autoresearch loop would keep optimising against a number that no longer means what
-it claims.
+The static audit covers HTML structure, metadata, canonical URLs, JSON-LD parsing, links, social metadata, accessibility-related invariants, no-third-party runtime dependencies, sitemap integrity, the 404 contract, security.txt and duplicate HTML attributes.
 
-The separate `bench/site-quality.mjs` harness contains the deterministic R1–R17 autoresearch experiment. Its current state (commit `6b2344a`) is:
+The R1–R17 regression suite must remain capable of failing when each rule is intentionally violated. This protects the meaning of the quality metric itself.
 
-- `issues = 0` — all 52 pages pass R1–R17; this is the tracked objective, and it is at floor
-- `html_bytes = 335,458` — secondary byte-guard metric, not a tracked objective
-- `total_bytes = 656,676` *(as of `6b2344a`)* — counts every walked file, Markdown docs included, so it rises when this README is edited; secondary byte-guard metric, not a tracked objective
-- `combined = 335,458` (`issues × 1e6 + html_bytes`)
+The autoresearch experiment configuration currently declares the combined metric:
 
-Reaching the floor required both rule scoping and markup fixes for R17 (heading
-order): headings inside `<a class="card">` and inside `role="status"` / `aria-live`
-regions are deliberately exempt from R17 because they are correct markup, not
-outline defects — do not "fix" them back. The remaining genuine defects were
-resolved by converting hero eyebrow `h3`s to `<p class="panel-label">`, promoting
-the `tools/diagnostic` priorities subhead to `<h2 class="tool-subhead">`, and
-replacing the `tools/automation-finder` KPI `h3`s with `<b>` under a new
-`<h2 class="tool-subhead" id="kpiLabel">`. `assets/css/numuw.css` gained the
-`.panel-label`, `.tool-subhead` and `.kpi .card b` hooks in `6b2344a` (it is no
-longer frozen); each hook reproduces the previous `h3` rendering exactly.
+`issues * 1e6 + html_bytes`
 
-Those metrics evaluate the harness objective, not live user experience.
+with lower being better. Independently, the release gate requires the current source audit and benchmark to reach `issues=0`. Historical autoresearch baselines remain in `.autoresearch/engineering/numuw-site-quality-v3/`.
 
-## Deployment
+Do not optimize HTML size at the expense of buyer value, accessibility, correctness or maintainability.
 
-GitHub Pages is enabled for the repository and its current Pages build is managed by GitHub's Pages deployment workflow. The repository itself contains the static audit workflow; there is intentionally no custom application build/deploy workflow.
+## Commercial architecture
 
-Source/CI verification can prove repository state and successful Pages build runs. It cannot by itself prove browser UX, Lighthouse/Core Web Vitals, live WhatsApp/phone behavior, Search Console indexing or formal legal approval.
+Canonical buyer journey:
 
-See:
+`Discover → Understand → Diagnose → Choose → Scope → Build → Launch → Measure → Improve`
 
-- `docs/QA.md`
-- `docs/RELEASE-MANIFEST.md`
-- `docs/PERFORMANCE-BUDGET.md`
-- `docs/MEASUREMENT-SPEC.md`
-- `docs/CONTENT-POLICY.md`
-- `SECURITY.md`
+Commercial entry is split intentionally:
+
+- **Free Fit Conversation** — qualification, context and next-step discovery; no implied deliverable.
+- **NUMUW Diagnostic** — paid structured decision work producing a bounded decision brief.
+
+Canonical product ladder:
+
+1. NUMUW Diagnostic
+2. Digital Kickoff
+3. Automation Sprint
+4. Growth System
+5. Growth Partner
+
+The correct product is the smallest sensible intervention that solves the current bottleneck. Larger scope is not automatically better.
 
 ## Content / proof policy
 
-Do not publish invented client logos, testimonials, awards, rankings, revenue, ROI or guaranteed search rankings. Real proof should include its source, scope and context.
+Do not publish invented client logos, testimonials, awards, rankings, revenue, ROI or guaranteed search rankings.
 
-## Ownership
+Real case studies require sourceable context, baseline, intervention, evidence, limits and learning.
 
-The repository is public, but no open-source reuse license is granted by default. Brand, commercial content and visual assets remain the property of their respective owners unless separately licensed.
+The absence of fabricated proof is intentional. Building real proof is a commercial operating priority, not a copywriting shortcut.
+
+## Brand and ownership
+
+Brand clearance is a pre-investment gate because the name NUMUW has external market uses and can create search, trademark, domain and handle ambiguity.
+
+See:
+- `docs/STRATEGIC-SYSTEM-REVIEW-2026-10-05.md`
+- `PROPRIETARY-NOTICE.md`
+
+The repository is public, but public visibility does not grant an open-source reuse license. Third-party assets remain subject to their own licenses.
+
+## Measurement
+
+Client-side measurement is intentionally inert.
+
+Implemented intent signals:
+- `tool_start`
+- `tool_complete`
+- `cta`
+
+Only safe intent metadata is emitted. Business stages such as qualified conversation, paid diagnostic, scoped proposal and won work belong to an external business source of truth and are not inferred from browser events.
+
+## Deployment boundary
+
+GitHub Pages can be proven from deployment runs, but source/CI cannot prove:
+- actual browser/mobile UX
+- real-user Core Web Vitals
+- live WhatsApp/phone behavior
+- Search Console indexing
+- Rich Results validation
+- formal legal approval
+- repository governance settings
+
+Those remain explicitly tracked release gates.
+
+## Security
+
+Never store passwords, API keys, private credentials or client-confidential information in public files.
+
+See:
+- `SECURITY.md`
+- `.well-known/security.txt`
