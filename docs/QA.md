@@ -12,7 +12,8 @@ The audit checks:
 - A canonical URL on every indexable HTML page; `404.html` remains `noindex`.
 - Open Graph title/image and Twitter summary metadata.
 - Parseable JSON-LD on public pages.
-- A real `<main>` landmark and Arabic RTL document language.
+- A real `<main>` landmark, declared `lang`/`dir`, and the shared navigation/footer shell.
+- Public pages use the shared CSS/JavaScript shell; the homepage may add `home.css` but does not use a duplicate homepage runtime script.
 - Internal relative links and asset references resolve to existing repository files.
 - No `javascript:` URLs.
 - External `_blank` links include `rel="noopener"`.

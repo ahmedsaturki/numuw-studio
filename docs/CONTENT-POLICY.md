@@ -19,3 +19,5 @@ Use:
 - clearly labeled estimates and scenarios
 
 Marketing language should describe what NUMUW does, not claim outcomes that have not been measured.
+
+Content expected to demonstrate expertise should identify its real author or responsible source where appropriate. AI-assisted production is acceptable when it adds value and is reviewed; AI is not a reason to publish near-duplicate pages at scale.

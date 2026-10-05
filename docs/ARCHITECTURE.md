@@ -1,7 +1,7 @@
 # NUMUW Architecture
 
 ## Root
-`index.html` = brand / conversion home. Homepage-specific CSS and behavior live in `assets/css/home.css` and `assets/js/home.js` so the large surface can be cached independently.
+`index.html` = brand / conversion home. It uses the shared navigation/footer shell, shared JavaScript, and a small homepage-only CSS layer in `assets/css/home.css`; there is no separate homepage runtime script.
 
 ## Landing system
 `landing/` contains focused service and industry acquisition pages. Every landing should have one audience, one core promise, one primary CTA and one clear next step.
