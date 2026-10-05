@@ -348,6 +348,14 @@ check("R17 does not fire inside a live region", (run) => {
   return true;
 });
 
+check("R18 fires on duplicate HTML attributes", (run) => {
+  const r = run({
+    "index.html": goodPage("", { body: '<p class="lead" class="tool-note">x</p>' }),
+  });
+  assertIncludes(rulesFired(r.stderr).join(","), "R18", "rules fired");
+  return true;
+});
+
 check("404.html is exempt from R7 and R13 but still needs R1/R6", (run) => {
   const r = run({ "404.html": goodPage("", { canonical: null }) });
   const fired = rulesFired(r.stderr);
