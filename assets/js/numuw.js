@@ -145,7 +145,6 @@
   ensureSkipLink();
   enhanceGlobalNav();
   ensureBreadcrumbs();
-  enhanceGlobalNav();
   ensureBreadcrumbSchema();
 
   langButtons.forEach(function(b){
