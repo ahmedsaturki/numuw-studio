@@ -3,7 +3,7 @@
 This repository is a static GitHub Pages-compatible growth hub.
 
 Included:
-- Main brand / conversion site
+- Main brand / conversion site with the shared navigation, footer and buyer-journey architecture
 - 10 specialized landing pages plus landing hub
 - 8 self-service tools plus tools hub
 - 5 product pages plus products hub
