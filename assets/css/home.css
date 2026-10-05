@@ -1,16 +1,16 @@
 :root{
-  --home-max:1160px;
-  --home-ink:#081321;
-  --home-ink-2:#10243d;
-  --home-teal:#08766e;
-  --home-teal-soft:#e8f7f5;
-  --home-paper:#f7f5ef;
-  --home-line:#dfe6ee;
-  --home-muted:#5d6d7e;
-  --home-shadow:0 18px 55px rgba(8,19,33,.09);
-  --home-radius:24px;
+  --home-max:var(--max);
+  --home-ink:var(--navy);
+  --home-ink-2:var(--navy2);
+  --home-teal:var(--teal);
+  --home-teal-soft:var(--soft);
+  --home-paper:var(--bg);
+  --home-line:var(--line);
+  --home-muted:var(--muted);
+  --home-shadow:var(--shadow);
+  --home-radius:var(--r);
 }
-.home-hero{padding:76px 0 42px;background:linear-gradient(180deg,var(--home-paper),#fbfaf7)}
+.home-hero{padding:76px 0 42px;background:var(--home-paper)}
 .home-hero-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:50px;align-items:center}
 .home-hero-copy h1{max-width:820px}
 .home-hero-copy h1 em{font-style:normal;color:var(--home-teal)}
