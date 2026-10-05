@@ -4,7 +4,7 @@ This file is retained as historical context for the deterministic site-quality h
 
 ## Historical baseline
 
-The R1–R17 harness reached:
+The historical R1–R17 harness reached:
 - `issues = 0`
 - `html_bytes = 335,458`
 
@@ -14,7 +14,7 @@ The major R17 work classified false positives separately from genuine heading-or
 
 Older sections of this file described an intermediate state and an earlier interpretation of the autoresearch objective. Those statements are not the current governing contract.
 
-Current authoritative sources are:
+Current authoritative sources are (the release audit has since added R18 for duplicate HTML attributes):
 - `README.md`
 - `.autoresearch/engineering/numuw-site-quality-v3/config.cfg`
 - `.autoresearch/engineering/numuw-site-quality-v3/program.md`
