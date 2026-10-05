@@ -29,8 +29,7 @@ contributes violations. Optimizing `index.html` alone can at most clear 1 of the
 
 ## Rule set
 
-R1–R17. R1–R16 are unchanged from the R1–R16 segment; R17 (heading order) is new and is why
-this segment exists with a fresh baseline.
+R1–R18. R1–R17 are the existing structural/release rules; R18 adds duplicate HTML attribute detection so invalid markup cannot silently pass the release audit.
 
 | rule | definition |
 | --- | --- |
@@ -51,6 +50,7 @@ this segment exists with a fresh baseline.
 | R15 | duplicate `<title>` across pages |
 | R16 | duplicate meta description across pages |
 | R17 | heading may not drop more than one level below its predecessor |
+| R18 | duplicate HTML attributes are rejected |
 
 ## Baseline
 
