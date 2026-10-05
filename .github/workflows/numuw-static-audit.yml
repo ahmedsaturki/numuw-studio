@@ -34,4 +34,4 @@ jobs:
         run: |
           set -o pipefail
           node bench/site-quality.mjs 2>&1 | tee /tmp/numuw-site-quality.log
-          grep -q '^METRIC issues=0 /tmp/numuw-site-quality.log
+          grep -q '^METRIC issues=0$' /tmp/numuw-site-quality.log
