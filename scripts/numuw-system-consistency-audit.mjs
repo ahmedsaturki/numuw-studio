@@ -145,7 +145,11 @@ for (const [name] of products) {
 const productIndex = fs.readFileSync(path.join(root, "products/index.html"), "utf8");
 for (const [name, route] of products) {
   if (!strip(productIndex).includes(name)) failures.push("products/index.html: missing " + name);
-  if (!productIndex.includes(route.replace(/index\.html$/, ""))) {
+  const productLinks = [...productIndex.matchAll(/<a\b([^>]*)>/gi)]
+    .map((match) => match[1].match(/\bhref=["']([^"']+)["']/i)?.[1])
+    .filter(Boolean)
+    .map((href) => routeFrom("products/index.html", href));
+  if (!productLinks.includes(route)) {
     failures.push("products/index.html: missing route for " + name);
   }
 }
