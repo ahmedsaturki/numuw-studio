@@ -7,6 +7,9 @@
     lang=next==='en'?'en':'ar';
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+    var titleAr=document.documentElement.getAttribute('data-title-ar');
+    var titleEn=document.documentElement.getAttribute('data-title-en');
+    if(titleAr&&titleEn) document.title=lang==='ar'?titleAr:titleEn;
     document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
       el.innerHTML=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
     });
