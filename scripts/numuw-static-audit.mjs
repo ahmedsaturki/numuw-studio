@@ -42,6 +42,69 @@ function resolveLocalHref(sourcePath, href) {
 }
 function existsPublic(p) { return fs.existsSync(path.join(root, p)); }
 
+function findStartTags(html) {
+  const tags = [];
+  let i = 0;
+  while (i < html.length) {
+    if (html[i] !== "<" || /[\\/!?#]/.test(html[i + 1] ?? "")) {
+      i += 1;
+      continue;
+    }
+    let j = i + 1;
+    while (j < html.length && /[A-Za-z0-9:_-]/.test(html[j])) j += 1;
+    if (j === i + 1) {
+      i += 1;
+      continue;
+    }
+    let quote = null;
+    for (; j < html.length; j += 1) {
+      const ch = html[j];
+      if (quote) {
+        if (ch === quote) quote = null;
+      } else if (ch === '"' || ch === "'") {
+        quote = ch;
+      } else if (ch === ">") {
+        tags.push(html.slice(i, j + 1));
+        i = j + 1;
+        break;
+      }
+    }
+    if (j >= html.length) break;
+  }
+  return tags;
+}
+
+function attributeCounts(tag) {
+  const counts = {};
+  let i = 1;
+  while (i < tag.length - 1) {
+    while (i < tag.length - 1 && /\s/.test(tag[i])) i += 1;
+    if (tag[i] === "/" || i >= tag.length - 1) break;
+    if (!/[A-Za-z_:]/.test(tag[i])) {
+      i += 1;
+      continue;
+    }
+    const start = i;
+    i += 1;
+    while (i < tag.length - 1 && /[A-Za-z0-9_.:-]/.test(tag[i])) i += 1;
+    const name = tag.slice(start, i).toLowerCase();
+    counts[name] = (counts[name] ?? 0) + 1;
+    while (i < tag.length - 1 && /\s/.test(tag[i])) i += 1;
+    if (tag[i] !== "=") continue;
+    i += 1;
+    while (i < tag.length - 1 && /\s/.test(tag[i])) i += 1;
+    if (tag[i] === '"' || tag[i] === "'") {
+      const quote = tag[i];
+      i += 1;
+      while (i < tag.length - 1 && tag[i] !== quote) i += 1;
+      if (tag[i] === quote) i += 1;
+    } else {
+      while (i < tag.length - 1 && !/[\s>]/.test(tag[i])) i += 1;
+    }
+  }
+  return counts;
+}
+
 const htmlFiles = walk(root)
   .filter(f => f.endsWith(".html"))
   .map(rel)
@@ -56,6 +119,13 @@ const robots = fs.existsSync(path.join(root, "robots.txt"))
 
 for (const file of htmlFiles) {
   const html = fs.readFileSync(path.join(root, file), "utf8");
+  for (const tag of findStartTags(html)) {
+    const tagName = tag.match(/^<([A-Za-z0-9:_-]+)/)?.[1]?.toLowerCase();
+    if (tagName === "script" || tagName === "style") continue;
+    for (const [attribute, count] of Object.entries(attributeCounts(tag))) {
+      if (count > 1) failures.push(`${file}: duplicate HTML attribute ${attribute}`);
+    }
+  }
   const is404 = file === "404.html";
   const titleCount = (html.match(/<title>/gi) || []).length;
   const descCount = (html.match(/<meta\s+name=["']description["']/gi) || []).length;
