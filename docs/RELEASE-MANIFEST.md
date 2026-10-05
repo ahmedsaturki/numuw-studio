@@ -25,6 +25,11 @@ Included:
 - Commercial templates hardened for scope/change control, acceptance, ownership and secure handover
 - Conversion, QA, architecture and content policy
 
+Current state:
+- Current main release line is consolidated after PR #24.
+- Static audit, R1–R17 regression suite and benchmark floor are green on the current main release commit.
+- The strategic system review is tracked in `docs/STRATEGIC-SYSTEM-REVIEW-2026-10-05.md`.
+
 Quality boundaries:
 - Git/source/tree validation can be completed in the repository.
 - Live GitHub Pages browser, mobile and Lighthouse verification remain an external release gate when the published host is not reachable from the execution environment.
