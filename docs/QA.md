@@ -2,45 +2,79 @@
 
 ## Static release gate
 
-The repository is intentionally build-free and GitHub Pages-compatible. Every public HTML route must pass the dependency-free audit:
+Every public HTML route must pass:
 
 `node scripts/numuw-static-audit.mjs`
 
-The audit checks:
+The gate validates document structure, metadata semantics, JSON-LD, canonical/sitemap alignment, local references, image alt attributes, safe external links, no-third-party runtime dependencies, security.txt, theme contrast and the absence of inline event handlers.
 
-- HTML5 doctype, viewport, title, description and one primary H1.
-- A canonical URL on every indexable HTML page; `404.html` remains `noindex`.
-- Open Graph title/image and Twitter summary metadata.
-- Parseable JSON-LD on public pages.
-- A real `<main>` landmark and Arabic RTL document language.
-- Internal relative links and asset references resolve to existing repository files.
-- No `javascript:` URLs.
-- External `_blank` links include `rel="noopener"`.
-- Images include an explicit `alt` attribute.
-- `security.txt` exposes a security-reporting contact and expiry.
-- No inline print/event handler is required for the business-document templates.
-- `sitemap.xml` and the shared `og-image.png` exist.
+It also detects:
+- mismatched or unclosed heading tags
+- empty required Open Graph / Twitter metadata
+- unknown meta attributes
+- unexpected tag names or stray text inside head
+- suspicious metadata corruption tokens
 
-## Conversion gate
+The release-audit regression suite is:
 
-Before publishing commercial copy, verify:
+`node scripts/test-numuw-static-audit.mjs`
 
-1. One primary action is obvious.
-2. The first step is a diagnosis/fit check when scope is uncertain.
-3. Pricing is framed as a reference or written scope where final price depends on requirements.
-4. Claims are evidence-backed; no invented testimonials, logos, awards, rankings, revenue or ROI.
-5. Product pages explain fit, non-fit, delivery and the next action.
-6. Tools explain what they do not measure and route useful results toward the next step.
+It intentionally builds bad fixtures and verifies the hardening rules remain effective.
+
+## Commercial QA gate
+
+Before releasing or changing a product page:
+- product name and reference price match docs/PRODUCT-MATRIX.md
+- audience and non-fit conditions are explicit
+- deliverables and exclusions are explicit
+- dependencies / client responsibilities are explicit
+- acceptance criteria are explicit
+- ownership/licensing and support boundaries are explicit
+- CTA routes to the intended next action
+
+The homepage, product hub, product pages and routing tools must describe the same five-product ladder.
+
+## Landing-page QA
+
+Every landing page must have:
+- one real audience
+- one specific problem
+- one meaningful promise
+- distinct evidence or useful context
+- one primary next action
+- a route into the canonical product/tool system
+
+Changing only a keyword or industry name is not sufficient.
+
+## Tool QA
+
+Every calculator or decision tool must define:
+- input units and assumptions
+- valid ranges and zero/empty behavior
+- clear result meaning
+- explicit limitations
+- useful next action
+- no hidden server-side collection
+
+## Delivery QA
+
+Before acceptance:
+- scope matches the signed proposal
+- critical user paths work
+- edge/error states are checked
+- content matches approved source
+- accounts / ownership are transferred as agreed
+- secrets are not stored in project files
+- documentation exists
+- acceptance evidence is recorded
 
 ## Live release gate
 
-Still required outside the source-only environment:
-
-- GitHub Pages live build serves current `main`.
-- Browser/mobile UX review.
-- Lighthouse/Core Web Vitals.
-- WhatsApp and phone CTA verification.
-- Rich Results / structured-data validation.
-- Search Console sitemap submission and indexing review.
-
-Do not mark these complete from source inspection alone.
+Still external to source-only verification:
+- real browser and mobile UX
+- keyboard / screen-reader review
+- Lighthouse and field Core Web Vitals
+- live WhatsApp / phone behavior
+- Rich Results validation
+- Search Console sitemap/indexing
+- formal legal review
