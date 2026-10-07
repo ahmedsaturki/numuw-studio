@@ -2,30 +2,43 @@
 
 This repository is a static GitHub Pages-compatible growth hub.
 
-Included:
-- Main brand / conversion site with the shared navigation, footer and buyer-journey architecture
+## Included
+- Main commercial site with shared navigation, footer and buyer-journey architecture
 - 10 specialized landing pages plus landing hub
 - 8 self-service tools plus tools hub
 - 5 product pages plus products hub
 - Company / Method / Proof / Case Studies / Contact
 - Business Library and public PDF exports
-- Legal / Trust Center (privacy notice and disclaimer)
+- Legal / Trust Center
 - Repository Security Policy + `/.well-known/security.txt`
-- Solution Finder + Brief Builder conversion layer
+- Solution Finder + Brief Builder
 - Sales Discovery + Delivery QA playbooks
 - Brand / Media / Insights / Resources
 - Shared CSS / JavaScript
-- Canonical, Open Graph, Twitter and JSON-LD metadata across public HTML pages
-- Accessibility hardening for navigation, dynamic tool results and document controls
+- Canonical, Open Graph, Twitter and JSON-LD metadata
+- Accessibility hardening for navigation and dynamic tool results
 - Sitemap / robots / resilient 404
 - Dependency-free static audit + GitHub Actions gate
-- Explicit performance budget for third-party runtime dependencies
-- Cacheable homepage CSS/JS assets
-- Privacy-aware measurement specification with inert client-side hooks
-- Commercial templates hardened for scope/change control, acceptance, ownership and secure handover
-- Conversion, QA, architecture and content policy
+- R1–R18 release invariant and regression coverage
+- Explicit performance budget
+- Inert privacy-aware measurement hooks
+- Commercial scope/change-control, acceptance, ownership and secure handover controls
+- Strategic and competitive system review
+- Structured system source of truth at `data/numuw-system.json`
+- Commercial product contracts, proof policy and measurement taxonomy
+- Explicit brand/name clearance gate and release-readiness evidence boundary
 
-Quality boundaries:
-- Git/source/tree validation can be completed in the repository.
-- Live GitHub Pages browser, mobile and Lighthouse verification remain an external release gate when the published host is not reachable from the execution environment.
-- Search Console submission/indexing is operational work, not a claim that source files alone can prove.
+## Canonical commercial model
+Free Fit Conversation → Qualified Conversation → Diagnostic or Scoped Proposal → Build/Launch → Measure/Improve.
+
+Product ladder:
+Diagnostic → Digital Kickoff → Automation Sprint → Growth System → Growth Partner.
+
+## Release candidate boundary
+- `main` remains the released baseline; the current hardening branch is a candidate until its checks and reviews are green.
+- Green repository checks do not constitute legal, commercial or live-browser approval.
+
+## Quality boundaries
+- Source/tree/CI correctness can be proven in the repository.
+- Live browser/mobile UX, field performance, external CTA behavior, Rich Results, Search Console indexing and formal legal approval require direct external verification.
+- Repository governance settings such as branch protection/private vulnerability reporting are separate from source files and must not be inferred.

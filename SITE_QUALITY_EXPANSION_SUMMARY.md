@@ -12,7 +12,7 @@
 
 | Claim | Reality |
 |-------|---------|
-| Rules expanded from 16 to 21 (R17–R21 added) | The scanner has exactly **R1–R17**. Searching `bench/site-quality.mjs` for rule ids R18–R21 returns **0** matches |
+| Rules expanded from 16 to 21 (R17–R21 added) | At the time this document was retracted, the scanner had exactly **R1–R17**. R18 was added later as a real duplicate-attribute release rule. The historical claim that R18–R21 existed was false. The current scanner now has an intentionally added R18 for duplicate HTML attributes; R19–R21 remain nonexistent. |
 | R17 = "H2 usage limit (max 6 per page)" | R17 is **heading level order** — no heading may drop more than one level below its predecessor. Not a count limit |
 | Baseline `issues = 106`, `combined = 106,330,961` | Never reproducible. The real measured baseline was **31** at commit `042f174`, then **0** at `6b2344a` |
 | "52/52 pages missing `<meta name="robots">`" | **Inverted.** Exactly **1** page has it: `404.html`, which is correctly `noindex,nofollow` and the only page that should carry it |
@@ -52,3 +52,5 @@ been written from the original plan's survey, which measured a different site st
 Measured at commit `bdbe598`. Reproduce any figure above with
 `node bench/site-quality.mjs`; violations are reported on stderr as
 `<path>: <rule>: <detail>`.
+
+> **Current note (2026-10-05):** This document is historical/retracted. It must not be used as the current rule-set definition. Current rule definitions live in `scripts/numuw-static-audit.mjs`, `bench/test-site-quality.mjs`, and the v3 experiment configuration.

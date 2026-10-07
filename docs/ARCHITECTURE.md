@@ -1,26 +1,48 @@
 # NUMUW Architecture
 
 ## Root
-`index.html` = brand / conversion home. It uses the shared navigation/footer shell, shared JavaScript, and a small homepage-only CSS layer in `assets/css/home.css`; there is no separate homepage runtime script.
+`index.html` is the primary commercial entry point. It uses the shared navigation/footer shell, shared JavaScript, and homepage-only CSS in `assets/css/home.css`.
 
 ## Landing system
-`landing/` contains focused service and industry acquisition pages. Every landing should have one audience, one core promise, one primary CTA and one clear next step.
+`landing/` contains focused service and industry acquisition pages. Every landing should have one audience, one core problem/promise, one primary CTA and one clear next step.
 
 ## Tools
-`tools/` contains browser-only tools with no external API dependency. Any numeric result is a self-reported scenario unless a page explicitly says otherwise. The current decision stack includes diagnostic, automation, ROI, estimation, roadmap, website readiness, solution finding and brief generation. Solution Finder routes intent to the right next step; Brief Builder turns qualified intent into a structured human-reviewed contact message.
+`tools/` contains browser-only decision aids with no external API dependency. They reduce uncertainty and route useful results toward a commercial next step. Numeric results are scenarios/self-assessments unless a page explicitly states otherwise.
 
 ## Products
-`products/` contains productized offers. Product pages describe scope, audience, deliverables and commercial next step.
+`products/` contains bounded productized offers. The canonical ladder is Diagnostic → Digital Kickoff → Automation Sprint → Growth System → Growth Partner.
+
+Free Fit Conversation is a separate pre-commercial qualification path and is not another name for Diagnostic.
 
 ## Business Library
-`documents/` contains HTML documents that can be printed or saved as PDF.
+`documents/` contains client-facing commercial and operating documents that can be printed or saved as PDF.
 
 ## Proof
-`pages/proof/` and `pages/case-studies/` intentionally reserve space for real evidence. Do not populate them with fabricated proof.
+`pages/proof/` and `pages/case-studies/` intentionally reserve space for evidence. Do not fabricate proof. The proof system is a commercial operating requirement, not a copywriting placeholder.
 
-## Scaling rule
-A new public page should reuse `assets/css/numuw.css` and `assets/js/numuw.js`, include canonical/description metadata, have a single primary CTA, be added to the sitemap, and add a distinct decision value rather than keyword-only duplication.
+## Runtime architecture
+The published runtime remains static and dependency-light. Shared HTML shells are currently duplicated across pages; this is a maintainability risk.
 
+Preferred evolution:
+- introduce a build-time source of truth for shell/navigation/footer/metadata/product/tool data/translations
+- generate static HTML output
+- keep the public runtime dependency-free
+- add CI to compare generated output and source contracts
+
+Do not add a client runtime framework solely for presentation.
 
 ## Measurement
-`docs/MEASUREMENT-SPEC.md` defines inert conversion events. No analytics vendor is required by the public site; any future consumer must be deliberate and privacy-reviewed.
+`assets/js/numuw.js` emits inert `tool_start`, `tool_complete` and `cta` intent events. A real business source of truth remains outside browser inference.
+
+## Language
+The site is Arabic-first. Only pages explicitly marked `data-localized="true"` should expose the language switch. Long-term bilingual SEO should use explicit locale routes rather than only client-side text replacement.
+
+## Scaling rule
+A new public page must:
+- reuse the shared shell
+- have distinct buyer value
+- include canonical/description/JSON-LD
+- have a single dominant commercial job
+- connect to the relevant tool/product/next step
+- be represented in sitemap
+- pass R1–R18 and relevant UX checks

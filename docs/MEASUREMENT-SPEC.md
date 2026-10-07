@@ -1,21 +1,22 @@
 # NUMUW Measurement Specification
 
-This specification defines what NUMUW may measure later without forcing analytics into the public site today.
+This document defines the safe measurement contract for the public NUMUW site.
 
 ## Current state
 
-The repository does not ship an analytics vendor or tracking pixel. The shared JavaScript exposes inert browser events and only forwards them to `window.dataLayer` when a consumer has already created that array.
+The repository does not ship an analytics vendor or tracking pixel. The shared JavaScript emits inert browser events for CTA intent and tool start/completion, and only forwards them to `window.dataLayer` when a consumer has already created that array.
 
 ## Core funnel
 
-`page_view → tool_start → tool_complete → cta_intent → qualified_conversation → scoped_proposal → won_work`
+`Landing view → Tool start → Tool completion → CTA intent → Free fit conversation → Qualified conversation → Paid diagnostic or scoped proposal → Won work`
 
-Only the first four are suitable for client-side site instrumentation. The later stages are business records and should not be inferred from a browser event.
+Only the first four stages are suitable for browser instrumentation. The later stages belong to the business system of record and must not be inferred from browser events.
 
 ## Event taxonomy
 
 ### cta
-Generated for meaningful WhatsApp, phone, diagnostic, product, tool and document interactions.
+
+Generated for meaningful WhatsApp, phone, product, tool and document interactions.
 
 Safe fields:
 - `kind`
@@ -24,12 +25,21 @@ Safe fields:
 Do not include message text, phone numbers, names, email addresses, form values or free-form user input.
 
 ### tool_start / tool_complete
-When instrumented, record tool name and completion state. Do not record answers or financial assumptions unless the organization has a documented purpose, lawful basis and retention policy for that data.
 
-## Measurement principles
+Generated when a tool interaction starts and when its result has actually rendered successfully.
+
+Safe fields:
+- tool/page pathname
+- completion signal
+
+Do not record answers, financial assumptions or other user-provided fields unless a documented business purpose, lawful basis and retention policy exists.
+
+## Principles
 
 - Event names describe user intent, not marketing conclusions.
-- Revenue attribution requires an agreed source of truth outside the browser.
-- Do not treat a click as a lead, a lead as qualified, or a proposal as won.
+- Revenue attribution requires an agreed business source of truth.
+- A click is not automatically a lead.
+- A lead is not automatically qualified.
+- A proposal is not automatically won.
 - Separate mobile and desktop when evaluating Core Web Vitals.
-- Any future analytics vendor must be reviewed against the Legal & Trust Center, privacy notice and performance budget before deployment.
+- Any future analytics vendor, chat widget or tracking component must be reviewed against the Legal & Trust Center, privacy obligations and performance budget before deployment.

@@ -20,13 +20,15 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "22"
       - name: Run static audit
         run: node scripts/numuw-static-audit.mjs
+      - name: Run system consistency audit
+        run: node scripts/numuw-system-consistency-audit.mjs
       - name: Run scanner rule regression suite
         run: node bench/test-site-quality.mjs
       - name: Enforce benchmark quality floor

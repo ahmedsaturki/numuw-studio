@@ -1,0 +1,294 @@
+{
+  "schema_version": "1.1.0",
+  "brand": {
+    "name": "NUMUW",
+    "arabic_name": "نُمو",
+    "descriptor": "Growth Systems Studio",
+    "name_status": "provisional_pending_clearance",
+    "logo_policy": "Keep the current approved base logo unchanged for existing print/signage assets until a separate brand decision is approved."
+  },
+  "site": {
+    "origin": "https://ahmedsaturki.github.io/numuw-studio/",
+    "primary_cta_label_ar": "ابدأ من المشكلة",
+    "primary_cta_label_en": "Start with the problem",
+    "primary_cta_route": "/numuw-studio/tools/solution-finder/"
+  },
+  "contact": {
+    "whatsapp_number": "201127788810",
+    "whatsapp_url": "https://wa.me/201127788810",
+    "phone_e164": "+201127788810"
+  },
+  "buyer_journey": [
+    "Discover",
+    "Understand",
+    "Diagnose",
+    "Choose",
+    "Scope",
+    "Build",
+    "Launch",
+    "Measure",
+    "Improve"
+  ],
+  "products": [
+    {
+      "id": "diagnostic",
+      "name": "NUMUW Diagnostic"
+    },
+    {
+      "id": "digital-kickoff",
+      "name": "Digital Kickoff"
+    },
+    {
+      "id": "automation-sprint",
+      "name": "Automation Sprint"
+    },
+    {
+      "id": "growth-system",
+      "name": "Growth System"
+    },
+    {
+      "id": "growth-partner",
+      "name": "Growth Partner"
+    }
+  ],
+  "tools": [
+    "solution-finder",
+    "diagnostic",
+    "automation-finder",
+    "roi-calculator",
+    "estimator",
+    "roadmap",
+    "website-readiness",
+    "brief-builder"
+  ],
+  "estimator_reference": [
+    {
+      "label": "لاندنج بيدج",
+      "reference_price": 8000,
+      "billing": "one_time"
+    },
+    {
+      "label": "موقع شركة",
+      "reference_price": 15000,
+      "billing": "one_time"
+    },
+    {
+      "label": "هوية بصرية",
+      "reference_price": 6000,
+      "billing": "one_time"
+    },
+    {
+      "label": "أتمتة عملية",
+      "reference_price": 8000,
+      "billing": "one_time"
+    },
+    {
+      "label": "AI Workflow",
+      "reference_price": 8000,
+      "billing": "one_time"
+    },
+    {
+      "label": "SEO / Local",
+      "reference_price": 6000,
+      "billing": "one_time"
+    },
+    {
+      "label": "CRM",
+      "reference_price": 6000,
+      "billing": "one_time"
+    },
+    {
+      "label": "KPI Dashboard",
+      "reference_price": 12000,
+      "billing": "one_time"
+    },
+    {
+      "label": "Growth Partner شهري",
+      "reference_price": 6500,
+      "billing": "monthly"
+    }
+  ],
+  "proof_policy": {
+    "status": "evidence_required",
+    "never_fabricate": [
+      "clients",
+      "logos",
+      "testimonials",
+      "awards",
+      "rankings",
+      "revenue",
+      "ROI",
+      "guarantees"
+    ]
+  },
+  "measurement": {
+    "browser_events": [
+      "cta",
+      "tool_start",
+      "tool_complete"
+    ],
+    "safe_fields": [
+      "kind",
+      "tool",
+      "path",
+      "completion"
+    ],
+    "business_system_of_record": "outside_browser"
+  },
+  "product_contracts": [
+    {
+      "id": "diagnostic",
+      "buyer": "Founder/owner or decision-maker who needs clarity before implementation",
+      "trigger": "Problem, priority or growth bottleneck is not yet sufficiently defined",
+      "best_fit": [
+        "Unclear priorities",
+        "Need to validate baseline before buying build"
+      ],
+      "not_fit": [
+        "Pure implementation request with already approved scope"
+      ],
+      "entry_criteria": [
+        "Decision-maker available",
+        "Relevant current-state inputs"
+      ],
+      "deliverables": [
+        "Diagnostic findings",
+        "Prioritized gaps",
+        "Decision map",
+        "Recommended next step"
+      ],
+      "exclusions": [
+        "Implementation work unless separately scoped"
+      ],
+      "acceptance": "Decision brief reviewed with client",
+      "ownership": "Client owns the resulting decision brief; underlying client data remains client-owned",
+      "support": "Scope-defined follow-up window",
+      "next_product": "Digital Kickoff, Automation Sprint or Growth System depending on findings",
+      "price_policy": "Quoted after scope; no invented public reference price"
+    },
+    {
+      "id": "digital-kickoff",
+      "buyer": "B2B/company team that needs a usable digital foundation",
+      "trigger": "Offer and customer path are clear enough to define the digital foundation",
+      "best_fit": [
+        "Website/Landing bottleneck",
+        "Need a bounded foundation"
+      ],
+      "not_fit": [
+        "Unclear strategic problem requiring diagnosis first"
+      ],
+      "entry_criteria": [
+        "Approved positioning inputs",
+        "Content/assets access"
+      ],
+      "deliverables": [
+        "Website/Landing foundation",
+        "Discovery foundation",
+        "Identity essentials as scoped",
+        "Measurement baseline as scoped"
+      ],
+      "exclusions": [
+        "Ongoing optimization and unrelated platform rebuilds"
+      ],
+      "acceptance": "Agreed pages/functions pass acceptance checklist",
+      "ownership": "Client receives agreed project assets and access subject to third-party licensing",
+      "support": "Scope-defined handover/support window",
+      "next_product": "Growth System or Growth Partner after baseline",
+      "price_policy": "Reference from 8000 EGP"
+    },
+    {
+      "id": "automation-sprint",
+      "buyer": "Team with one repeatable workflow worth improving",
+      "trigger": "A bounded workflow is identified and measurable",
+      "best_fit": [
+        "Repeatable manual work",
+        "Clear workflow owner"
+      ],
+      "not_fit": [
+        "Broad automation program with undefined processes"
+      ],
+      "entry_criteria": [
+        "Workflow owner",
+        "Sample cases/data",
+        "Access to agreed systems"
+      ],
+      "deliverables": [
+        "Process map",
+        "Automation implementation",
+        "Test cases",
+        "Handover"
+      ],
+      "exclusions": [
+        "Open-ended process redesign outside agreed workflow"
+      ],
+      "acceptance": "Agreed test cases pass and handover is completed",
+      "ownership": "Client owns delivered workflow assets except third-party components",
+      "support": "Scope-defined support window",
+      "next_product": "Growth System or Growth Partner for expansion/optimization",
+      "price_policy": "Reference from 8000 EGP"
+    },
+    {
+      "id": "growth-system",
+      "buyer": "Business with connected marketing/operations bottlenecks",
+      "trigger": "Multiple layers must change together",
+      "best_fit": [
+        "Interdependent message/presence/operations/measurement gaps",
+        "Need one system instead of disconnected projects"
+      ],
+      "not_fit": [
+        "Single narrow task",
+        "No owner/baseline for coordinated change"
+      ],
+      "entry_criteria": [
+        "Decision-maker",
+        "Current-state inputs",
+        "Agreed priorities and dependencies"
+      ],
+      "deliverables": [
+        "Connected strategy and system components",
+        "Measurement approach",
+        "Acceptance and handover"
+      ],
+      "exclusions": [
+        "Undefined transformation work outside written scope"
+      ],
+      "acceptance": "Defined milestones and system acceptance criteria pass",
+      "ownership": "Client-owned agreed assets and documented dependencies",
+      "support": "Scope-defined handover/support",
+      "next_product": "Growth Partner when ongoing optimization is justified",
+      "price_policy": "Reference from 24900 EGP"
+    },
+    {
+      "id": "growth-partner",
+      "buyer": "Business with a useful baseline that needs recurring optimization",
+      "trigger": "There is a recurring improvement backlog with an accountable decision rhythm",
+      "best_fit": [
+        "Established baseline",
+        "Recurring optimization"
+      ],
+      "not_fit": [
+        "No baseline",
+        "One-off implementation only"
+      ],
+      "entry_criteria": [
+        "Baseline or measurable operating inputs",
+        "Decision cadence",
+        "Access to agreed systems"
+      ],
+      "deliverables": [
+        "Prioritized monthly backlog",
+        "Execution",
+        "Review",
+        "Learning log / next-cycle decisions"
+      ],
+      "exclusions": [
+        "Unlimited requests or undefined availability"
+      ],
+      "acceptance": "Monthly agreed work and review completed",
+      "ownership": "Client-owned assets; collaboration terms define third-party rights",
+      "support": "Ongoing within the contracted cadence",
+      "next_product": "Exit/handover or scoped next engagement",
+      "price_policy": "Reference from 6500 EGP/month"
+    }
+  ]
+}

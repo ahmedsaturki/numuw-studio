@@ -1,41 +1,71 @@
 # NUMUW Conversion System
 
-NUMUW is not designed as a single page with every service mixed together. The public system uses a deliberate ladder:
+NUMUW is not designed as a single page with every service mixed together. The public system uses a deliberate buyer journey.
 
 ## 1. Discovery
 
-Landing pages answer the visitor's immediate question by service or industry.
+Landing pages answer an immediate problem or sector question.
 
 ## 2. Self-assessment
 
-Tools let a prospect estimate readiness, identify friction and understand the shape of the problem without pretending to access external systems they did not authorize.
+Tools reduce uncertainty without pretending to access systems or data the visitor did not authorize.
 
 ## 3. Product fit
 
-Product pages translate a broad service into a bounded offer with fit, non-fit, delivery and next-step guidance.
+Product pages convert a problem into a bounded commercial choice with scope, fit, non-fit, delivery and ownership expectations.
 
 ## 4. Trust
 
-Company, method, proof, case-study and document pages explain who is behind the work, how it is done and what evidence exists.
+Company, method, proof, case-study and document pages reduce decision risk by explaining who is behind the work, how it is delivered and what evidence exists.
 
-## 5. Conversion
+## 5. Commercial entry
 
-The default action is a direct conversation or a diagnostic. The visitor should not need to understand the internal service catalog before taking the next step.
+Two entry paths are intentionally distinct.
+
+### Free Fit Conversation
+
+Purpose:
+- understand context
+- assess fit
+- clarify the next decision
+- determine whether deeper work is justified
+
+It does not promise a deliverable.
+
+### NUMUW Diagnostic
+
+Paid structured decision work.
+
+Typical output:
+- current state
+- hypotheses
+- bottlenecks
+- priorities
+- risks
+- next recommended intervention
+
+It is a product, not a synonym for the free fit conversation.
 
 ## 6. Delivery confidence
 
-Business Library pages, proposal templates, onboarding, handover and terms make the transition from marketing to execution explicit.
+Proposal, onboarding, handover and terms make scope, responsibilities, ownership, acceptance and change control concrete.
+
+## 7. Buyer journey
+
+`Discover → Understand → Diagnose → Choose → Scope → Build → Launch → Measure → Improve`
+
+Each public page should have one dominant job in that journey.
+
+## 8. Measurement
+
+`Landing view → Tool start → Tool completion → CTA intent → Free fit conversation → Qualified conversation → Paid diagnostic or scoped proposal → Won work`
+
+Browser instrumentation stops at intent. Commercial outcomes remain in the business system of record.
 
 ## Content rules
 
-Copy should help the visitor make a decision, not merely create more indexable pages. Avoid producing large amounts of near-duplicate or search-engine-first content. Any future industry/service page should have a real audience, distinct problem framing and meaningful information beyond keyword variation.
+Copy must help the visitor make a decision, not merely create more indexable pages.
 
-Do not publish invented proof. Real proof may include verified screenshots, links, measurable outcomes with context, or client-approved case studies.
+Avoid near-duplicate service/industry pages and do not publish invented proof.
 
-## Measurement model
-
-Track the funnel by intent:
-
-`Landing view → Tool start → Tool completion → Diagnostic/contact → Qualified conversation → Scoped proposal → Won work`
-
-Do not imply that a page, tool or campaign caused revenue without an agreed measurement method and baseline.
+Real proof should include sourceable context, scope and limits.
