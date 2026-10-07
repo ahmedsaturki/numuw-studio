@@ -36,4 +36,5 @@ f.addEventListener("submit",function(e){
  else if(goal==="system"){pick=clarity==="high"&&speed==="system"?map.system:map.websiteExplore}
  else if(goal==="clarity"){pick=map.clarity}
  render(pick,segments[business]||null);
+ window.NUMUW&&window.NUMUW.completeTool&&window.NUMUW.completeTool(f);
 });})();
