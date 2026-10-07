@@ -67,8 +67,8 @@ function navEntries(html) {
 }
 
 const canonicalNav = [
-  { route: "landing/index.html", ar: "الحلول", en: "Solutions" },
-  { route: "landing/index.html", ar: "القطاعات", en: "Industries" },
+  { route: "landing/index.html", ar: "الحلول", en: "Solutions", hash: "" },
+  { route: "landing/index.html", ar: "القطاعات", en: "Industries", hash: "#industries" },
   { route: "tools/index.html", ar: "الأدوات", en: "Tools" },
   { route: "pages/case-studies/index.html", ar: "العمل والإثبات", en: "Work & Proof" },
   { route: "resources/index.html", ar: "المصادر", en: "Resources" },
@@ -113,7 +113,9 @@ for (const file of htmlFiles) {
       !expected ||
       actualRoute !== expected.route ||
       entry.ar !== expected.ar ||
-      entry.en !== expected.en
+      entry.en !== expected.en ||
+      (expected.hash && !entry.href.includes(expected.hash)) ||
+      (!expected.hash && entry.href.includes("#"))
     ) {
       failures.push(file + ": navigation item " + (index + 1) + " differs from the canonical contract");
     }
@@ -154,10 +156,25 @@ for (const [name, route] of products) {
   }
 }
 
+const toolIds = {
+  "tools/automation-finder/index.html": "automation-finder",
+  "tools/brief-builder/index.html": "brief-builder",
+  "tools/diagnostic/index.html": "diagnostic",
+  "tools/estimator/index.html": "estimator",
+  "tools/roadmap/index.html": "roadmap",
+  "tools/roi-calculator/index.html": "roi-calculator",
+  "tools/solution-finder/index.html": "solution-finder",
+  "tools/website-readiness/index.html": "website-readiness"
+};
 for (const [page, runtime] of tools) {
   const html = fs.readFileSync(path.join(root, page), "utf8");
   if (!html.includes(runtime)) failures.push(page + ": missing dedicated runtime " + runtime);
   if (html.includes("assets/js/tools.js")) failures.push(page + ": legacy tools.js reference detected");
+  const toolId = toolIds[page];
+  if (!html.includes('data-tool-page="' + toolId + '"')) failures.push(page + ": missing data-tool-page contract");
+  if (toolId !== "estimator" && !html.includes('data-tool="' + toolId + '"')) failures.push(page + ": missing form data-tool contract");
+  const runtimeText = fs.readFileSync(path.join(root, runtime), "utf8");
+  if (!runtimeText.includes("completeTool")) failures.push(page + ": runtime must mark rendered completion");
 }
 
 const growthPartner = fs.readFileSync(path.join(root, "products/growth-partner/index.html"), "utf8");
@@ -167,6 +184,20 @@ if (!estimator.includes("Growth Partner شهري") || !estimator.includes("6500"
   failures.push("Estimator: Growth Partner monthly reference price missing or changed");
 }
 
+const system = JSON.parse(fs.readFileSync(path.join(root, "data/numuw-system.json"), "utf8"));
+const whatsappNumber = system.contact && system.contact.whatsapp_number;
+if (!whatsappNumber) failures.push("data/numuw-system.json: missing contact.whatsapp_number");
+for (const file of htmlFiles) {
+  const html = fs.readFileSync(path.join(root, file), "utf8");
+  if (/018541802/.test(html)) failures.push(file + ": legacy contact number detected");
+  for (const match of html.matchAll(/https:\/\/wa\.me\/(\d+)/g)) {
+    if (match[1] !== whatsappNumber) failures.push(file + ": WhatsApp number differs from system source of truth");
+  }
+}
+for (const runtime of tools.map((item) => item[1])) {
+  const src = fs.readFileSync(path.join(root, runtime), "utf8");
+  if (/018541802/.test(src)) failures.push(runtime + ": legacy contact number detected");
+}
 const sitemap = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
 const sitemapCount = [...sitemap.matchAll(/<loc>/gi)].length;
 if (sitemapCount !== 54) failures.push("sitemap.xml: expected 54 URLs, found " + sitemapCount);
