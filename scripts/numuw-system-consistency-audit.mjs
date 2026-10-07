@@ -177,6 +177,7 @@ for (const [page, runtime] of tools) {
   if (!runtimeText.includes("completeTool")) failures.push(page + ": runtime must mark rendered completion");
 }
 
+const system = JSON.parse(fs.readFileSync(path.join(root, "data/numuw-system.json"), "utf8"));
 const growthPartner = fs.readFileSync(path.join(root, "products/growth-partner/index.html"), "utf8");
 const estimator = fs.readFileSync(path.join(root, "assets/js/tools/estimator.js"), "utf8");
 const partnerRef = system.estimator_reference && system.estimator_reference.find((item) => item.billing === "monthly");
@@ -190,7 +191,6 @@ if (!growthPartner.includes("6,500 ج.م شهريًا")) {
   failures.push("Growth Partner: monthly reference price missing or changed");
 }
 
-const system = JSON.parse(fs.readFileSync(path.join(root, "data/numuw-system.json"), "utf8"));
 const whatsappNumber = system.contact && system.contact.whatsapp_number;
 if (!whatsappNumber) failures.push("data/numuw-system.json: missing contact.whatsapp_number");
 for (const file of htmlFiles) {
