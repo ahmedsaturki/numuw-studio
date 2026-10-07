@@ -34,9 +34,11 @@ Free Fit Conversation → Qualified Conversation → Diagnostic or Scoped Propos
 Product ladder:
 Diagnostic → Digital Kickoff → Automation Sprint → Growth System → Growth Partner.
 
-## Release candidate boundary
-- `main` remains the released baseline; the current hardening branch is a candidate until its checks and reviews are green.
+## Current release boundary
+- `main` contains the current verified technical baseline, including the October 7, 2026 system-foundation hardening pass.
+- No pending hardening branch is treated as released merely because it exists.
 - Green repository checks do not constitute legal, commercial or live-browser approval.
+- External launch gates remain explicitly tracked in Issues #7 and #26.
 
 ## Quality boundaries
 - Source/tree/CI correctness can be proven in the repository.
