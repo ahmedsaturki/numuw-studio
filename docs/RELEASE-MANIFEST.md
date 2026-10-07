@@ -24,12 +24,19 @@ This repository is a static GitHub Pages-compatible growth hub.
 - Inert privacy-aware measurement hooks
 - Commercial scope/change-control, acceptance, ownership and secure handover controls
 - Strategic and competitive system review
+- Structured system source of truth at `data/numuw-system.json`
+- Commercial product contracts, proof policy and measurement taxonomy
+- Explicit brand/name clearance gate and release-readiness evidence boundary
 
 ## Canonical commercial model
 Free Fit Conversation → Qualified Conversation → Diagnostic or Scoped Proposal → Build/Launch → Measure/Improve.
 
 Product ladder:
 Diagnostic → Digital Kickoff → Automation Sprint → Growth System → Growth Partner.
+
+## Release candidate boundary
+- `main` remains the released baseline; the current hardening branch is a candidate until its checks and reviews are green.
+- Green repository checks do not constitute legal, commercial or live-browser approval.
 
 ## Quality boundaries
 - Source/tree/CI correctness can be proven in the repository.
