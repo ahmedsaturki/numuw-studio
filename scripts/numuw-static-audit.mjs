@@ -44,19 +44,24 @@ function existsPublic(p) { return fs.existsSync(path.join(root, p)); }
 
 function findStartTags(html) {
   const tags = [];
+  const opaque = new Set(["script", "style", "textarea", "title"]);
   let i = 0;
   while (i < html.length) {
+    if (html.startsWith("<!--", i)) {
+      const close = html.indexOf("-->", i + 4);
+      i = close === -1 ? html.length : close + 3;
+      continue;
+    }
     if (html[i] !== "<" || /[\\/!?#]/.test(html[i + 1] ?? "")) {
       i += 1;
       continue;
     }
     let j = i + 1;
     while (j < html.length && /[A-Za-z0-9:_-]/.test(html[j])) j += 1;
-    if (j === i + 1) {
-      i += 1;
-      continue;
-    }
+    if (j === i + 1) { i += 1; continue; }
+    const tagName = html.slice(i + 1, j).toLowerCase();
     let quote = null;
+    let finish = -1;
     for (; j < html.length; j += 1) {
       const ch = html[j];
       if (quote) {
@@ -64,12 +69,18 @@ function findStartTags(html) {
       } else if (ch === '"' || ch === "'") {
         quote = ch;
       } else if (ch === ">") {
-        tags.push(html.slice(i, j + 1));
-        i = j + 1;
+        finish = j;
         break;
       }
     }
-    if (j >= html.length) break;
+    if (finish < 0) break;
+    tags.push(html.slice(i, finish + 1));
+    i = finish + 1;
+    if (opaque.has(tagName)) {
+      const close = html.toLowerCase().indexOf("</" + tagName, i);
+      if (close < 0) break;
+      i = close;
+    }
   }
   return tags;
 }
