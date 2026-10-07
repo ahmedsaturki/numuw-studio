@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0.0",
+  "brand": {
+    "name": "NUMUW",
+    "arabic_name": "نُمو",
+    "descriptor": "Growth Systems Studio",
+    "name_status": "provisional_pending_clearance",
+    "logo_policy": "Keep the current approved base logo unchanged for existing print/signage assets until a separate brand decision is approved."
+  },
+  "site": {
+    "origin": "https://ahmedsaturki.github.io/numuw-studio/",
+    "primary_cta_label_ar": "ابدأ من المشكلة",
+    "primary_cta_label_en": "Start with the problem",
+    "primary_cta_route": "/numuw-studio/tools/solution-finder/"
+  },
+  "contact": {
+    "whatsapp_number": "201127788810",
+    "whatsapp_url": "https://wa.me/201127788810",
+    "phone_e164": "+201127788810"
+  },
+  "buyer_journey": [
+    "Discover",
+    "Understand",
+    "Diagnose",
+    "Choose",
+    "Scope",
+    "Build",
+    "Launch",
+    "Measure",
+    "Improve"
+  ],
+  "products": [
+    {
+      "id": "diagnostic",
+      "name": "NUMUW Diagnostic"
+    },
+    {
+      "id": "digital-kickoff",
+      "name": "Digital Kickoff"
+    },
+    {
+      "id": "automation-sprint",
+      "name": "Automation Sprint"
+    },
+    {
+      "id": "growth-system",
+      "name": "Growth System"
+    },
+    {
+      "id": "growth-partner",
+      "name": "Growth Partner"
+    }
+  ],
+  "tools": [
+    "solution-finder",
+    "diagnostic",
+    "automation-finder",
+    "roi-calculator",
+    "estimator",
+    "roadmap",
+    "website-readiness",
+    "brief-builder"
+  ],
+  "estimator_reference": [
+    {
+      "label": "لاندنج بيدج",
+      "reference_price": 8000,
+      "billing": "one_time"
+    },
+    {
+      "label": "موقع شركة",
+      "reference_price": 15000,
+      "billing": "one_time"
+    },
+    {
+      "label": "هوية بصرية",
+      "reference_price": 6000,
+      "billing": "one_time"
+    },
+    {
+      "label": "أتمتة عملية",
+      "reference_price": 8000,
+      "billing": "one_time"
+    },
+    {
+      "label": "AI Workflow",
+      "reference_price": 8000,
+      "billing": "one_time"
+    },
+    {
+      "label": "SEO / Local",
+      "reference_price": 6000,
+      "billing": "one_time"
+    },
+    {
+      "label": "CRM",
+      "reference_price": 6000,
+      "billing": "one_time"
+    },
+    {
+      "label": "KPI Dashboard",
+      "reference_price": 12000,
+      "billing": "one_time"
+    },
+    {
+      "label": "Growth Partner شهري",
+      "reference_price": 6500,
+      "billing": "monthly"
+    }
+  ],
+  "proof_policy": {
+    "status": "evidence_required",
+    "never_fabricate": [
+      "clients",
+      "logos",
+      "testimonials",
+      "awards",
+      "rankings",
+      "revenue",
+      "ROI",
+      "guarantees"
+    ]
+  },
+  "measurement": {
+    "browser_events": [
+      "cta",
+      "tool_start",
+      "tool_complete"
+    ],
+    "safe_fields": [
+      "kind",
+      "tool",
+      "path",
+      "completion"
+    ],
+    "business_system_of_record": "outside_browser"
+  }
+}
