@@ -11,6 +11,8 @@
     lang=next==='en'?'en':'ar';
     document.documentElement.lang=lang;
     document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+    if(nav) nav.setAttribute('aria-label',lang==='ar'?'التنقل الرئيسي':'Primary navigation');
+    if(menu&&nav) menu.setAttribute('aria-label',nav.classList.contains('open')?(lang==='ar'?'غلق القائمة':'Close menu'):(lang==='ar'?'فتح القائمة':'Open menu'));
     document.querySelectorAll('[data-ar][data-en]').forEach(function(el){
       el.textContent=lang==='ar'?el.getAttribute('data-ar'):el.getAttribute('data-en');
     });
@@ -121,15 +123,41 @@
     }
   }
 
-  var toolStarted=false;
+  var startedTools=new WeakSet();
+  var completedTools=new WeakSet();
+  var completedToolNames=new Set();
+
+  function toolContext(target){
+    if(!target||!target.closest)return null;
+    var form=target.closest('form[data-tool]');
+    if(form)return form;
+    return target.closest('[data-tool-page]');
+  }
+  function toolName(context){
+    if(!context)return '';
+    return context.getAttribute('data-tool')||context.getAttribute('data-tool-page')||'';
+  }
   document.addEventListener('focusin',function(e){
-    if(toolStarted)return;
-    var form=e.target.closest('form');
-    if(form){toolStarted=true;emit('tool_start',{tool:location.pathname,path:location.pathname});}
+    var context=toolContext(e.target);
+    var name=toolName(context);
+    if(!context||!name||startedTools.has(context))return;
+    startedTools.add(context);
+    emit('tool_start',{tool:name,path:location.pathname});
   });
-  document.addEventListener('submit',function(e){
-    if(e.target&&e.target.tagName==='FORM')emit('tool_complete',{tool:location.pathname,path:location.pathname});
-  });
+
+  window.NUMUW=window.NUMUW||{};
+  window.NUMUW.completeTool=function(context){
+    var name=typeof context==='string'?context:toolName(context);
+    if(!name)return;
+    if(typeof context==='string'){
+      if(completedToolNames.has(name))return;
+      completedToolNames.add(name);
+    }else{
+      if(completedTools.has(context))return;
+      completedTools.add(context);
+    }
+    emit('tool_complete',{tool:name,path:location.pathname,completion:'rendered'});
+  };
 
   document.addEventListener('click',function(e){
     var a=e.target.closest('a[href]');
