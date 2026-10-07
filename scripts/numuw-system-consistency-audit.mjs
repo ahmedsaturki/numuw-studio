@@ -179,9 +179,15 @@ for (const [page, runtime] of tools) {
 
 const growthPartner = fs.readFileSync(path.join(root, "products/growth-partner/index.html"), "utf8");
 const estimator = fs.readFileSync(path.join(root, "assets/js/tools/estimator.js"), "utf8");
-if (!growthPartner.includes("6,500 ج.م شهريًا")) failures.push("Growth Partner: monthly reference price missing or changed");
-if (!estimator.includes("Growth Partner شهري") || !estimator.includes("6500")) {
-  failures.push("Estimator: Growth Partner monthly reference price missing or changed");
+const partnerRef = system.estimator_reference && system.estimator_reference.find((item) => item.billing === "monthly");
+if (!partnerRef || Number(partnerRef.reference_price) !== 6500) {
+  failures.push("System source: Growth Partner monthly reference price must be 6500");
+}
+if (!estimator.includes("estimator_reference")) {
+  failures.push("Estimator: pricing must be loaded from the system source");
+}
+if (!growthPartner.includes("6,500 ج.م شهريًا")) {
+  failures.push("Growth Partner: monthly reference price missing or changed");
 }
 
 const system = JSON.parse(fs.readFileSync(path.join(root, "data/numuw-system.json"), "utf8"));
