@@ -107,7 +107,7 @@ make scope and execution concrete
 Handover:
 transfer ownership and operating knowledge
 
-Current research supports this direction: B2B buyers increasingly self-educate and use AI, while human validation remains important for confidence and risk reduction. Forrester reports 94% of buyers use AI during purchasing, average buying groups include 13 internal stakeholders and nine external participants, procurement is a decision-maker in 53% of cycles, and more than 60% use trials to reduce risk. Gartner reports 67% prefer a rep-free experience and 69% use sales reps to validate AI-generated insights.
+Current research supports this direction: B2B buyers increasingly self-educate and use AI, while human validation remains important for confidence and risk reduction. Forrester reports 94% of buyers use AI during purchasing, average buying groups include 13 internal stakeholders and nine external participants, procurement is a decision-maker in 53% of cycles, and more than 60% use trials to reduce risk. Gartner reports 67% prefer a rep-free experience, while 69% prefer to validate AI-generated insights with sales reps.
 
 ## 4. Commercial entry contract
 
@@ -281,7 +281,7 @@ Browser layer:
 page_view
 tool_start
 tool_complete
-cta_intent
+cta
 
 Business layer:
 qualified_conversation
@@ -291,7 +291,7 @@ won_work
 
 Do not infer revenue from browser events.
 
-Current implementation emits inert tool-start/tool-complete and CTA-intent events without requiring an analytics vendor.
+Current implementation emits inert tool-start/tool-complete and CTA events without requiring an analytics vendor.
 
 ## 14. Public vs private knowledge
 
