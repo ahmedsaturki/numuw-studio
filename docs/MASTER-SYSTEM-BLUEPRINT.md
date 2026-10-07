@@ -181,7 +181,7 @@ The browser records intent signals only when an instrumentation consumer exists.
 Client-side events are limited to safe intent fields.
 
 The business source of truth remains outside browser inference:
-page_view -> tool_start -> tool_complete -> cta_intent -> qualified_conversation -> scoped_proposal -> won_work
+page_view -> tool_start -> tool_complete -> cta -> qualified_conversation -> scoped_proposal -> won_work
 
 A click is not a lead. A lead is not qualified. A proposal is not won.
 
