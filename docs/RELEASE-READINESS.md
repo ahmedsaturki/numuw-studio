@@ -1,8 +1,27 @@
 # NUMUW Release Readiness
 
+## Status
+
+**Technical baseline: GREEN. Commercial/live release: HOLD pending external evidence.**
+
+The current `main` baseline contains the verified system-foundation hardening pass. This document intentionally separates repository evidence from gates that require real-world validation.
+
 ## Engineering state
 
 NUMUW remains a static/no-build site with a shared shell, local assets and deterministic source-level QA.
+
+## Internal gates verified before merge
+
+- Static audit
+- System consistency audit
+- R1–R18 scanner regression suite
+- Benchmark quality floor
+- Product/tool/system contract checks
+- Contact normalization against the structured source of truth
+- Roadmap maturity behavior
+- Estimator system-source pricing
+- Explicit localization contract
+- Proof-acquisition policy contract
 
 ## Implemented in this hardening pass
 
@@ -16,15 +35,15 @@ NUMUW remains a static/no-build site with a shared shell, local assets and deter
 - duplicate-attribute detection hardened against quoted `>` and opaque content in the source audit
 - product/tool/system contracts extended in the consistency audit
 
-## External release gates
+## External release gates — still open
 
-- formal legal/name clearance
-- live browser and mobile UX verification
-- real WhatsApp and phone verification
-- Lighthouse and/or field Core Web Vitals evidence
-- Search Console/indexing and Rich Results validation
-- final commercial pricing and scope approval
-- permissioned, sourceable customer proof before publishing case-study claims
+1. **Brand/name clearance — HOLD.** See `docs/BRAND-NAME-CLEARANCE.md`.
+2. **Live browser/mobile UX — OPEN.** Needs real deployed-page inspection at desktop and mobile widths.
+3. **CTA verification — OPEN.** Confirm WhatsApp and direct phone behavior on the live deployment.
+4. **Performance — OPEN.** Capture Lighthouse and/or field Core Web Vitals evidence.
+5. **Search/Rich Results — OPEN.** Validate deployed structured data and indexing state.
+6. **Commercial approval — OPEN.** Confirm final prices, scope boundaries and payment terms before external selling.
+7. **Customer proof — OPEN by design.** No public case claim should ship without a sourceable result and publication permission.
 
 ## Rule
 

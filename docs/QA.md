@@ -44,7 +44,7 @@ Before publishing commercial copy, verify:
 
 ## System-consistency gate
 
-When a product name, price, scope, CTA, language contract or navigation route changes, check:
+When a product name, price, scope, CTA, language contract, proof policy or navigation route changes, check:
 - homepage
 - landing pages
 - tool outputs
@@ -54,6 +54,10 @@ When a product name, price, scope, CTA, language contract or navigation route ch
 - conversion/measurement docs
 
 A local page fix is not considered complete if another public layer still contradicts it.
+
+## Proof gate
+
+Before publishing a case, result or testimonial, verify the sourceable evidence record and publication permission using `docs/PROOF-ACQUISITION.md`. The absence of proof is a valid state; never weaken the evidence boundary to make the site look more complete.
 
 ## Live release gate
 

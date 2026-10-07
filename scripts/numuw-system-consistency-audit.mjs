@@ -178,6 +178,20 @@ for (const [page, runtime] of tools) {
 }
 
 const system = JSON.parse(fs.readFileSync(path.join(root, "data/numuw-system.json"), "utf8"));
+if (system.schema_version !== "1.2.0") failures.push("System source: expected schema_version 1.2.0");
+if (system.localization?.default_locale !== "ar") failures.push("System source: Arabic must remain the default locale");
+if (!Array.isArray(system.localization?.localized_routes) || !system.localization.localized_routes.includes("/numuw-studio/")) {
+  failures.push("System source: localized route contract must include the homepage");
+}
+if (!Array.isArray(system.proof_policy?.evidence_ladder) || system.proof_policy.evidence_ladder.length < 4) {
+  failures.push("System source: proof evidence ladder is incomplete");
+}
+const requiredProofFields = ["context","baseline","problem","intervention","evidence_source","result","limits","learning","publication_permission"];
+for (const field of requiredProofFields) {
+  if (!system.proof_policy?.case_study_required_fields?.includes(field)) {
+    failures.push("System source: missing proof case-study field " + field);
+  }
+}
 const growthPartner = fs.readFileSync(path.join(root, "products/growth-partner/index.html"), "utf8");
 const estimator = fs.readFileSync(path.join(root, "assets/js/tools/estimator.js"), "utf8");
 const partnerRef = system.estimator_reference && system.estimator_reference.find((item) => item.billing === "monthly");
