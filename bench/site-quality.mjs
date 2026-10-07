@@ -448,14 +448,44 @@ process.stdout.write(`METRIC issues * 1e6 + html_bytes=${issues * 1e6 + htmlByte
 // Legacy single-metric form ("<metric>: <value>") for consumers that parse
 // one primary metric per line via prefix match.
 process.stdout.write(`issues: ${issues}\n`);
+function startTags(html) {
+  const tags = [];
+  const opaque = new Set(["script", "style", "textarea", "title"]);
+  let i = 0;
+  while (i < html.length) {
+    if (html.startsWith("<!--", i)) {
+      const close = html.indexOf("-->", i + 4);
+      i = close === -1 ? html.length : close + 3;
+      continue;
+    }
+    if (html[i] !== "<" || /[\\/!?#]/.test(html[i + 1] ?? "")) { i += 1; continue; }
+    let j = i + 1;
+    while (j < html.length && /[A-Za-z0-9:_-]/.test(html[j])) j += 1;
+    if (j === i + 1) { i += 1; continue; }
+    const name = html.slice(i + 1, j).toLowerCase();
+    let quote = null, finish = -1;
+    for (; j < html.length; j += 1) {
+      const ch = html[j];
+      if (quote) { if (ch === quote) quote = null; }
+      else if (ch === '"' || ch === "'") quote = ch;
+      else if (ch === ">") { finish = j; break; }
+    }
+    if (finish < 0) break;
+    tags.push(html.slice(i, finish + 1));
+    i = finish + 1;
+    if (opaque.has(name)) {
+      const close = html.toLowerCase().indexOf("</" + name, i);
+      if (close < 0) break;
+      i = close;
+    }
+  }
+  return tags;
+}
+
 function startTagAttributes(tag) {
   const attrs = [];
   const inner = tag.slice(1, -1);
   const re = /([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*(?:=\s*("([^"]*)"|'([^']*)'|([^\s"'=<>]+)))?/g;
   for (const match of inner.matchAll(re)) attrs.push(match[1].toLowerCase());
   return attrs;
-}
-
-function startTags(html) {
-  return html.match(/<([a-zA-Z][a-zA-Z0-9:_-]*)\b[^>]*>/g) ?? [];
 }
