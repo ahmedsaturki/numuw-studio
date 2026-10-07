@@ -26,7 +26,7 @@ Do not include message text, phone numbers, names, email addresses, form values 
 
 ### tool_start / tool_complete
 
-Generated for tool interaction start and successful form submission.
+Generated when a tool interaction starts and when its result has actually rendered successfully.
 
 Safe fields:
 - tool/page pathname
