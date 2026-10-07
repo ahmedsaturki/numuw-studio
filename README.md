@@ -9,14 +9,9 @@ https://ahmedsaturki.github.io/numuw-studio/
 
 Canonical release branch: `main`.
 
-The current hardening candidate is `hardening/system-foundation-2026-10-05` and is still under release verification; it must not be treated as the released baseline until its full CI and review gates pass.
+The 2026-10-05/07 system-foundation hardening was integrated into `main` on October 7, 2026 after the static audit, system-consistency audit, R1–R18 regression suite and benchmark quality floor passed.
 
-The stable `main` baseline has previously passed:
-- NUMUW Static Audit
-- R1–R18 benchmark/regression gate
-- GitHub Pages build and deployment
-
-The remaining release boundary is tracked in GitHub Issue #7 and covers live browser/mobile UX, field performance, external CTA verification, Rich Results/Search Console validation, formal legal review, name clearance and repository settings that cannot be proven from source files alone.
+`main` is the current technical baseline. This does **not** mean commercial launch is approved: external release gates remain explicitly open in GitHub Issues #7 and #26 for live browser/mobile UX, field performance, external CTA verification, Rich Results/Search Console validation, formal legal/name clearance and repository governance settings that cannot be proven from source files alone.
 
 ## What is included
 
