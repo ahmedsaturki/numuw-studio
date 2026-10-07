@@ -356,6 +356,19 @@ check("R18 fires on duplicate HTML attributes", (run) => {
   return true;
 });
 
+check("R18 ignores quoted > and opaque/comment pseudo-markup", (run) => {
+  const r = run({
+    "index.html": goodPage("", {
+      body:
+String.raw`<!-- <p class="x" class="y"> -->
+<script>const fake = '<div class="a" class="b">';</script>
+<style>.x::after{content:'<span class="a" class="b">';}</style>
+<p data-note="a > b" class="ok">real</p>`
+    }),
+  });
+  assertEqual(r.issues, 0, "opaque/quoted markup must not create R18 false positives");
+  return true;
+});
 check("404.html is exempt from R7 and R13 but still needs R1/R6", (run) => {
   const r = run({ "404.html": goodPage("", { canonical: null }) });
   const fired = rulesFired(r.stderr);
