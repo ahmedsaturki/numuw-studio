@@ -4,6 +4,7 @@
   --home-ink-2:var(--navy2);
   --home-teal:var(--teal);
   --home-teal-2:var(--teal2);
+  --home-teal-text:var(--teal-text);
   --home-teal-soft:var(--soft);
   --home-paper:var(--bg);
   --home-line:var(--line);
@@ -26,7 +27,7 @@
 .hero-checks div{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start;padding:11px 12px;background:#f7f9fb;border:1px solid var(--home-line);border-radius:14px}
 .hero-checks b{color:var(--home-teal);font-size:.78rem}
 .hero-checks span{font-size:.88rem;color:var(--home-ink)}
-.text-link{display:inline-block;margin-top:17px;color:var(--home-teal);font-weight:900;text-decoration:none}
+.text-link{display:inline-block;margin-top:17px;color:var(--teal-text);font-weight:900;text-decoration:none}
 .trust-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px}
 .trust-row>div{padding:14px 15px;border-top:1px solid var(--home-line)}
 .trust-row b{display:block;font-size:.85rem;color:var(--home-ink)}
@@ -53,7 +54,7 @@
 .service-card:hover{transform:translateY(-3px);box-shadow:var(--home-shadow);border-color:#c7d7e2}
 .service-card h3{font-size:1.14rem;margin:8px 0 9px}
 .service-card p{font-size:.87rem;color:var(--home-muted)}
-.service-card .text-link{margin-top:auto;font-size:.78rem}
+.service-card .text-link{margin-top:auto;font-size:.78rem;color:var(--home-teal-text)}
 .home-industries{background:var(--home-paper)}
 .industry-grid-home{display:grid;grid-template-columns:1.35fr repeat(3,1fr);gap:16px;margin-top:35px}
 .industry-card{min-height:235px;padding:25px;border-radius:22px;border:1px solid var(--home-line);background:#fff;display:flex;flex-direction:column;text-decoration:none;color:inherit;box-shadow:0 8px 24px rgba(8,19,33,.04)}
