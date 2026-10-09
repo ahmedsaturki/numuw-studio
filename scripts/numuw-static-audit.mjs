@@ -9,7 +9,7 @@ const warnings = [];
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
-    if (entry.name === ".git" || entry.name === "node_modules") return [];
+    if (entry.name === ".git" || entry.name === "node_modules" || entry.name === ".lighthouseci") return [];
     const full = path.join(dir, entry.name);
     return entry.isDirectory() ? walk(full) : [full];
   });
