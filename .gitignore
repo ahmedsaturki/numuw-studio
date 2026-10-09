@@ -3,3 +3,10 @@
 .DS_Store
 node_modules/
 *.log
+.lighthouseci/
+package.json
+lighthouserc.js
+branch-protection.json
+og-image-optimized.png
+og-image.avif
+og-image.webp
