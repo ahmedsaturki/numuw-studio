@@ -28,6 +28,10 @@
 .hero-checks b{color:var(--home-teal);font-size:.78rem}
 .hero-checks span{font-size:.88rem;color:var(--home-ink)}
 .text-link{display:inline-block;margin-top:17px;color:var(--teal-text);font-weight:900;text-decoration:none}
+.home-system .eyebrow{color:var(--home-teal-2)}
+.home-system .text-link{color:var(--home-teal-2)}
+.home-offers .text-link{color:var(--home-teal-2)}
+.home-final .text-link{color:var(--home-teal-2)}
 .trust-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px}
 .trust-row>div{padding:14px 15px;border-top:1px solid var(--home-line)}
 .trust-row b{display:block;font-size:.85rem;color:var(--home-ink)}
